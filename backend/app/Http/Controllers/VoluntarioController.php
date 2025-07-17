@@ -59,8 +59,10 @@ class VoluntarioController extends Controller
         return response()->json($voluntario);
     }
 
-    public function destroy(string $id)
+    public function destroy(Voluntario $voluntario)
     {
-        //
+        $voluntario->delete();
+
+        return response()->json(null, 204);
     }
 }
