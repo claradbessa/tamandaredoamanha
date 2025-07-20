@@ -7,6 +7,7 @@ use App\Http\Controllers\AlunoController;
 use App\Http\Controllers\AulaController;
 use App\Http\Controllers\PostagemController;
 use App\Http\Controllers\GestorController;
+use App\Http\Controllers\MatriculaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,3 +29,4 @@ Route::apiResource('alunos', AlunoController::class);
 Route::apiResource('aulas', AulaController::class);
 Route::apiResource('postagens', PostagemController::class);
 Route::apiResource('gestores', GestorController::class);
+Route::apiResource('matriculas', MatriculaController::class);
