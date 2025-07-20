@@ -8,6 +8,7 @@ use App\Http\Controllers\AulaController;
 use App\Http\Controllers\PostagemController;
 use App\Http\Controllers\GestorController;
 use App\Http\Controllers\MatriculaController;
+use App\Http\Controllers\FrequenciaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,3 +31,4 @@ Route::apiResource('aulas', AulaController::class);
 Route::apiResource('postagens', PostagemController::class);
 Route::apiResource('gestores', GestorController::class);
 Route::apiResource('matriculas', MatriculaController::class);
+Route::apiResource('frequencias', FrequenciaController::class);
