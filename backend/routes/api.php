@@ -6,6 +6,7 @@ use App\Http\Controllers\VoluntarioController;
 use App\Http\Controllers\AlunoController;
 use App\Http\Controllers\AulaController;
 use App\Http\Controllers\PostagemController;
+use App\Http\Controllers\GestorController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,3 +27,4 @@ Route::apiResource('voluntarios', VoluntarioController::class);
 Route::apiResource('alunos', AlunoController::class);
 Route::apiResource('aulas', AulaController::class);
 Route::apiResource('postagens', PostagemController::class);
+Route::apiResource('gestores', GestorController::class);
