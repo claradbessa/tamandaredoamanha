@@ -39,18 +39,18 @@ class AuthController extends Controller
             'senha' => 'required|string',
         ]);
 
-        // Converte 'senha' para 'password' para o método attempt()
         $loginData = [
             'email' => $credentials['email'],
             'password' => $credentials['senha']
         ];
 
-        if (!Auth::guard('voluntario')->attempt($loginData)) {
+        // Usando o guard 'api', que agora é o nosso padrão para voluntários
+        if (!Auth::guard('api')->attempt($loginData)) {
             return response()->json(['message' => 'Credenciais inválidas'], 401);
         }
 
         /** @var \App\Models\Voluntario $voluntario */
-        $voluntario = Auth::guard('voluntario')->user();
+        $voluntario = Auth::guard('api')->user();
 
         $token = $voluntario->createToken('auth_token')->plainTextToken;
 
