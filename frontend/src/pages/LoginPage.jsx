@@ -1,32 +1,26 @@
 import { useState } from 'react';
-import api from '../services/api';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 function LoginPage() {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [error, setError] = useState('');
+  
+  const navigate = useNavigate();
+  const auth = useAuth();
 
   const handleLogin = async (event) => {
-    event.preventDefault(); // Impede o recarregamento padrão da página
-    setError(''); // Limpa erros anteriores
+    event.preventDefault();
+    setError('');
 
-    try {
-      const response = await api.post('/login', {
-        email: email,
-        senha: senha,
-      });
+    const loginSuccess = await auth.login({ email, senha });
 
-      // Se o login for bem-sucedido, a API retornará os dados
-      console.log('Login bem-sucedido:', response.data);
-      
-      const { access_token } = response.data;
-      
-      // Aqui, futuramente, será salvo o token e os dados do usuário
-      alert(`Login realizado com sucesso! Token: ${access_token}`);
-
-    } catch (err) {
-      // Se a API retornar um erro (ex: 401 Credenciais inválidas)
-      console.error('Erro no login:', err.response?.data?.message || 'Erro desconhecido');
+    if (loginSuccess) {
+      // Se o login der certo, navega para a página de dashboard
+      navigate('/dashboard'); 
+    } else {
+      // Se falhar, exibe o erro
       setError('E-mail ou senha inválidos. Tente novamente.');
     }
   };

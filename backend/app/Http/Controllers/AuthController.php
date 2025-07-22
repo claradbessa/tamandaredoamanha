@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Voluntario;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -39,18 +38,11 @@ class AuthController extends Controller
             'senha' => 'required|string',
         ]);
 
-        $loginData = [
-            'email' => $credentials['email'],
-            'password' => $credentials['senha']
-        ];
+        $voluntario = Voluntario::where('email', $credentials['email'])->first();
 
-        // Usando o guard 'api', que agora é o padrão para voluntários
-        if (!Auth::guard('api')->attempt($loginData)) {
+        if (! $voluntario || ! Hash::check($credentials['senha'], $voluntario->senha)) {
             return response()->json(['message' => 'Credenciais inválidas'], 401);
         }
-
-        /** @var \App\Models\Voluntario $voluntario */
-        $voluntario = Auth::guard('api')->user();
 
         $token = $voluntario->createToken('auth_token')->plainTextToken;
 
