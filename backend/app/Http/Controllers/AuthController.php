@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Voluntario;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -39,7 +39,13 @@ class AuthController extends Controller
             'senha' => 'required|string',
         ]);
 
-        if (!Auth::guard('voluntario')->attempt(['email' => $credentials['email'], 'password' => $credentials['senha']])) {
+        // Converte 'senha' para 'password' para o método attempt()
+        $loginData = [
+            'email' => $credentials['email'],
+            'password' => $credentials['senha']
+        ];
+
+        if (!Auth::guard('voluntario')->attempt($loginData)) {
             return response()->json(['message' => 'Credenciais inválidas'], 401);
         }
 

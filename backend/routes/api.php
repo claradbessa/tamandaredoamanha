@@ -2,35 +2,34 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\VoluntarioController;
 use App\Http\Controllers\AlunoController;
 use App\Http\Controllers\AulaController;
-use App\Http\Controllers\PostagemController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\FrequenciaController;
 use App\Http\Controllers\GestorController;
 use App\Http\Controllers\MatriculaController;
-use App\Http\Controllers\FrequenciaController;
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PostagemController;
+use App\Http\Controllers\VoluntarioController;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-*/
-
-// Rotas Públicas
+// Rotas Públicas de Autenticação
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-// Rotas de Recursos
-Route::apiResource('voluntarios', VoluntarioController::class);
-Route::apiResource('alunos', AlunoController::class);
-Route::apiResource('aulas', AulaController::class);
-Route::apiResource('postagens', PostagemController::class);
-Route::apiResource('gestores', GestorController::class);
-Route::apiResource('matriculas', MatriculaController::class);
-Route::apiResource('frequencias', FrequenciaController::class);
+// Grupo de Rotas Protegidas
+// Todas as rotas aqui dentro exigem um token de autenticação válido.
+Route::middleware('auth:sanctum')->group(function () {
 
-// Rota de Usuário Autenticado
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+    // Rota para obter dados do usuário logado
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+
+    // Rotas de Recursos (CRUDs)
+    Route::apiResource('voluntarios', VoluntarioController::class);
+    Route::apiResource('alunos', AlunoController::class);
+    Route::apiResource('aulas', AulaController::class);
+    Route::apiResource('postagens', PostagemController::class);
+    Route::apiResource('gestores', GestorController::class);
+    Route::apiResource('matriculas', MatriculaController::class);
+    Route::apiResource('frequencias', FrequenciaController::class);
 });

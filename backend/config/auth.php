@@ -11,7 +11,7 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
-        'voluntario' => [
+        'api' => [
             'driver' => 'sanctum',
             'provider' => 'voluntarios',
         ],
