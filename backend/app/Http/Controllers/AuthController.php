@@ -44,7 +44,7 @@ class AuthController extends Controller
             'password' => $credentials['senha']
         ];
 
-        // Usando o guard 'api', que agora é o nosso padrão para voluntários
+        // Usando o guard 'api', que agora é o padrão para voluntários
         if (!Auth::guard('api')->attempt($loginData)) {
             return response()->json(['message' => 'Credenciais inválidas'], 401);
         }
