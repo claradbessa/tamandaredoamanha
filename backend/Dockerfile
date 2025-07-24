@@ -1,26 +1,32 @@
 FROM php:8.3-fpm-alpine
 
-RUN apk add --no-cache \
-    nginx \
-    supervisor \
-    libzip-dev \
-    libpng-dev \
-    jpeg-dev \
-    freetype-dev \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install pdo pdo_mysql zip gd
+# Instala dependências e extensões
+RUN apk add --no-cache nginx supervisor shadow && \
+    docker-php-ext-install pdo pdo_mysql
 
+# Instala o Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# Define o diretório de trabalho
 WORKDIR /var/www/html
 
+# Copia os arquivos da aplicação
 COPY . .
 
+# Copia as configurações do Nginx, Supervisor e o script de inicialização
+COPY docker/nginx.conf /etc/nginx/http.d/default.conf
+COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY docker/start.sh /usr/local/bin/start.sh
+RUN chmod +x /usr/local/bin/start.sh
+
+# Instala dependências do Composer
 RUN composer install --no-dev --optimize-autoloader
 
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
-RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+# Ajusta permissões
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache && \
+    chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
 EXPOSE 80
 
-CMD ["/usr/sbin/supervisord", "-c", "/etc/supervisord.conf"]
+# Comando para iniciar o servidor usando o script
+CMD ["/usr/local/bin/start.sh"]
