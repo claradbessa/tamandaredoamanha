@@ -13,9 +13,9 @@ WORKDIR /var/www/html
 # Copia os arquivos da aplicação
 COPY . .
 
-# Copia as configurações do Nginx, Supervisor e o script de inicialização
-COPY docker/nginx.conf /etc/nginx/http.d/default.conf
-COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+# Copia as configurações para os caminhos padrão, sobrescrevendo os originais
+COPY docker/nginx.conf /etc/nginx/nginx.conf
+COPY docker/supervisord.conf /etc/supervisord.conf
 COPY docker/start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
 
