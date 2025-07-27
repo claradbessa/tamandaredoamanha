@@ -13,7 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->validateCsrfTokens(except: [
-            'api/*', // Garante que as rotas de API não usem CSRF
+            'api/*', 
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
