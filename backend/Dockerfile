@@ -22,6 +22,14 @@ RUN chmod +x /usr/local/bin/start.sh
 # Instala dependências do Composer
 RUN composer install --no-dev --optimize-autoloader
 
+# Cria o cache de configuração para otimizar a performance
+RUN php artisan config:cache
+
 # Ajusta permissões
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache && \
-    chmod -R 775 /var/w
+    chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+
+EXPOSE 80
+
+# Comando para iniciar o servidor usando o script
+CMD ["/usr/local/bin/start.sh"]
