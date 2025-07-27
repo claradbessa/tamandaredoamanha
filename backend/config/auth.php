@@ -11,6 +11,7 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        // O guarda 'api' agora é o responsável por autenticar os voluntários
         'api' => [
             'driver' => 'sanctum',
             'provider' => 'voluntarios',
@@ -18,10 +19,12 @@ return [
     ],
 
     'providers' => [
+        // Mantemos o provider 'users' padrão do Laravel
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
+        // Adicionamos nosso provider para 'voluntarios'
         'voluntarios' => [
             'driver' => 'eloquent',
             'model' => App\Models\Voluntario::class,

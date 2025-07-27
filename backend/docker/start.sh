@@ -17,9 +17,3 @@ php artisan migrate --force
 
 echo "Iniciando supervisord..."
 /usr/bin/supervisord -c /etc/supervisord.conf
-
-# Roda as migrations no banco de dados de produção
-php artisan migrate --force
-
-# Inicia os serviços
-/usr/bin/supervisord -c /etc/supervisord.conf
