@@ -16,12 +16,8 @@ COPY docker/supervisord.conf /etc/supervisord.conf
 COPY docker/start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
 
-# Instala dependências e gera o autoload
+# Instala dependências do Composer
 RUN composer install --no-dev --optimize-autoloader
-
-# Gera o cache de configuração e rotas
-RUN php artisan config:cache
-RUN php artisan route:cache
 
 # Ajusta permissões
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache && \
