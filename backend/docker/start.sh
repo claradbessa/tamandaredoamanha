@@ -4,7 +4,8 @@ set -e
 echo "Ajustando permissões..."
 chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-echo "Aguardando o banco de dados ficar pronto..."
+echo "Aguardando o banco de dados e rodando migrations..."
+# Usei migrate --force para aplicar novas migrations sem apagar os dados existentes
 until php artisan migrate --force; do
   echo "O banco de dados não está pronto, tentando novamente em 3 segundos..."
   sleep 3
