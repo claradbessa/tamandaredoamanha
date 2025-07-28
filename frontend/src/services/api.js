@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://backend.test/api/v1',
+  baseURL: 'https://render-m7dj.onrender.com',
   headers: {
     'Accept': 'application/json',
   }
