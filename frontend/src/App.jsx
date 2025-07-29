@@ -3,6 +3,7 @@ import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import ProtectedRoute from './components/ProtectedRoute';
+import AdminLayout from './components/layout/AdminLayout';
 
 function App() {
   return (
@@ -12,10 +13,12 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
 
-        {/* Rotas Protegidas */}
+        {/* Rotas Protegidas com o Layout de Admin */}
         <Route element={<ProtectedRoute />}>
-          <Route path="/dashboard" element={<DashboardPage />} />
-          {/* Todas as outras rotas de admin virão aqui dentro */}
+          <Route element={<AdminLayout />}>
+            <Route path="/dashboard" element={<DashboardPage />} />
+            {/* As páginas de Alunos, Aulas, etc. virão aqui */}
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>
