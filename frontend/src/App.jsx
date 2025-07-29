@@ -4,6 +4,7 @@ import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminLayout from './components/layout/AdminLayout';
+import AlunosPage from './pages/AlunosPage'; 
 
 function App() {
   return (
@@ -17,7 +18,8 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route element={<AdminLayout />}>
             <Route path="/dashboard" element={<DashboardPage />} />
-            {/* As páginas de Alunos, Aulas, etc. virão aqui */}
+            <Route path="/admin/alunos" element={<AlunosPage />} /> 
+            {/* As páginas de Aulas, Postagens, etc. virão aqui */}
           </Route>
         </Route>
       </Routes>
