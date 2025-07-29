@@ -1,7 +1,7 @@
 FROM php:8.3-fpm-alpine
 
-# Instala dependências
-RUN apk add --no-cache nginx supervisor shadow postgresql-dev && \
+# Instala dependências, incluindo git
+RUN apk add --no-cache git nginx supervisor shadow postgresql-dev && \
     docker-php-ext-install pdo pdo_pgsql
 
 # Instala o Composer
