@@ -12,7 +12,7 @@ class AlunoController extends Controller
      */
     public function index()
     {
-        return Aluno::all();
+        return Aluno::paginate(15);
     }
 
     /**
