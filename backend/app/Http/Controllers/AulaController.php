@@ -9,18 +9,16 @@ use Illuminate\Validation\Rule;
 class AulaController extends Controller
 {
     /**
-     * Lista todas as aulas, já incluindo os dados do voluntário responsável.
+     * Lista todas as aulas, incluindo os voluntários e os alunos matriculados.
      */
     public function index()
     {
-        // Usamos with('voluntario') para já carregar os dados do voluntário junto com a aula.
-        // Isso é mais eficiente e evita múltiplas consultas ao banco (problema N+1).
-        $aulas = Aula::with('voluntario')->get();
+        $aulas = Aula::with(['voluntario', 'alunos'])->get(); 
         return response()->json($aulas);
     }
 
     /**
-     * Cria uma nova aula.
+     * Armazena uma nova aula.
      */
     public function store(Request $request)
     {
@@ -29,23 +27,21 @@ class AulaController extends Controller
             'descricao' => 'nullable|string',
             'horario' => 'nullable|date_format:H:i',
             'dia_semana' => ['nullable', Rule::in(['segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado', 'domingo'])],
-            'voluntario_id' => 'nullable|exists:voluntarios,id', // Garante que o ID do voluntário existe na tabela 'voluntarios'
+            'voluntario_id' => 'nullable|exists:voluntarios,id',
             'capacidade' => 'nullable|integer',
             'local_aula' => 'nullable|string|max:100',
         ]);
 
         $aula = Aula::create($validatedData);
-
         return response()->json($aula, 201);
     }
 
     /**
-     * Mostra uma aula específica, incluindo os dados do voluntário.
+     * Exibe uma aula específica, incluindo o voluntário e os alunos matriculados.
      */
     public function show(Aula $aula)
     {
-        // Carrega os dados do voluntário relacionado a esta aula.
-        $aula->load('voluntario');
+        $aula->load(['voluntario', 'alunos']);
         return response()->json($aula);
     }
 
@@ -65,17 +61,15 @@ class AulaController extends Controller
         ]);
 
         $aula->update($validatedData);
-
         return response()->json($aula);
     }
 
     /**
-     * Deleta uma aula.
+     * Remove uma aula específica.
      */
     public function destroy(Aula $aula)
     {
         $aula->delete();
-
         return response()->json(null, 204);
     }
 }
