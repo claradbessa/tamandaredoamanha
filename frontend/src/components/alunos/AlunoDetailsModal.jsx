@@ -8,7 +8,7 @@ function AlunoDetailsModal({ aluno, onClose }) {
   return (
     <Modal isOpen={!!aluno} onClose={onClose} title={`Detalhes de ${aluno.nome}`}>
       <div>
-        <p><strong>ID:</strong> {aluno.id}</p>
+        {/* <p><strong>ID:</strong> {aluno.id}</p> */}
         <p><strong>Nome Completo:</strong> {aluno.nome}</p>
         <p><strong>Data de Nascimento:</strong> {aluno.data_nascimento}</p>
         <p><strong>Nome do Responsável:</strong> {aluno.nome_responsaveis || 'Não informado'}</p>
