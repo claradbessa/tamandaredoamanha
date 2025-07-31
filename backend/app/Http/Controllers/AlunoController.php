@@ -8,11 +8,11 @@ use Illuminate\Http\Request;
 class AlunoController extends Controller
 {
     /**
-     * Lista todos os alunos.
+     * Lista todos os alunos, incluindo as suas aulas.
      */
     public function index()
     {
-        return Aluno::paginate(15);
+        return Aluno::with('aulas')->paginate(15);
     }
 
     /**
@@ -36,11 +36,11 @@ class AlunoController extends Controller
     }
 
     /**
-     * Mostra um aluno específico.
+     * Mostra um aluno específico, incluindo as suas aulas.
      */
     public function show(Aluno $aluno)
     {
-        return $aluno;
+        return $aluno->load('aulas');
     }
 
     /**
