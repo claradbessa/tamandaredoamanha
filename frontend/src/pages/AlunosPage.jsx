@@ -4,8 +4,7 @@ import Modal from '../components/Modal';
 import AlunoForm from '../components/alunos/AlunoForm';
 import AlunoDetailsModal from '../components/alunos/AlunoDetailsModal';
 import { formatPhoneBR } from '../utils/formatters';
-// 1. Importe os ícones que vamos usar
-import { FaEye, FaEdit, FaTrashAlt } from 'react-icons/fa';
+import { FaEye, FaEdit, FaTrashAlt, FaSearch } from 'react-icons/fa';
 
 function AlunosPage() {
   const [alunos, setAlunos] = useState([]);
@@ -15,6 +14,9 @@ function AlunosPage() {
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [editingAluno, setEditingAluno] = useState(null);
   const [viewingAluno, setViewingAluno] = useState(null);
+
+  // 1. Novo estado para guardar o termo da busca
+  const [searchTerm, setSearchTerm] = useState('');
 
   const fetchAlunos = async () => {
     try {
@@ -69,6 +71,14 @@ function AlunosPage() {
     }
   };
 
+  // 2. Lógica para filtrar e ordenar os alunos antes de exibir
+  const filteredAndSortedAlunos = alunos
+    .filter(aluno => 
+      aluno.nome.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .sort((a, b) => a.nome.localeCompare(b.nome));
+
+
   if (loading) return <p>A carregar alunos...</p>;
 
   return (
@@ -79,6 +89,23 @@ function AlunosPage() {
       </div>
       
       {error && <p style={{ color: 'red' }}>{error}</p>}
+
+      {/* 3. Adiciona o campo de busca */}
+      <div style={{ margin: '20px 0', position: 'relative' }}>
+        <input
+          type="text"
+          placeholder="Buscar aluno por nome..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          style={{
+            width: '100%',
+            padding: '10px',
+            paddingLeft: '40px',
+            boxSizing: 'border-box' 
+          }}
+        />
+        <FaSearch style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: '#ccc' }} />
+      </div>
 
       <Modal
         isOpen={isFormModalOpen}
@@ -97,7 +124,7 @@ function AlunosPage() {
         onClose={() => setViewingAluno(null)}
       />
 
-      <table border="1" style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
+      <table border="1" style={{ width: '100%', borderCollapse: 'collapse' }}>
         <thead>
           <tr>
             <th>Nome</th>
@@ -107,14 +134,14 @@ function AlunosPage() {
           </tr>
         </thead>
         <tbody>
-          {alunos.length > 0 ? (
-            alunos.map(aluno => (
+          {/* 4. Usa a nova lista filtrada e ordenada para renderizar a tabela */}
+          {filteredAndSortedAlunos.length > 0 ? (
+            filteredAndSortedAlunos.map(aluno => (
               <tr key={aluno.id}>
                 <td>{aluno.nome}</td>
                 <td>{aluno.nome_responsaveis}</td>
                 <td>{formatPhoneBR(aluno.telefone)}</td>
                 <td style={{ textAlign: 'center' }}>
-                  {/* 2. Substitua o texto pelos componentes de ícone */}
                   <button onClick={() => setViewingAluno(aluno)} title="Ver Detalhes">
                     <FaEye />
                   </button>
