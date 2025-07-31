@@ -16,6 +16,7 @@ class Voluntario extends Authenticatable
         'email',
         'senha',
         'ativo',
+        'cargo',
     ];
 
     protected $hidden = [
