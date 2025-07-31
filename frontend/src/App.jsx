@@ -4,8 +4,9 @@ import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminLayout from './components/layout/AdminLayout';
-import AlunosPage from './pages/AlunosPage'; 
-import AulasPage from './pages/AulasPage'; 
+import AlunosPage from './pages/AlunosPage';
+import AulasPage from './pages/AulasPage';
+import VoluntariosPage from './pages/VoluntariosPage'; 
 
 function App() {
   return (
@@ -19,9 +20,9 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route element={<AdminLayout />}>
             <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/admin/alunos" element={<AlunosPage />} /> 
-            <Route path="/admin/aulas" element={<AulasPage />} /> 
-            {/* As páginas de Postagens, etc. virão aqui */}
+            <Route path="/admin/alunos" element={<AlunosPage />} />
+            <Route path="/admin/aulas" element={<AulasPage />} />
+            <Route path="/admin/voluntarios" element={<VoluntariosPage />} /> 
           </Route>
         </Route>
       </Routes>

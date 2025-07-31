@@ -28,6 +28,7 @@ function AdminLayout() {
             <li><Link to="/admin/alunos">Alunos</Link></li>
             <li><Link to="/admin/aulas">Aulas</Link></li>
             <li><Link to="/admin/postagens">Postagens</Link></li>
+            <li><Link to="/admin/voluntarios">Voluntários</Link></li>
             {/* No futuro terá mais links aqui */}
           </ul>
         </nav>
