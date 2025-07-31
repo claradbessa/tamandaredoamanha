@@ -6,6 +6,7 @@ function VoluntarioForm({ onSave, onCancel, voluntarioToEdit }) {
   const [senha, setSenha] = useState('');
   const [senhaConfirmation, setSenhaConfirmation] = useState('');
   const [ativo, setAtivo] = useState(true);
+  const [cargo, setCargo] = useState(''); // 1. Adiciona o estado para o novo campo
   const [isSaving, setIsSaving] = useState(false);
 
   const isEditing = !!voluntarioToEdit;
@@ -15,7 +16,7 @@ function VoluntarioForm({ onSave, onCancel, voluntarioToEdit }) {
       setNome(voluntarioToEdit.nome || '');
       setEmail(voluntarioToEdit.email || '');
       setAtivo(voluntarioToEdit.ativo);
-      // Senha fica em branco na edição por segurança
+      setCargo(voluntarioToEdit.cargo || ''); // 2. Preenche o campo ao editar
       setSenha('');
       setSenhaConfirmation('');
     }
@@ -25,9 +26,9 @@ function VoluntarioForm({ onSave, onCancel, voluntarioToEdit }) {
     event.preventDefault();
     setIsSaving(true);
     
-    const voluntarioData = { nome, email, ativo };
+    // 3. Inclui o cargo nos dados a serem salvos
+    const voluntarioData = { nome, email, ativo, cargo }; 
     
-    // Apenas inclui a senha se ela for preenchida
     if (senha) {
       voluntarioData.senha = senha;
       voluntarioData.senha_confirmation = senhaConfirmation;
@@ -46,6 +47,11 @@ function VoluntarioForm({ onSave, onCancel, voluntarioToEdit }) {
       <div style={{ marginBottom: '15px' }}>
         <label htmlFor="email">Email:</label>
         <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} required style={{ width: '100%', padding: '8px', marginTop: '5px' }} />
+      </div>
+      {/* 4. Adiciona o novo campo de input para o cargo */}
+      <div style={{ marginBottom: '15px' }}>
+        <label htmlFor="cargo">Cargo:</label>
+        <input type="text" id="cargo" value={cargo} onChange={(e) => setCargo(e.target.value)} placeholder="Ex: Prof. de Inglês, Prof. de Ginástica" style={{ width: '100%', padding: '8px', marginTop: '5px' }} />
       </div>
       <div style={{ marginBottom: '15px' }}>
         <label htmlFor="senha">Senha:</label>

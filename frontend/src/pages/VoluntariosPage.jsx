@@ -93,6 +93,7 @@ function VoluntariosPage() {
           <tr>
             <th>Nome</th>
             <th>Email</th>
+            <th>Cargo</th> {/* 1. Adiciona a nova coluna */}
             <th>Status</th>
             <th style={{ width: '120px' }}>Ações</th>
           </tr>
@@ -103,6 +104,7 @@ function VoluntariosPage() {
               <tr key={voluntario.id}>
                 <td>{voluntario.nome}</td>
                 <td>{voluntario.email}</td>
+                <td>{voluntario.cargo}</td> {/* 2. Exibe o dado do cargo */}
                 <td>{voluntario.ativo ? 'Ativo' : 'Inativo'}</td>
                 <td style={{ textAlign: 'center' }}>
                   <button onClick={() => handleOpenModal(voluntario)} title="Editar">
@@ -116,7 +118,7 @@ function VoluntariosPage() {
             ))
           ) : (
             <tr>
-              <td colSpan="4" style={{ textAlign: 'center', padding: '10px' }}>
+              <td colSpan="5" style={{ textAlign: 'center', padding: '10px' }}> {/* 3. Ajusta o colSpan */}
                 Nenhum voluntário encontrado.
               </td>
             </tr>
