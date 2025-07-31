@@ -3,26 +3,28 @@ import api from '../services/api';
 import Modal from '../components/Modal';
 import AlunoForm from '../components/alunos/AlunoForm';
 import AlunoDetailsModal from '../components/alunos/AlunoDetailsModal';
+import Pagination from '../components/Pagination';
 import { formatPhoneBR } from '../utils/formatters';
 import { FaEye, FaEdit, FaTrashAlt, FaSearch } from 'react-icons/fa';
 
 function AlunosPage() {
   const [alunos, setAlunos] = useState([]);
+  const [paginationMeta, setPaginationMeta] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [editingAluno, setEditingAluno] = useState(null);
   const [viewingAluno, setViewingAluno] = useState(null);
-
-  // 1. Novo estado para guardar o termo da busca
   const [searchTerm, setSearchTerm] = useState('');
 
-  const fetchAlunos = async () => {
+  const fetchAlunos = async (page = 1) => {
     try {
       setLoading(true);
-      const response = await api.get('/alunos');
-      setAlunos(response.data);
+      const response = await api.get(`/alunos?page=${page}`);
+      setAlunos(response.data.data);
+      setPaginationMeta(response.data);
     } catch (err) {
       setError('Falha ao carregar os alunos.');
     } finally {
@@ -33,6 +35,11 @@ function AlunosPage() {
   useEffect(() => {
     fetchAlunos();
   }, []);
+
+  const showSuccess = (message) => {
+    setSuccessMessage(message);
+    setTimeout(() => setSuccessMessage(''), 3000);
+  };
 
   const handleOpenFormModal = (aluno = null) => {
     setEditingAluno(aluno);
@@ -48,14 +55,15 @@ function AlunosPage() {
     try {
       if (alunoId) {
         await api.put(`/alunos/${alunoId}`, alunoData);
+        showSuccess('Aluno atualizado com sucesso!');
       } else {
         await api.post('/alunos', alunoData);
+        showSuccess('Aluno criado com sucesso!');
       }
       handleCloseFormModal();
-      fetchAlunos();
+      fetchAlunos(paginationMeta?.current_page || 1);
     } catch (err) {
       setError('Falha ao salvar o aluno.');
-      console.error(err);
     }
   };
 
@@ -63,21 +71,19 @@ function AlunosPage() {
     if (window.confirm('Tem a certeza que deseja excluir este aluno?')) {
       try {
         await api.delete(`/alunos/${alunoId}`);
-        fetchAlunos();
+        showSuccess('Aluno excluído com sucesso!');
+        fetchAlunos(paginationMeta?.current_page || 1);
       } catch (err) {
         setError('Falha ao excluir o aluno.');
-        console.error(err);
       }
     }
   };
 
-  // 2. Lógica para filtrar e ordenar os alunos antes de exibir
   const filteredAndSortedAlunos = alunos
     .filter(aluno => 
       aluno.nome.toLowerCase().includes(searchTerm.toLowerCase())
     )
     .sort((a, b) => a.nome.localeCompare(b.nome));
-
 
   if (loading) return <p>A carregar alunos...</p>;
 
@@ -87,22 +93,17 @@ function AlunosPage() {
         <h2>Gestão de Alunos</h2>
         <button onClick={() => handleOpenFormModal()}>Adicionar Novo Aluno</button>
       </div>
-      
-      {error && <p style={{ color: 'red' }}>{error}</p>}
 
-      {/* 3. Adiciona o campo de busca */}
+      {successMessage && <div style={{ color: 'green', background: '#e6ffed', padding: '10px', margin: '15px 0' }}>{successMessage}</div>}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      
       <div style={{ margin: '20px 0', position: 'relative' }}>
         <input
           type="text"
           placeholder="Buscar aluno por nome..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          style={{
-            width: '100%',
-            padding: '10px',
-            paddingLeft: '40px',
-            boxSizing: 'border-box' 
-          }}
+          style={{ width: '100%', padding: '10px', paddingLeft: '40px', boxSizing: 'border-box' }}
         />
         <FaSearch style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: '#ccc' }} />
       </div>
@@ -134,7 +135,6 @@ function AlunosPage() {
           </tr>
         </thead>
         <tbody>
-          {/* 4. Usa a nova lista filtrada e ordenada para renderizar a tabela */}
           {filteredAndSortedAlunos.length > 0 ? (
             filteredAndSortedAlunos.map(aluno => (
               <tr key={aluno.id}>
@@ -142,15 +142,9 @@ function AlunosPage() {
                 <td>{aluno.nome_responsaveis}</td>
                 <td>{formatPhoneBR(aluno.telefone)}</td>
                 <td style={{ textAlign: 'center' }}>
-                  <button onClick={() => setViewingAluno(aluno)} title="Ver Detalhes">
-                    <FaEye />
-                  </button>
-                  <button onClick={() => handleOpenFormModal(aluno)} style={{ marginLeft: '10px' }} title="Editar">
-                    <FaEdit />
-                  </button>
-                  <button onClick={() => handleDeleteAluno(aluno.id)} style={{ marginLeft: '10px' }} title="Excluir">
-                    <FaTrashAlt />
-                  </button>
+                  <button onClick={() => setViewingAluno(aluno)} title="Ver Detalhes"><FaEye /></button>
+                  <button onClick={() => handleOpenFormModal(aluno)} style={{ marginLeft: '10px' }} title="Editar"><FaEdit /></button>
+                  <button onClick={() => handleDeleteAluno(aluno.id)} style={{ marginLeft: '10px' }} title="Excluir"><FaTrashAlt /></button>
                 </td>
               </tr>
             ))
@@ -163,6 +157,8 @@ function AlunosPage() {
           )}
         </tbody>
       </table>
+
+      <Pagination meta={paginationMeta} onPageChange={fetchAlunos} />
     </div>
   );
 }
