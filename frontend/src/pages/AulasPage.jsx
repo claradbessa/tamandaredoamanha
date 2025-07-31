@@ -3,16 +3,18 @@ import api from '../services/api';
 import Modal from '../components/Modal';
 import AulaForm from '../components/aulas/AulaForm';
 import AulaDetailsModal from '../components/aulas/AulaDetailsModal';
-import { FaEye, FaEdit, FaTrashAlt } from 'react-icons/fa';
+import AlunosMatriculadosModal from '../components/aulas/AlunosMatriculadosModal'; // Importe o novo componente
+import { FaEye, FaEdit, FaTrashAlt, FaUsers } from 'react-icons/fa'; // Importe o ícone FaUsers
 
 function AulasPage() {
   const [aulas, setAulas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  
+
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [editingAula, setEditingAula] = useState(null);
   const [viewingAula, setViewingAula] = useState(null);
+  const [viewingAlunos, setViewingAlunos] = useState(null); // Novo estado para o modal de alunos
 
   const fetchAulas = async () => {
     try {
@@ -75,7 +77,7 @@ function AulasPage() {
         <h2>Gestão de Aulas</h2>
         <button onClick={() => handleOpenFormModal()}>Adicionar Nova Aula</button>
       </div>
-      
+
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
       <Modal
@@ -95,6 +97,12 @@ function AulasPage() {
         onClose={() => setViewingAula(null)}
       />
 
+      {/* Novo Modal para listar alunos */}
+      <AlunosMatriculadosModal
+        aula={viewingAlunos}
+        onClose={() => setViewingAlunos(null)}
+      />
+
       <table border="1" style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
         <thead>
           <tr>
@@ -102,7 +110,7 @@ function AulasPage() {
             <th>Dia da Semana</th>
             <th>Horário</th>
             <th>Voluntário Responsável</th>
-            <th style={{ width: '150px' }}>Ações</th>
+            <th style={{ width: '180px' }}>Ações</th>
           </tr>
         </thead>
         <tbody>
@@ -114,7 +122,11 @@ function AulasPage() {
                 <td>{aula.horario ? aula.horario.substring(0, 5) : ''}</td>
                 <td>{aula.voluntario ? aula.voluntario.nome : 'N/A'}</td>
                 <td style={{ textAlign: 'center' }}>
-                  <button onClick={() => setViewingAula(aula)} title="Ver Detalhes">
+                  {/* Novo botão para ver alunos */}
+                  <button onClick={() => setViewingAlunos(aula)} title="Ver Alunos Matriculados">
+                    <FaUsers />
+                  </button>
+                  <button onClick={() => setViewingAula(aula)} style={{ marginLeft: '10px' }} title="Ver Detalhes">
                     <FaEye />
                   </button>
                   <button onClick={() => handleOpenFormModal(aula)} style={{ marginLeft: '10px' }} title="Editar">
