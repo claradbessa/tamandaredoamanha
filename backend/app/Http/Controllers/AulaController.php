@@ -9,18 +9,12 @@ use Illuminate\Validation\Rule;
 
 class AulaController extends Controller
 {
-    /**
-     * Exibe uma listagem do recurso.
-     */
     public function index()
     {
-        $aulas = Aula::with(['voluntario', 'horarios'])->get();
+        $aulas = Aula::with(['voluntario', 'horarios'])->paginate(15);
         return response()->json($aulas);
     }
 
-    /**
-     * Armazena um novo recurso.
-     */
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -43,18 +37,12 @@ class AulaController extends Controller
         return response()->json($aula->load('horarios'), 201);
     }
 
-    /**
-     * Exibe o recurso especificado.
-     */
     public function show(Aula $aula)
     {
         $aula->load(['voluntario', 'horarios']);
         return response()->json($aula);
     }
 
-    /**
-     * Atualiza o recurso especificado.
-     */
     public function update(Request $request, Aula $aula)
     {
         $validatedData = $request->validate([
@@ -79,9 +67,6 @@ class AulaController extends Controller
         return response()->json($aula->load('horarios'));
     }
 
-    /**
-     * Remove o recurso especificado.
-     */
     public function destroy(Aula $aula)
     {
         $aula->delete();
