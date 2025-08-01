@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Aula extends Model
 {
@@ -14,8 +15,6 @@ class Aula extends Model
     protected $fillable = [
         'nome',
         'descricao',
-        'horario',
-        'dia_semana',
         'voluntario_id',
         'capacidade',
         'local_aula',
@@ -26,9 +25,13 @@ class Aula extends Model
         return $this->belongsTo(Voluntario::class);
     }
 
-    // Define a relação de "Muitos para Muitos" entre Aula e Aluno
     public function alunos(): BelongsToMany
     {
         return $this->belongsToMany(Aluno::class, 'matriculas');
+    }
+
+    public function horarios(): HasMany
+    {
+        return $this->hasMany(HorarioAula::class);
     }
 }
