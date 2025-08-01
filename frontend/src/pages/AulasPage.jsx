@@ -3,18 +3,16 @@ import api from '../services/api';
 import Modal from '../components/Modal';
 import AulaForm from '../components/aulas/AulaForm';
 import AulaDetailsModal from '../components/aulas/AulaDetailsModal';
-import AlunosMatriculadosModal from '../components/aulas/AlunosMatriculadosModal'; // Importe o novo componente
-import { FaEye, FaEdit, FaTrashAlt, FaUsers } from 'react-icons/fa'; // Importe o ícone FaUsers
+import { FaEye, FaEdit, FaTrashAlt } from 'react-icons/fa';
 
 function AulasPage() {
   const [aulas, setAulas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-
+  
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [editingAula, setEditingAula] = useState(null);
   const [viewingAula, setViewingAula] = useState(null);
-  const [viewingAlunos, setViewingAlunos] = useState(null); // Novo estado para o modal de alunos
 
   const fetchAulas = async () => {
     try {
@@ -77,7 +75,7 @@ function AulasPage() {
         <h2>Gestão de Aulas</h2>
         <button onClick={() => handleOpenFormModal()}>Adicionar Nova Aula</button>
       </div>
-
+      
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
       <Modal
@@ -97,20 +95,13 @@ function AulasPage() {
         onClose={() => setViewingAula(null)}
       />
 
-      {/* Novo Modal para listar alunos */}
-      <AlunosMatriculadosModal
-        aula={viewingAlunos}
-        onClose={() => setViewingAlunos(null)}
-      />
-
       <table border="1" style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
         <thead>
           <tr>
             <th>Nome da Aula</th>
-            <th>Dia da Semana</th>
-            <th>Horário</th>
+            <th>Horários</th>
             <th>Voluntário Responsável</th>
-            <th style={{ width: '180px' }}>Ações</th>
+            <th style={{ width: '150px' }}>Ações</th>
           </tr>
         </thead>
         <tbody>
@@ -118,29 +109,26 @@ function AulasPage() {
             aulas.map(aula => (
               <tr key={aula.id}>
                 <td>{aula.nome}</td>
-                <td>{aula.dia_semana}</td>
-                <td>{aula.horario ? aula.horario.substring(0, 5) : ''}</td>
+                <td>
+                  {aula.horarios && aula.horarios.length > 0 ? (
+                    <ul style={{ margin: 0, padding: 0, listStyleType: 'none' }}>
+                      {aula.horarios.map(h => (
+                        <li key={h.id}>{`${h.dia_semana} às ${h.horario.substring(0, 5)}`}</li>
+                      ))}
+                    </ul>
+                  ) : 'Nenhum horário definido'}
+                </td>
                 <td>{aula.voluntario ? aula.voluntario.nome : 'N/A'}</td>
                 <td style={{ textAlign: 'center' }}>
-                  {/* Novo botão para ver alunos */}
-                  <button onClick={() => setViewingAlunos(aula)} title="Ver Alunos Matriculados">
-                    <FaUsers />
-                  </button>
-                  <button onClick={() => setViewingAula(aula)} style={{ marginLeft: '10px' }} title="Ver Detalhes">
-                    <FaEye />
-                  </button>
-                  <button onClick={() => handleOpenFormModal(aula)} style={{ marginLeft: '10px' }} title="Editar">
-                    <FaEdit />
-                  </button>
-                  <button onClick={() => handleDeleteAula(aula.id)} style={{ marginLeft: '10px' }} title="Excluir">
-                    <FaTrashAlt />
-                  </button>
+                  <button onClick={() => setViewingAula(aula)} title="Ver Detalhes"><FaEye /></button>
+                  <button onClick={() => handleOpenFormModal(aula)} style={{ marginLeft: '10px' }} title="Editar"><FaEdit /></button>
+                  <button onClick={() => handleDeleteAula(aula.id)} style={{ marginLeft: '10px' }} title="Excluir"><FaTrashAlt /></button>
                 </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="5" style={{ textAlign: 'center', padding: '10px' }}>
+              <td colSpan="4" style={{ textAlign: 'center', padding: '10px' }}>
                 Nenhuma aula encontrada.
               </td>
             </tr>
