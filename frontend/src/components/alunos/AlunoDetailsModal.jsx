@@ -38,8 +38,9 @@ function AlunoDetailsModal({ aluno, onClose, onUpdate }) {
           <ul style={{ listStyle: 'none', padding: 0 }}>
             {aluno.aulas.map(aula => (
               <li key={aula.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '5px' }}>
-                <span>{aula.nome}</span>
-                {/* O ID da matrícula fica em 'aula.pivot.id' */}
+                <span>
+                  <strong>{aula.nome}</strong> ({aula.dia_semana || 'sem dia'}) - Prof. {aula.voluntario?.nome || 'N/A'}
+                </span>
                 <button onClick={() => handleMatriculaDelete(aula.pivot.id)} title="Cancelar Matrícula">
                   <FaTrashAlt />
                 </button>
