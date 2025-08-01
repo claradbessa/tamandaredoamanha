@@ -8,15 +8,15 @@ use Illuminate\Http\Request;
 class AlunoController extends Controller
 {
     /**
-     * Exibe uma listagem paginada do recurso, incluindo as aulas.
+     * Lista todos os alunos, incluindo as suas aulas e os voluntários de cada aula.
      */
     public function index()
     {
-        return Aluno::with('aulas')->paginate(15);
+        return Aluno::with('aulas.voluntario')->paginate(15);
     }
 
     /**
-     * Armazena um novo aluno e sincroniza as suas matrículas.
+     * Cria um novo aluno.
      */
     public function store(Request $request)
     {
@@ -28,8 +28,8 @@ class AlunoController extends Controller
             'endereco' => 'nullable|string',
             'observacoes' => 'nullable|string',
             'ativo' => 'sometimes|boolean',
-            'aulas_ids' => 'nullable|array', // Valida que aulas_ids é um array
-            'aulas_ids.*' => 'exists:aulas,id', // Valida que cada ID no array existe na tabela de aulas
+            'aulas_ids' => 'nullable|array',
+            'aulas_ids.*' => 'exists:aulas,id',
         ]);
 
         $aluno = Aluno::create($validatedData);
@@ -38,19 +38,19 @@ class AlunoController extends Controller
             $aluno->aulas()->sync($validatedData['aulas_ids']);
         }
 
-        return response()->json($aluno->load('aulas'), 201);
+        return response()->json($aluno->load('aulas.voluntario'), 201);
     }
 
     /**
-     * Exibe o recurso especificado, incluindo as suas aulas.
+     * Mostra um aluno específico, incluindo as suas aulas e os voluntários de cada aula.
      */
     public function show(Aluno $aluno)
     {
-        return $aluno->load('aulas');
+        return $aluno->load('aulas.voluntario');
     }
 
     /**
-     * Atualiza um aluno específico e sincroniza as suas matrículas.
+     * Atualiza um aluno específico.
      */
     public function update(Request $request, Aluno $aluno)
     {
@@ -72,11 +72,11 @@ class AlunoController extends Controller
             $aluno->aulas()->sync($validatedData['aulas_ids']);
         }
 
-        return response()->json($aluno->load('aulas'));
+        return response()->json($aluno->load('aulas.voluntario'));
     }
 
     /**
-     * Remove o recurso especificado.
+     * Deleta um aluno.
      */
     public function destroy(Aluno $aluno)
     {
