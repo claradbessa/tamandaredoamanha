@@ -13,7 +13,7 @@ function AlunosPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-  
+
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [editingAluno, setEditingAluno] = useState(null);
   const [viewingAluno, setViewingAluno] = useState(null);
@@ -80,7 +80,7 @@ function AlunosPage() {
   };
 
   const filteredAndSortedAlunos = alunos
-    .filter(aluno => 
+    .filter(aluno =>
       aluno.nome.toLowerCase().includes(searchTerm.toLowerCase())
     )
     .sort((a, b) => a.nome.localeCompare(b.nome));
@@ -94,9 +94,9 @@ function AlunosPage() {
         <button onClick={() => handleOpenFormModal()}>Adicionar Novo Aluno</button>
       </div>
 
-      {successMessage && <div style={{ color: 'green', background: '#e6ffed', padding: '10px', margin: '15px 0' }}>{successMessage}</div>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      
+      {successMessage && <div style={{ color: 'green', background: '#e6ffed', padding: '10px', margin: '15px 0', borderRadius: '5px' }}>{successMessage}</div>}
+      {error && <p style={{ color: 'red', marginTop: '10px' }}>{error}</p>}
+
       <div style={{ margin: '20px 0', position: 'relative' }}>
         <input
           type="text"
@@ -123,6 +123,10 @@ function AlunosPage() {
       <AlunoDetailsModal
         aluno={viewingAluno}
         onClose={() => setViewingAluno(null)}
+        onUpdate={() => {
+          setViewingAluno(null);
+          fetchAlunos(paginationMeta?.current_page || 1);
+        }}
       />
 
       <table border="1" style={{ width: '100%', borderCollapse: 'collapse' }}>

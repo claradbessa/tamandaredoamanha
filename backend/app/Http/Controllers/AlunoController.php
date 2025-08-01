@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class AlunoController extends Controller
 {
     /**
-     * Lista todos os alunos, incluindo as suas aulas.
+     * Exibe uma listagem paginada do recurso, incluindo as aulas.
      */
     public function index()
     {
@@ -16,7 +16,7 @@ class AlunoController extends Controller
     }
 
     /**
-     * Cria um novo aluno.
+     * Armazena um novo aluno e sincroniza as suas matrículas.
      */
     public function store(Request $request)
     {
@@ -28,15 +28,21 @@ class AlunoController extends Controller
             'endereco' => 'nullable|string',
             'observacoes' => 'nullable|string',
             'ativo' => 'sometimes|boolean',
+            'aulas_ids' => 'nullable|array', // Valida que aulas_ids é um array
+            'aulas_ids.*' => 'exists:aulas,id', // Valida que cada ID no array existe na tabela de aulas
         ]);
 
         $aluno = Aluno::create($validatedData);
 
-        return response()->json($aluno, 201);
+        if (isset($validatedData['aulas_ids'])) {
+            $aluno->aulas()->sync($validatedData['aulas_ids']);
+        }
+
+        return response()->json($aluno->load('aulas'), 201);
     }
 
     /**
-     * Mostra um aluno específico, incluindo as suas aulas.
+     * Exibe o recurso especificado, incluindo as suas aulas.
      */
     public function show(Aluno $aluno)
     {
@@ -44,7 +50,7 @@ class AlunoController extends Controller
     }
 
     /**
-     * Atualiza um aluno específico.
+     * Atualiza um aluno específico e sincroniza as suas matrículas.
      */
     public function update(Request $request, Aluno $aluno)
     {
@@ -56,15 +62,21 @@ class AlunoController extends Controller
             'endereco' => 'nullable|string',
             'observacoes' => 'nullable|string',
             'ativo' => 'sometimes|boolean',
+            'aulas_ids' => 'nullable|array',
+            'aulas_ids.*' => 'exists:aulas,id',
         ]);
 
         $aluno->update($validatedData);
 
-        return response()->json($aluno);
+        if (isset($validatedData['aulas_ids'])) {
+            $aluno->aulas()->sync($validatedData['aulas_ids']);
+        }
+
+        return response()->json($aluno->load('aulas'));
     }
 
     /**
-     * Deleta um aluno.
+     * Remove o recurso especificado.
      */
     public function destroy(Aluno $aluno)
     {
