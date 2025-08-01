@@ -1,13 +1,28 @@
 import { useState, useEffect } from 'react';
+import api from '../../services/api';
 
 function AlunoForm({ onSave, onCancel, alunoToEdit }) {
+  // Estados para os campos de dados do aluno
   const [nome, setNome] = useState('');
   const [dataNascimento, setDataNascimento] = useState('');
   const [nomeResponsaveis, setNomeResponsaveis] = useState('');
   const [telefone, setTelefone] = useState('');
   const [endereco, setEndereco] = useState('');
+
+  // Estados para a matrícula em aulas
+  const [aulasDisponiveis, setAulasDisponiveis] = useState([]);
+  const [aulasSelecionadasIds, setAulasSelecionadasIds] = useState([]);
+  
   const [isSaving, setIsSaving] = useState(false);
 
+  // Busca a lista de todas as aulas disponíveis
+  useEffect(() => {
+    api.get('/aulas').then(response => {
+      setAulasDisponiveis(response.data);
+    }).catch(error => console.error("Falha ao buscar aulas", error));
+  }, []);
+
+  // Preenche o formulário ao editar um aluno
   useEffect(() => {
     if (alunoToEdit) {
       setNome(alunoToEdit.nome || '');
@@ -15,86 +30,83 @@ function AlunoForm({ onSave, onCancel, alunoToEdit }) {
       setNomeResponsaveis(alunoToEdit.nome_responsaveis || '');
       setTelefone(alunoToEdit.telefone || '');
       setEndereco(alunoToEdit.endereco || '');
+      // Pré-seleciona as aulas em que o aluno já está matriculado
+      setAulasSelecionadasIds(alunoToEdit.aulas.map(aula => aula.id));
     }
   }, [alunoToEdit]);
+
+  // Função para marcar/desmarcar uma aula
+  const handleAulaSelection = (aulaId) => {
+    setAulasSelecionadasIds(prevSelected =>
+      prevSelected.includes(aulaId)
+        ? prevSelected.filter(id => id !== aulaId) // Desmarca
+        : [...prevSelected, aulaId] // Marca
+    );
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsSaving(true);
-
     const alunoData = {
       nome,
       data_nascimento: dataNascimento,
       nome_responsaveis: nomeResponsaveis,
       telefone,
       endereco,
+      aulas_ids: aulasSelecionadasIds,
     };
-
     await onSave(alunoData, alunoToEdit?.id);
     setIsSaving(false);
   };
 
   return (
     <form onSubmit={handleSubmit}>
+      {/* Campos de dados do Aluno */}
       <div style={{ marginBottom: '15px' }}>
         <label htmlFor="nome">Nome Completo:</label>
-        <input
-          type="text"
-          id="nome"
-          value={nome}
-          onChange={(e) => setNome(e.target.value)}
-          required
-          style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-        />
+        <input type="text" id="nome" value={nome} onChange={(e) => setNome(e.target.value)} required style={{ width: '100%', padding: '8px', marginTop: '5px' }} />
       </div>
       <div style={{ marginBottom: '15px' }}>
         <label htmlFor="dataNascimento">Data de Nascimento:</label>
-        <input
-          type="date"
-          id="dataNascimento"
-          value={dataNascimento}
-          onChange={(e) => setDataNascimento(e.target.value)}
-          required
-          style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-        />
+        <input type="date" id="dataNascimento" value={dataNascimento} onChange={(e) => setDataNascimento(e.target.value)} required style={{ width: '100%', padding: '8px', marginTop: '5px' }} />
       </div>
       <div style={{ marginBottom: '15px' }}>
         <label htmlFor="nomeResponsaveis">Nome do Responsável:</label>
-        <input
-          type="text"
-          id="nomeResponsaveis"
-          value={nomeResponsaveis}
-          onChange={(e) => setNomeResponsaveis(e.target.value)}
-          placeholder="Digite o nome do responsável"
-          style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-        />
+        <input type="text" id="nomeResponsaveis" value={nomeResponsaveis} onChange={(e) => setNomeResponsaveis(e.target.value)} placeholder="Digite o nome do responsável" style={{ width: '100%', padding: '8px', marginTop: '5px' }} />
       </div>
       <div style={{ marginBottom: '15px' }}>
         <label htmlFor="telefone">Telefone:</label>
-        <input
-          type="text"
-          id="telefone"
-          value={telefone}
-          onChange={(e) => setTelefone(e.target.value)}
-          placeholder="(XX) XXXXX-XXXX"
-          style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-        />
+        <input type="text" id="telefone" value={telefone} onChange={(e) => setTelefone(e.target.value)} placeholder="(XX) XXXXX-XXXX" style={{ width: '100%', padding: '8px', marginTop: '5px' }} />
       </div>
       <div style={{ marginBottom: '15px' }}>
         <label htmlFor="endereco">Endereço:</label>
-        <textarea
-          id="endereco"
-          value={endereco}
-          onChange={(e) => setEndereco(e.target.value)}
-          placeholder="Digite o endereço completo"
-          style={{ width: '100%', padding: '8px', marginTop: '5px' }}
-        />
+        <textarea id="endereco" value={endereco} onChange={(e) => setEndereco(e.target.value)} placeholder="Digite o endereço completo" style={{ width: '100%', padding: '8px', marginTop: '5px' }} />
+      </div>
+
+      <hr style={{ margin: '20px 0' }} />
+
+      {/* Secção para Matricular em Aulas */}
+      <div style={{ marginBottom: '15px' }}>
+        <label>Matricular nas Aulas:</label>
+        <div style={{ maxHeight: '150px', overflowY: 'auto', border: '1px solid #ccc', padding: '10px', marginTop: '5px', borderRadius: '5px' }}>
+          {aulasDisponiveis.length > 0 ? aulasDisponiveis.map(aula => (
+            <div key={aula.id}>
+              <input
+                type="checkbox"
+                id={`aula-${aula.id}`}
+                checked={aulasSelecionadasIds.includes(aula.id)}
+                onChange={() => handleAulaSelection(aula.id)}
+              />
+              <label htmlFor={`aula-${aula.id}`} style={{ marginLeft: '8px' }}>
+                {aula.nome}
+              </label>
+            </div>
+          )) : <p>A carregar aulas...</p>}
+        </div>
       </div>
       
       <div style={{ marginTop: '20px', textAlign: 'right' }}>
-        <button type="button" onClick={onCancel} disabled={isSaving}>
-          Cancelar
-        </button>
+        <button type="button" onClick={onCancel} disabled={isSaving}>Cancelar</button>
         <button type="submit" disabled={isSaving} style={{ marginLeft: '10px' }}>
           {isSaving ? 'A salvar...' : 'Salvar'}
         </button>
