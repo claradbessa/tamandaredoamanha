@@ -1,12 +1,9 @@
 <?php
 
 return [
-    'paths' => ['api/*', 'login', 'register', 'sanctum/csrf-cookie'],
+    'paths' => ['api/*', 'sanctum/csrf-cookie', 'login', 'register'],
     'allowed_methods' => ['*'],
-    'allowed_origins' => [
-        'http://localhost:5173', // Para o desenvolvimento local
-        'https://render-m7dj.onrender.com', // Para o frontend em produção no futuro
-    ],
+    'allowed_origins' => explode(',', env('CORS_ALLOWED_ORIGINS', '')),
     'allowed_origins_patterns' => [],
     'allowed_headers' => ['*'],
     'exposed_headers' => [],
