@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom'; 
 import api from '../services/api';
 import Modal from '../components/Modal';
 import AulaForm from '../components/aulas/AulaForm';
 import AulaDetailsModal from '../components/aulas/AulaDetailsModal';
 import Pagination from '../components/Pagination';
-import { FaEye, FaEdit, FaTrashAlt, FaUsers, FaSearch } from 'react-icons/fa';
+import AlunosMatriculadosModal from '../components/aulas/AlunosMatriculadosModal';
+import { FaEye, FaEdit, FaTrashAlt, FaUsers, FaSearch, FaClipboardList } from 'react-icons/fa'; 
 
 function AulasPage() {
   const [aulas, setAulas] = useState([]);
@@ -127,12 +129,10 @@ function AulasPage() {
         onClose={() => setViewingAula(null)}
       />
 
-      {/* Continua a existir, mas não é usado nesta página
       <AlunosMatriculadosModal
         aula={viewingAlunos}
         onClose={() => setViewingAlunos(null)}
       />
-      */}
 
       <table border="1" style={{ width: '100%', borderCollapse: 'collapse' }}>
         <thead>
@@ -140,7 +140,7 @@ function AulasPage() {
             <th>Nome da Aula</th>
             <th>Horários</th>
             <th>Voluntário Responsável</th>
-            <th style={{ width: '180px' }}>Ações</th>
+            <th style={{ width: '230px' }}>Ações</th>
           </tr>
         </thead>
         <tbody>
@@ -159,7 +159,12 @@ function AulasPage() {
                 </td>
                 <td>{aula.voluntario ? aula.voluntario.nome : 'N/A'}</td>
                 <td style={{ textAlign: 'center' }}>
-                  <button onClick={() => setViewingAlunos(aula)} title="Ver Alunos Matriculados"><FaUsers /></button>
+                  <Link to={`/admin/aulas/${aula.id}/frequencia`} title="Registar Frequência">
+                    <button>
+                      <FaClipboardList />
+                    </button>
+                  </Link>
+                  <button onClick={() => setViewingAlunos(aula)} style={{ marginLeft: '10px' }} title="Ver Alunos Matriculados"><FaUsers /></button>
                   <button onClick={() => setViewingAula(aula)} style={{ marginLeft: '10px' }} title="Ver Detalhes"><FaEye /></button>
                   <button onClick={() => handleOpenFormModal(aula)} style={{ marginLeft: '10px' }} title="Editar"><FaEdit /></button>
                   <button onClick={() => handleDeleteAula(aula.id)} style={{ marginLeft: '10px' }} title="Excluir"><FaTrashAlt /></button>
