@@ -72,4 +72,12 @@ class AulaController extends Controller
         $aula->delete();
         return response()->json(null, 204);
     }
+
+    /**
+     * Retorna a lista de alunos matriculados numa aula específica.
+     */
+    public function getAlunos(Aula $aula)
+    {
+        return response()->json($aula->alunos);
+    }
 }
