@@ -6,7 +6,7 @@ function VoluntarioForm({ onSave, onCancel, voluntarioToEdit }) {
   const [senha, setSenha] = useState('');
   const [senhaConfirmation, setSenhaConfirmation] = useState('');
   const [ativo, setAtivo] = useState(true);
-  const [cargo, setCargo] = useState(''); // 1. Adiciona o estado para o novo campo
+  const [cargo, setCargo] = useState('');
   const [isSaving, setIsSaving] = useState(false);
 
   const isEditing = !!voluntarioToEdit;
@@ -16,7 +16,7 @@ function VoluntarioForm({ onSave, onCancel, voluntarioToEdit }) {
       setNome(voluntarioToEdit.nome || '');
       setEmail(voluntarioToEdit.email || '');
       setAtivo(voluntarioToEdit.ativo);
-      setCargo(voluntarioToEdit.cargo || ''); // 2. Preenche o campo ao editar
+      setCargo(voluntarioToEdit.cargo || '');
       setSenha('');
       setSenhaConfirmation('');
     }
@@ -26,8 +26,7 @@ function VoluntarioForm({ onSave, onCancel, voluntarioToEdit }) {
     event.preventDefault();
     setIsSaving(true);
     
-    // 3. Inclui o cargo nos dados a serem salvos
-    const voluntarioData = { nome, email, ativo, cargo }; 
+    const voluntarioData = { nome, email, ativo, cargo };
     
     if (senha) {
       voluntarioData.senha = senha;
@@ -40,6 +39,7 @@ function VoluntarioForm({ onSave, onCancel, voluntarioToEdit }) {
 
   return (
     <form onSubmit={handleSubmit}>
+      {/* ... (campos de nome, email, cargo, etc.) ... */}
       <div style={{ marginBottom: '15px' }}>
         <label htmlFor="nome">Nome Completo:</label>
         <input type="text" id="nome" value={nome} onChange={(e) => setNome(e.target.value)} required style={{ width: '100%', padding: '8px', marginTop: '5px' }} />
@@ -48,10 +48,9 @@ function VoluntarioForm({ onSave, onCancel, voluntarioToEdit }) {
         <label htmlFor="email">Email:</label>
         <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} required style={{ width: '100%', padding: '8px', marginTop: '5px' }} />
       </div>
-      {/* 4. Adiciona o novo campo de input para o cargo */}
       <div style={{ marginBottom: '15px' }}>
         <label htmlFor="cargo">Cargo:</label>
-        <input type="text" id="cargo" value={cargo} onChange={(e) => setCargo(e.target.value)} placeholder="Ex: Prof. de Inglês, Prof. de Ginástica" style={{ width: '100%', padding: '8px', marginTop: '5px' }} />
+        <input type="text" id="cargo" value={cargo} onChange={(e) => setCargo(e.target.value)} placeholder="Ex: Desenvolvedora, Prof. de Inglês" style={{ width: '100%', padding: '8px', marginTop: '5px' }} />
       </div>
       <div style={{ marginBottom: '15px' }}>
         <label htmlFor="senha">Senha:</label>
@@ -65,6 +64,8 @@ function VoluntarioForm({ onSave, onCancel, voluntarioToEdit }) {
         <input type="checkbox" id="ativo" checked={ativo} onChange={(e) => setAtivo(e.target.checked)} style={{ marginRight: '10px' }} />
         <label htmlFor="ativo">Ativo</label>
       </div>
+
+      {/* Botões com estado de loading */}
       <div style={{ marginTop: '20px', textAlign: 'right' }}>
         <button type="button" onClick={onCancel} disabled={isSaving}>Cancelar</button>
         <button type="submit" disabled={isSaving} style={{ marginLeft: '10px' }}>

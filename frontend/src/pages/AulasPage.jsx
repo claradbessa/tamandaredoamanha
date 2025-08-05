@@ -174,7 +174,10 @@ function AulasPage() {
                 </td>
                 <td>{aula.voluntario ? aula.voluntario.nome : 'N/A'}</td>
                 <td style={{ textAlign: 'center' }}>
-                  <button onClick={() => setViewingAlunos(aula)} title="Ver Alunos Matriculados"><FaUsers /></button>
+                  <Link to={`/admin/aulas/${aula.id}/frequencia`} title="Registar Frequência">
+                    <button><FaClipboardList /></button>
+                  </Link>
+                  <button onClick={() => setViewingAlunos(aula)} style={{ marginLeft: '10px' }} title="Ver Alunos Matriculados"><FaUsers /></button>
                   <button onClick={() => setViewingAula(aula)} style={{ marginLeft: '10px' }} title="Ver Detalhes"><FaEye /></button>
                   <button onClick={() => handleOpenFormModal(aula)} style={{ marginLeft: '10px' }} title="Editar"><FaEdit /></button>
                   <button onClick={() => handleDeleteAula(aula.id)} style={{ marginLeft: '10px' }} title="Excluir"><FaTrashAlt /></button>
@@ -183,8 +186,11 @@ function AulasPage() {
             ))
           ) : (
             <tr>
-              <td colSpan="4" style={{ textAlign: 'center', padding: '10px' }}>
-                Nenhuma aula encontrada.
+              <td colSpan="4" style={{ textAlign: 'center', padding: '20px' }}>
+                <p>Ainda não há aulas cadastradas.</p>
+                <button onClick={() => handleOpenFormModal()}>
+                  Clique aqui para adicionar a primeira aula
+                </button>
               </td>
             </tr>
           )}

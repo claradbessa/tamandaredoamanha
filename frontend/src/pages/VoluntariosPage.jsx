@@ -143,8 +143,11 @@ function VoluntariosPage() {
             ))
           ) : (
             <tr>
-              <td colSpan="5" style={{ textAlign: 'center', padding: '10px' }}>
-                Nenhum voluntário encontrado.
+              <td colSpan="5" style={{ textAlign: 'center', padding: '20px' }}>
+                <p>Ainda não há voluntários cadastrados.</p>
+                <button onClick={() => handleOpenModal()}>
+                  Clique aqui para adicionar o primeiro voluntário
+                </button>
               </td>
             </tr>
           )}

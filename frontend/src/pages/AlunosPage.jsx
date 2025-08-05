@@ -172,10 +172,13 @@ function AlunosPage() {
             ))
           ) : (
             <tr>
-              <td colSpan="4" style={{ textAlign: 'center', padding: '10px' }}>
-                Nenhum aluno encontrado.
-              </td>
-            </tr>
+            <td colSpan="4" style={{ textAlign: 'center', padding: '20px' }}>
+              <p>Ainda não há alunos cadastrados.</p>
+              <button onClick={() => handleOpenFormModal()}>
+                Clique aqui para adicionar o primeiro aluno
+              </button>
+            </td>
+          </tr>
           )}
         </tbody>
       </table>
