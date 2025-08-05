@@ -76,4 +76,38 @@ class FrequenciaController extends Controller
 
         return response()->json(null, 204);
     }
+
+    /**
+     * Cria ou atualiza múltiplos registos de frequência de uma só vez (em lote).
+     */
+    public function storeBatch(Request $request)
+    {
+        $validatedData = $request->validate([
+            'aula_id' => 'required|exists:aulas,id',
+            'data' => 'required|date',
+            'registrado_por' => 'required|exists:voluntarios,id',
+            'frequencias' => 'required|array',
+            'frequencias.*.aluno_id' => 'required|exists:alunos,id',
+            'frequencias.*.presenca' => 'required|boolean',
+        ]);
+
+        $registros = [];
+        foreach ($validatedData['frequencias'] as $freq) {
+            $registro = Frequencia::updateOrCreate(
+                [
+                    'aluno_id' => $freq['aluno_id'],
+                    'aula_id' => $validatedData['aula_id'],
+                    'data' => $validatedData['data'],
+                ],
+                [
+                    'presenca' => $freq['presenca'],
+                    'observacoes' => null, 
+                    'registrado_por' => $validatedData['registrado_por'],
+                ]
+            );
+            $registros[] = $registro;
+        }
+
+        return response()->json($registros, 201);
+    }
 }

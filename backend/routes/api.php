@@ -35,5 +35,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('postagens', PostagemController::class);
     Route::apiResource('gestores', GestorController::class);
     Route::apiResource('matriculas', MatriculaController::class);
+    Route::post('/frequencias/batch', [\App\Http\Controllers\FrequenciaController::class, 'storeBatch']);
     Route::apiResource('frequencias', FrequenciaController::class);
 });
