@@ -8,6 +8,7 @@ import AlunosPage from './pages/AlunosPage';
 import AulasPage from './pages/AulasPage';
 import VoluntariosPage from './pages/VoluntariosPage';
 import FrequenciaPage from './pages/FrequenciaPage'; 
+import RelatorioFrequenciaPage from './pages/RelatorioFrequenciaPage';
 
 function App() {
   return (
@@ -23,8 +24,9 @@ function App() {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/admin/alunos" element={<AlunosPage />} />
             <Route path="/admin/aulas" element={<AulasPage />} />
-            <Route path="/admin/voluntarios" element={<VoluntariosPage />} />
             <Route path="/admin/aulas/:id/frequencia" element={<FrequenciaPage />} />
+            <Route path="/admin/frequencia" element={<RelatorioFrequenciaPage />} />
+            <Route path="/admin/voluntarios" element={<VoluntariosPage />} />
           </Route>
         </Route>
       </Routes>
