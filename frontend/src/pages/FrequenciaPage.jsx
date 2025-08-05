@@ -4,27 +4,26 @@ import api from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
 
 function FrequenciaPage() {
-  const { id } = useParams(); // Pega o ID da aula a partir da URL
-  const { user } = useAuth(); // Pega o voluntário logado para saber quem registou
+  const { id: aulaId } = useParams();
+  const { user } = useAuth();
 
   const [aula, setAula] = useState(null);
   const [frequencias, setFrequencias] = useState({});
-  const [data, setData] = useState(new Date().toISOString().split('T')[0]); // Data de hoje por defeito
+  const [data, setData] = useState(new Date().toISOString().split('T')[0]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
-  // Busca os dados da aula e prepara o estado da frequência
   useEffect(() => {
     const fetchAulaData = async () => {
       try {
         setLoading(true);
-        const aulaResponse = await api.get(`/aulas/${id}`);
+        const aulaResponse = await api.get(`/aulas/${aulaId}`);
         setAula(aulaResponse.data);
 
         const frequenciaInicial = {};
         aulaResponse.data.alunos.forEach(aluno => {
-          frequenciaInicial[aluno.id] = 'presente'; // Começa com todos como "presente"
+          frequenciaInicial[aluno.id] = 'presente';
         });
         setFrequencias(frequenciaInicial);
 
@@ -35,7 +34,7 @@ function FrequenciaPage() {
       }
     };
     fetchAulaData();
-  }, [id]);
+  }, [aulaId]);
 
   const handleFrequenciaChange = (alunoId, status) => {
     setFrequencias(prevFrequencias => ({
@@ -48,23 +47,22 @@ function FrequenciaPage() {
     setError('');
     setSuccessMessage('');
 
-    const payload = Object.entries(frequencias).map(([alunoId, status]) => ({
-      aluno_id: parseInt(alunoId, 10),
-      aula_id: parseInt(id, 10),
+    const payload = {
+      aula_id: parseInt(aulaId, 10),
       data: data,
-      presenca: status === 'presente',
       registrado_por: user.id,
-    }));
+      frequencias: Object.entries(frequencias).map(([alunoId, status]) => ({
+        aluno_id: parseInt(alunoId, 10),
+        presenca: status === 'presente',
+      })),
+    };
 
     try {
-      // O backend espera um registo de cada vez.
-      // Uma melhoria futura seria criar um endpoint para receber um array.
-      for (const registro of payload) {
-        await api.post('/frequencias', registro);
-      }
+      // Envia todos os registos de uma só vez para o novo endpoint
+      await api.post('/frequencias/batch', payload);
       setSuccessMessage('Frequência salva com sucesso!');
     } catch (err) {
-      setError('Falha ao salvar a frequência. Pode já existir um registo para um ou mais alunos nesta data.');
+      setError('Falha ao salvar a frequência.');
       console.error(err);
     }
   };
