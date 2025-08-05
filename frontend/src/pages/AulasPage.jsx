@@ -155,7 +155,7 @@ function AulasPage() {
             <th>Nome da Aula</th>
             <th>Horários</th>
             <th>Voluntário Responsável</th>
-            <th style={{ width: '180px' }}>Ações</th>
+            <th style={{ width: '220px' }}>Ações</th>
           </tr>
         </thead>
         <tbody>

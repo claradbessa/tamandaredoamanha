@@ -7,6 +7,7 @@ import AdminLayout from './components/layout/AdminLayout';
 import AlunosPage from './pages/AlunosPage';
 import AulasPage from './pages/AulasPage';
 import VoluntariosPage from './pages/VoluntariosPage';
+import PostagensPage from './pages/PostagensPage';
 import FrequenciaPage from './pages/FrequenciaPage'; 
 import RelatorioFrequenciaPage from './pages/RelatorioFrequenciaPage';
 
@@ -27,6 +28,7 @@ function App() {
             <Route path="/admin/aulas/:id/frequencia" element={<FrequenciaPage />} />
             <Route path="/admin/frequencia" element={<RelatorioFrequenciaPage />} />
             <Route path="/admin/voluntarios" element={<VoluntariosPage />} />
+            <Route path="/admin/postagens" element={<PostagensPage />} />
           </Route>
         </Route>
       </Routes>
