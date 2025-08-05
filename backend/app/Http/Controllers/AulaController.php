@@ -74,6 +74,14 @@ class AulaController extends Controller
     }
 
     /**
+     * Retorna uma lista simples de todas as aulas (sem paginação).
+     */
+    public function getListaAulas()
+    {
+        return response()->json(Aula::all());
+    }
+
+    /**
      * Retorna a lista de alunos matriculados numa aula específica.
      */
     public function getAlunos(Aula $aula)
