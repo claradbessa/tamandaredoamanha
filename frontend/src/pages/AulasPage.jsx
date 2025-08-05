@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom'; 
+import { Link } from 'react-router-dom';
 import api from '../services/api';
 import Modal from '../components/Modal';
 import AulaForm from '../components/aulas/AulaForm';
 import AulaDetailsModal from '../components/aulas/AulaDetailsModal';
 import Pagination from '../components/Pagination';
 import AlunosMatriculadosModal from '../components/aulas/AlunosMatriculadosModal';
-import { FaEye, FaEdit, FaTrashAlt, FaUsers, FaSearch, FaClipboardList } from 'react-icons/fa'; 
+import { FaEye, FaEdit, FaTrashAlt, FaUsers, FaSearch, FaClipboardList } from 'react-icons/fa';
 
 function AulasPage() {
   const [aulas, setAulas] = useState([]);
@@ -43,7 +43,13 @@ function AulasPage() {
     setTimeout(() => setSuccessMessage(''), 3000);
   };
 
+  const clearMessages = () => {
+    setError('');
+    setSuccessMessage('');
+  };
+
   const handleOpenFormModal = (aula = null) => {
+    clearMessages();
     setEditingAula(aula);
     setIsFormModalOpen(true);
   };
@@ -54,6 +60,7 @@ function AulasPage() {
   };
 
   const handleSaveAula = async (aulaData, aulaId) => {
+    clearMessages();
     try {
       if (aulaId) {
         await api.put(`/aulas/${aulaId}`, aulaData);
@@ -65,20 +72,28 @@ function AulasPage() {
       handleCloseFormModal();
       fetchAulas(paginationMeta?.current_page || 1);
     } catch (err) {
-      setError('Falha ao salvar a aula.');
-      console.error(err);
+      const errorMessage = err.response?.data?.message || 'Falha ao salvar a aula.';
+      const validationErrors = err.response?.data?.errors;
+
+      if (validationErrors) {
+        const detailedError = Object.values(validationErrors).flat().join(' ');
+        setError(detailedError);
+      } else {
+        setError(errorMessage);
+      }
     }
   };
 
   const handleDeleteAula = async (aulaId) => {
+    clearMessages();
     if (window.confirm('Tem a certeza que deseja excluir esta aula?')) {
       try {
         await api.delete(`/aulas/${aulaId}`);
         showSuccess('Aula excluída com sucesso!');
         fetchAulas(paginationMeta?.current_page || 1);
       } catch (err) {
-        setError('Falha ao excluir a aula.');
-        console.error(err);
+        const errorMessage = err.response?.data?.message || 'Falha ao excluir a aula.';
+        setError(errorMessage);
       }
     }
   };
@@ -99,7 +114,7 @@ function AulasPage() {
       </div>
 
       {successMessage && <div style={{ color: 'green', background: '#e6ffed', padding: '10px', margin: '15px 0', borderRadius: '5px' }}>{successMessage}</div>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <div style={{ color: 'red', background: '#fde8e8', padding: '10px', margin: '15px 0', borderRadius: '5px' }}>{error}</div>}
 
       <div style={{ margin: '20px 0', position: 'relative' }}>
         <input
@@ -140,7 +155,7 @@ function AulasPage() {
             <th>Nome da Aula</th>
             <th>Horários</th>
             <th>Voluntário Responsável</th>
-            <th style={{ width: '230px' }}>Ações</th>
+            <th style={{ width: '180px' }}>Ações</th>
           </tr>
         </thead>
         <tbody>
@@ -159,12 +174,7 @@ function AulasPage() {
                 </td>
                 <td>{aula.voluntario ? aula.voluntario.nome : 'N/A'}</td>
                 <td style={{ textAlign: 'center' }}>
-                  <Link to={`/admin/aulas/${aula.id}/frequencia`} title="Registar Frequência">
-                    <button>
-                      <FaClipboardList />
-                    </button>
-                  </Link>
-                  <button onClick={() => setViewingAlunos(aula)} style={{ marginLeft: '10px' }} title="Ver Alunos Matriculados"><FaUsers /></button>
+                  <button onClick={() => setViewingAlunos(aula)} title="Ver Alunos Matriculados"><FaUsers /></button>
                   <button onClick={() => setViewingAula(aula)} style={{ marginLeft: '10px' }} title="Ver Detalhes"><FaEye /></button>
                   <button onClick={() => handleOpenFormModal(aula)} style={{ marginLeft: '10px' }} title="Editar"><FaEdit /></button>
                   <button onClick={() => handleDeleteAula(aula.id)} style={{ marginLeft: '10px' }} title="Excluir"><FaTrashAlt /></button>

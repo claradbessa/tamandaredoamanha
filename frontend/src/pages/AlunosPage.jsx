@@ -13,7 +13,7 @@ function AlunosPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-
+  
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [editingAluno, setEditingAluno] = useState(null);
   const [viewingAluno, setViewingAluno] = useState(null);
@@ -40,8 +40,14 @@ function AlunosPage() {
     setSuccessMessage(message);
     setTimeout(() => setSuccessMessage(''), 3000);
   };
+  
+  const clearMessages = () => {
+    setError('');
+    setSuccessMessage('');
+  };
 
   const handleOpenFormModal = (aluno = null) => {
+    clearMessages();
     setEditingAluno(aluno);
     setIsFormModalOpen(true);
   };
@@ -52,6 +58,7 @@ function AlunosPage() {
   };
 
   const handleSaveAluno = async (alunoData, alunoId) => {
+    clearMessages();
     try {
       if (alunoId) {
         await api.put(`/alunos/${alunoId}`, alunoData);
@@ -63,24 +70,34 @@ function AlunosPage() {
       handleCloseFormModal();
       fetchAlunos(paginationMeta?.current_page || 1);
     } catch (err) {
-      setError('Falha ao salvar o aluno.');
+      const errorMessage = err.response?.data?.message || 'Falha ao salvar o aluno.';
+      const validationErrors = err.response?.data?.errors;
+
+      if (validationErrors) {
+        const detailedError = Object.values(validationErrors).flat().join(' ');
+        setError(detailedError);
+      } else {
+        setError(errorMessage);
+      }
     }
   };
 
   const handleDeleteAluno = async (alunoId) => {
+    clearMessages();
     if (window.confirm('Tem a certeza que deseja excluir este aluno?')) {
       try {
         await api.delete(`/alunos/${alunoId}`);
         showSuccess('Aluno excluído com sucesso!');
         fetchAlunos(paginationMeta?.current_page || 1);
       } catch (err) {
-        setError('Falha ao excluir o aluno.');
+        const errorMessage = err.response?.data?.message || 'Falha ao excluir o aluno.';
+        setError(errorMessage);
       }
     }
   };
 
   const filteredAndSortedAlunos = alunos
-    .filter(aluno =>
+    .filter(aluno => 
       aluno.nome.toLowerCase().includes(searchTerm.toLowerCase())
     )
     .sort((a, b) => a.nome.localeCompare(b.nome));
@@ -95,8 +112,9 @@ function AlunosPage() {
       </div>
 
       {successMessage && <div style={{ color: 'green', background: '#e6ffed', padding: '10px', margin: '15px 0', borderRadius: '5px' }}>{successMessage}</div>}
-      {error && <p style={{ color: 'red', marginTop: '10px' }}>{error}</p>}
-
+      {/* O componente de erro agora pode mostrar mensagens mais detalhadas */}
+      {error && <div style={{ color: 'red', background: '#fde8e8', padding: '10px', margin: '15px 0', borderRadius: '5px' }}>{error}</div>}
+      
       <div style={{ margin: '20px 0', position: 'relative' }}>
         <input
           type="text"

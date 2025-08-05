@@ -8,7 +8,8 @@ function VoluntariosPage() {
   const [voluntarios, setVoluntarios] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  
+  const [successMessage, setSuccessMessage] = useState('');
+
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [editingVoluntario, setEditingVoluntario] = useState(null);
 
@@ -28,7 +29,18 @@ function VoluntariosPage() {
     fetchVoluntarios();
   }, []);
 
+  const showSuccess = (message) => {
+    setSuccessMessage(message);
+    setTimeout(() => setSuccessMessage(''), 3000);
+  };
+
+  const clearMessages = () => {
+    setError('');
+    setSuccessMessage('');
+  };
+
   const handleOpenModal = (voluntario = null) => {
+    clearMessages();
     setEditingVoluntario(voluntario);
     setIsFormModalOpen(true);
   };
@@ -39,28 +51,40 @@ function VoluntariosPage() {
   };
 
   const handleSaveVoluntario = async (voluntarioData, voluntarioId) => {
+    clearMessages();
     try {
       if (voluntarioId) {
         await api.put(`/voluntarios/${voluntarioId}`, voluntarioData);
+        showSuccess('Voluntário atualizado com sucesso!');
       } else {
         await api.post('/voluntarios', voluntarioData);
+        showSuccess('Voluntário criado com sucesso!');
       }
       handleCloseModal();
       fetchVoluntarios();
     } catch (err) {
-      setError('Falha ao salvar o voluntário. Verifique os dados, especialmente se o e-mail já existe.');
-      console.error(err);
+      const errorMessage = err.response?.data?.message || 'Falha ao salvar o voluntário.';
+      const validationErrors = err.response?.data?.errors;
+
+      if (validationErrors) {
+        const detailedError = Object.values(validationErrors).flat().join(' ');
+        setError(detailedError);
+      } else {
+        setError(errorMessage);
+      }
     }
   };
 
   const handleDeleteVoluntario = async (voluntarioId) => {
+    clearMessages();
     if (window.confirm('Tem a certeza que deseja excluir este voluntário? Esta ação não pode ser desfeita.')) {
       try {
         await api.delete(`/voluntarios/${voluntarioId}`);
+        showSuccess('Voluntário excluído com sucesso!');
         fetchVoluntarios();
       } catch (err) {
-        setError('Falha ao excluir o voluntário.');
-        console.error(err);
+        const errorMessage = err.response?.data?.message || 'Falha ao excluir o voluntário.';
+        setError(errorMessage);
       }
     }
   };
@@ -73,8 +97,9 @@ function VoluntariosPage() {
         <h2>Gestão de Voluntários</h2>
         <button onClick={() => handleOpenModal()}>Adicionar Novo Voluntário</button>
       </div>
-      
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+
+      {successMessage && <div style={{ color: 'green', background: '#e6ffed', padding: '10px', margin: '15px 0', borderRadius: '5px' }}>{successMessage}</div>}
+      {error && <div style={{ color: 'red', background: '#fde8e8', padding: '10px', margin: '15px 0', borderRadius: '5px' }}>{error}</div>}
 
       <Modal
         isOpen={isFormModalOpen}
@@ -93,7 +118,7 @@ function VoluntariosPage() {
           <tr>
             <th>Nome</th>
             <th>Email</th>
-            <th>Cargo</th> {/* 1. Adiciona a nova coluna */}
+            <th>Cargo</th>
             <th>Status</th>
             <th style={{ width: '120px' }}>Ações</th>
           </tr>
@@ -104,7 +129,7 @@ function VoluntariosPage() {
               <tr key={voluntario.id}>
                 <td>{voluntario.nome}</td>
                 <td>{voluntario.email}</td>
-                <td>{voluntario.cargo}</td> {/* 2. Exibe o dado do cargo */}
+                <td>{voluntario.cargo}</td>
                 <td>{voluntario.ativo ? 'Ativo' : 'Inativo'}</td>
                 <td style={{ textAlign: 'center' }}>
                   <button onClick={() => handleOpenModal(voluntario)} title="Editar">
@@ -118,7 +143,7 @@ function VoluntariosPage() {
             ))
           ) : (
             <tr>
-              <td colSpan="5" style={{ textAlign: 'center', padding: '10px' }}> {/* 3. Ajusta o colSpan */}
+              <td colSpan="5" style={{ textAlign: 'center', padding: '10px' }}>
                 Nenhum voluntário encontrado.
               </td>
             </tr>
@@ -129,4 +154,4 @@ function VoluntariosPage() {
   );
 }
 
-export default VoluntariosPage; 
+export default VoluntariosPage;
