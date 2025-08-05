@@ -25,6 +25,9 @@ RUN chmod +x /usr/local/bin/start.sh
 ENV COMPOSER_MEMORY_LIMIT=-1
 RUN composer install --no-dev --optimize-autoloader
 
+# Adiciona o link simbólico do storage
+RUN php artisan storage:link
+
 # Ajusta permissões
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache && \
     chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
