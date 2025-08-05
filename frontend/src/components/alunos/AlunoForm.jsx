@@ -2,27 +2,22 @@ import { useState, useEffect } from 'react';
 import api from '../../services/api';
 
 function AlunoForm({ onSave, onCancel, alunoToEdit }) {
-  // Estados para os campos de dados do aluno
   const [nome, setNome] = useState('');
   const [dataNascimento, setDataNascimento] = useState('');
   const [nomeResponsaveis, setNomeResponsaveis] = useState('');
   const [telefone, setTelefone] = useState('');
   const [endereco, setEndereco] = useState('');
-
-  // Estados para a matrícula em aulas
   const [aulasDisponiveis, setAulasDisponiveis] = useState([]);
   const [aulasSelecionadasIds, setAulasSelecionadasIds] = useState([]);
-  
   const [isSaving, setIsSaving] = useState(false);
 
-  // Busca a lista de todas as aulas disponíveis
   useEffect(() => {
-    api.get('/aulas').then(response => {
+    // AQUI ESTÁ A CORREÇÃO: usamos o endpoint '/aulas-lista'
+    api.get('/aulas-lista').then(response => {
       setAulasDisponiveis(response.data);
     }).catch(error => console.error("Falha ao buscar aulas", error));
   }, []);
 
-  // Preenche o formulário ao editar um aluno
   useEffect(() => {
     if (alunoToEdit) {
       setNome(alunoToEdit.nome || '');
@@ -30,17 +25,22 @@ function AlunoForm({ onSave, onCancel, alunoToEdit }) {
       setNomeResponsaveis(alunoToEdit.nome_responsaveis || '');
       setTelefone(alunoToEdit.telefone || '');
       setEndereco(alunoToEdit.endereco || '');
-      // Pré-seleciona as aulas em que o aluno já está matriculado
       setAulasSelecionadasIds(alunoToEdit.aulas.map(aula => aula.id));
+    } else {
+      setNome('');
+      setDataNascimento('');
+      setNomeResponsaveis('');
+      setTelefone('');
+      setEndereco('');
+      setAulasSelecionadasIds([]);
     }
   }, [alunoToEdit]);
 
-  // Função para marcar/desmarcar uma aula
   const handleAulaSelection = (aulaId) => {
     setAulasSelecionadasIds(prevSelected =>
       prevSelected.includes(aulaId)
-        ? prevSelected.filter(id => id !== aulaId) // Desmarca
-        : [...prevSelected, aulaId] // Marca
+        ? prevSelected.filter(id => id !== aulaId)
+        : [...prevSelected, aulaId]
     );
   };
 
@@ -61,7 +61,6 @@ function AlunoForm({ onSave, onCancel, alunoToEdit }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      {/* Campos de dados do Aluno */}
       <div style={{ marginBottom: '15px' }}>
         <label htmlFor="nome">Nome Completo:</label>
         <input type="text" id="nome" value={nome} onChange={(e) => setNome(e.target.value)} required style={{ width: '100%', padding: '8px', marginTop: '5px' }} />
@@ -85,7 +84,6 @@ function AlunoForm({ onSave, onCancel, alunoToEdit }) {
 
       <hr style={{ margin: '20px 0' }} />
 
-      {/* Secção para Matricular em Aulas */}
       <div style={{ marginBottom: '15px' }}>
         <label>Matricular nas Aulas:</label>
         <div style={{ maxHeight: '150px', overflowY: 'auto', border: '1px solid #ccc', padding: '10px', marginTop: '5px', borderRadius: '5px' }}>

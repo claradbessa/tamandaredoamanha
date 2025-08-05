@@ -25,8 +25,8 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     // Nova rota para buscar os alunos de uma aula específica
-    Route::get('/aulas/{aula}/alunos', [\App\Http\Controllers\AulaController::class, 'getAlunos']);
-    Route::get('/aulas-lista', [\App\Http\Controllers\AulaController::class, 'getListaAulas']);
+    Route::get('/aulas/{aula}/alunos', [AulaController::class, 'getAlunos']);
+    Route::get('/aulas-lista', [AulaController::class, 'getListaAulas']);
 
     // Rotas de Recursos (CRUDs)
     Route::apiResource('voluntarios', VoluntarioController::class);

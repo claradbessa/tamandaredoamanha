@@ -11,7 +11,8 @@ class AulaController extends Controller
 {
     public function index()
     {
-        $aulas = Aula::with(['voluntario', 'horarios'])->paginate(15);
+        // Adiciona 'alunos' ao with() para que a lista já venha com os matriculados
+        $aulas = Aula::with(['voluntario', 'horarios', 'alunos'])->paginate(15);
         return response()->json($aulas);
     }
 
@@ -39,7 +40,8 @@ class AulaController extends Controller
 
     public function show(Aula $aula)
     {
-        $aula->load(['voluntario', 'horarios']);
+        // Adiciona 'alunos' ao load() para que os detalhes da aula incluam os matriculados
+        $aula->load(['voluntario', 'horarios', 'alunos']);
         return response()->json($aula);
     }
 
@@ -73,19 +75,16 @@ class AulaController extends Controller
         return response()->json(null, 204);
     }
 
+    public function getAlunos(Aula $aula)
+    {
+        return response()->json($aula->alunos);
+    }
+
     /**
      * Retorna uma lista simples de todas as aulas (sem paginação).
      */
     public function getListaAulas()
     {
         return response()->json(Aula::all());
-    }
-
-    /**
-     * Retorna a lista de alunos matriculados numa aula específica.
-     */
-    public function getAlunos(Aula $aula)
-    {
-        return response()->json($aula->alunos);
     }
 }
