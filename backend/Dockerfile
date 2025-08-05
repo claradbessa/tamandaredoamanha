@@ -1,8 +1,7 @@
-FROM php:8.3-fpm-alpine3.19
+FROM php:8.3-fpm-alpine
 
-# Atualiza os repositórios antes de instalar pacotes
-RUN apk update && \
-    apk add --no-cache git nginx supervisor shadow postgresql-dev \
+# Instala dependências, incluindo as para manipulação de imagem (gd) e zip
+RUN apk add --no-cache git nginx supervisor shadow postgresql-dev \
     libzip-dev \
     libpng-dev \
     jpeg-dev \
