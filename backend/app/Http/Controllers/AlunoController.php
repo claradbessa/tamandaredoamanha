@@ -8,15 +8,15 @@ use Illuminate\Http\Request;
 class AlunoController extends Controller
 {
     /**
-     * Lista todos os alunos, incluindo as suas aulas e os voluntários de cada aula.
+     * Lista todos os alunos, incluindo as suas aulas, horários e voluntários.
      */
     public function index()
     {
-        return Aluno::with('aulas.voluntario')->paginate(15);
+        return Aluno::with(['aulas.voluntario', 'aulas.horarios'])->paginate(15);
     }
 
     /**
-     * Cria um novo aluno.
+     * Cria um novo aluno e sincroniza as suas matrículas.
      */
     public function store(Request $request)
     {
@@ -38,19 +38,19 @@ class AlunoController extends Controller
             $aluno->aulas()->sync($validatedData['aulas_ids']);
         }
 
-        return response()->json($aluno->load('aulas.voluntario'), 201);
+        return response()->json($aluno->load(['aulas.voluntario', 'aulas.horarios']), 201);
     }
 
     /**
-     * Mostra um aluno específico, incluindo as suas aulas e os voluntários de cada aula.
+     * Mostra um aluno específico, incluindo as suas aulas, horários e voluntários.
      */
     public function show(Aluno $aluno)
     {
-        return $aluno->load('aulas.voluntario');
+        return $aluno->load(['aulas.voluntario', 'aulas.horarios']);
     }
 
     /**
-     * Atualiza um aluno específico.
+     * Atualiza um aluno específico e sincroniza as suas matrículas.
      */
     public function update(Request $request, Aluno $aluno)
     {
@@ -72,7 +72,7 @@ class AlunoController extends Controller
             $aluno->aulas()->sync($validatedData['aulas_ids']);
         }
 
-        return response()->json($aluno->load('aulas.voluntario'));
+        return response()->json($aluno->load(['aulas.voluntario', 'aulas.horarios']));
     }
 
     /**

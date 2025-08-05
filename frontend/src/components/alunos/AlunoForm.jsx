@@ -12,7 +12,6 @@ function AlunoForm({ onSave, onCancel, alunoToEdit }) {
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
-    // AQUI ESTÁ A CORREÇÃO: usamos o endpoint '/aulas-lista'
     api.get('/aulas-lista').then(response => {
       setAulasDisponiveis(response.data);
     }).catch(error => console.error("Falha ao buscar aulas", error));
