@@ -1,8 +1,13 @@
 FROM php:8.3-fpm-alpine
 
-# Instala dependências, incluindo git
-RUN apk add --no-cache git nginx supervisor shadow postgresql-dev && \
-    docker-php-ext-install pdo pdo_pgsql
+# Instala dependências, incluindo as para manipulação de imagem (gd) e zip
+RUN apk add --no-cache git nginx supervisor shadow postgresql-dev \
+    libzip-dev \
+    libpng-dev \
+    jpeg-dev \
+    freetype-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install pdo pdo_pgsql zip gd
 
 # Instala o Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -17,6 +22,7 @@ COPY docker/start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
 
 # Instala dependências do Composer
+ENV COMPOSER_MEMORY_LIMIT=-1
 RUN composer install --no-dev --optimize-autoloader
 
 # Ajusta permissões
