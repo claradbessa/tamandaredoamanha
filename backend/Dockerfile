@@ -1,6 +1,6 @@
 FROM php:8.3-fpm-alpine
 
-# Instala dependências, incluindo as para manipulação de imagem (gd) e zip
+# Instala dependências
 RUN apk add --no-cache git nginx supervisor shadow postgresql-dev \
     libzip-dev \
     libpng-dev \
@@ -12,10 +12,12 @@ RUN apk add --no-cache git nginx supervisor shadow postgresql-dev \
 # Instala o Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+COPY docker/uploads.ini /usr/local/etc/php/conf.d/uploads.ini
+
 WORKDIR /var/www/html
 COPY . .
 
-# Copia as configurações
+# Copia as configurações do Nginx, Supervisor e o script de inicialização
 COPY docker/nginx.conf /etc/nginx/nginx.conf
 COPY docker/supervisord.conf /etc/supervisord.conf
 COPY docker/start.sh /usr/local/bin/start.sh
