@@ -12,8 +12,13 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        // Garante que o middleware de CORS é aplicado a todas as rotas de API
+        $middleware->api(prepend: [
+            \Illuminate\Http\Middleware\HandleCors::class,
+        ]);
+
         $middleware->validateCsrfTokens(except: [
-            'api/*', 
+            'api/*',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
