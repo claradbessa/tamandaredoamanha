@@ -14,8 +14,8 @@ class PostagemService
 
     public function create(array $data)
     {
-        if (isset($data['midia'])) {
-            $path = $data['midia']->store('uploads/midia', 'public');
+        if (isset($data['midia']) && $data['midia']->isValid()) {
+            $path = $data['midia']->store('uploads/midia');
             $data['midia'] = $path;
         }
 
@@ -24,11 +24,11 @@ class PostagemService
 
     public function update(Postagem $postagem, array $data)
     {
-        if (isset($data['midia'])) {
+        if (isset($data['midia']) && $data['midia']->isValid()) {
             if ($postagem->midia) {
-                Storage::disk('public')->delete($postagem->midia);
+                Storage::delete($postagem->midia);
             }
-            $path = $data['midia']->store('uploads/midia', 'public');
+            $path = $data['midia']->store('uploads/midia');
             $data['midia'] = $path;
         }
 
@@ -39,7 +39,7 @@ class PostagemService
     public function delete(Postagem $postagem)
     {
         if ($postagem->midia) {
-            Storage::disk('public')->delete($postagem->midia);
+            Storage::delete($postagem->midia);
         }
 
         return $postagem->delete();

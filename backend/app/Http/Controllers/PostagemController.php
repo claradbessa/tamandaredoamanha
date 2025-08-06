@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Postagem;
 use App\Services\PostagemService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class PostagemController extends Controller
 {
@@ -34,6 +35,9 @@ class PostagemController extends Controller
 
         $postagem = $this->postagemService->create($validatedData);
 
+        // Carrega o relacionamento com o voluntário antes de retornar
+        $postagem->load('voluntario');
+
         return response()->json($postagem, 201);
     }
 
@@ -56,6 +60,9 @@ class PostagemController extends Controller
         ]);
 
         $updatedPostagem = $this->postagemService->update($postagem, $validatedData);
+
+        // Carrega o relacionamento com o voluntário antes de retornar
+        $updatedPostagem->load('voluntario');
 
         return response()->json($updatedPostagem);
     }
