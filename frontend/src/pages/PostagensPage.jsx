@@ -87,10 +87,6 @@ function PostagensPage() {
     }
   };
 
-  const getMediaUrl = (path) => {
-    return `https://render-m7dj.onrender.com/storage/${path}`;
-  };
-
   if (loading) return <p>A carregar postagens...</p>;
 
   return (
@@ -130,8 +126,9 @@ function PostagensPage() {
             postagens.map(postagem => (
               <tr key={postagem.id}>
                 <td>
-                  {postagem.midia ? (
-                    <img src={getMediaUrl(postagem.midia)} alt={postagem.titulo} style={{ width: '100px', height: 'auto' }} />
+                  {/* AQUI ESTÁ A MUDANÇA: Usamos a nova midia_url */}
+                  {postagem.midia_url ? (
+                    <img src={postagem.midia_url} alt={postagem.titulo} style={{ width: '100px', height: 'auto' }} />
                   ) : 'Sem imagem'}
                 </td>
                 <td>{postagem.titulo}</td>
