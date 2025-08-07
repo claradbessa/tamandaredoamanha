@@ -24,6 +24,9 @@ class PostagemController extends Controller
 
     public function store(Request $request)
     {
+
+        Log::info('Requisição recebida no PostagemController@store.');
+
         $validatedData = $request->validate([
             'titulo' => 'required|string|max:150',
             'conteudo' => 'required|string',
@@ -32,6 +35,8 @@ class PostagemController extends Controller
             'voluntario_id' => 'required|exists:voluntarios,id',
             'categoria' => 'nullable|string|max:50',
         ]);
+
+        Log::info('Validação concluída com sucesso.');
 
         $postagem = $this->postagemService->create($validatedData);
 
@@ -50,6 +55,9 @@ class PostagemController extends Controller
 
     public function update(Request $request, Postagem $postagem)
     {
+
+        Log::info('Requisição recebida no PostagemController@update para o post ID: ' . $postagem->id);
+
         $validatedData = $request->validate([
             'titulo' => 'sometimes|required|string|max:150',
             'conteudo' => 'sometimes|required|string',
@@ -58,6 +66,8 @@ class PostagemController extends Controller
             'voluntario_id' => 'sometimes|required|exists:voluntarios,id',
             'categoria' => 'nullable|string|max:50',
         ]);
+
+        Log::info('Validação de update concluída com sucesso.');
 
         $updatedPostagem = $this->postagemService->update($postagem, $validatedData);
 
