@@ -1,7 +1,10 @@
 #!/bin/sh
 set -e
 
-# Cria um diretório gravável para os uploads
+# Garante permissão de escrita na pasta de uploads temporários do sistema
+chmod 1777 /tmp
+
+# Cria as pastas necessárias e garante as permissões corretas
 mkdir -p /var/www/html/storage/app/public
 chown -R www-data:www-data /var/www/html/storage
 chmod -R 775 /var/www/html/storage
