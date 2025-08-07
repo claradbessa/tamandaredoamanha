@@ -25,7 +25,13 @@ class PostagemController extends Controller
     public function store(Request $request)
     {
 
-        Log::info('Requisição recebida no PostagemController@store.');
+        Log::info('[PostagemController] A iniciar o método store.');
+
+        if ($request->hasFile('midia')) {
+            Log::info('[PostagemController] Arquivo de mídia presente na requisição.');
+        } else {
+            Log::warning('[PostagemController] Nenhum arquivo de mídia na requisição.');
+        }
 
         $validatedData = $request->validate([
             'titulo' => 'required|string|max:150',
@@ -36,7 +42,7 @@ class PostagemController extends Controller
             'categoria' => 'nullable|string|max:50',
         ]);
 
-        Log::info('Validação concluída com sucesso.');
+        Log::info('[PostagemController] Validação concluída com sucesso.');
 
         $postagem = $this->postagemService->create($validatedData);
 

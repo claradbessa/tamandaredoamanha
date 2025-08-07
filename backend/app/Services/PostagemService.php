@@ -16,13 +16,21 @@ class PostagemService
     public function create(array $data)
     {
         try {
+            Log::info('[PostagemService] A iniciar a criação da postagem.');
+
             if (isset($data['midia']) && $data['midia']->isValid()) {
+                Log::info('[PostagemService] Ficheiro de mídia é válido. A tentar salvar...');
                 $path = $data['midia']->store('uploads/midia', 'public');
+                Log::info('[PostagemService] Ficheiro salvo com sucesso em: ' . $path);
                 $data['midia'] = $path;
             }
-            return Postagem::create($data);
+
+            $postagem = Postagem::create($data);
+            Log::info('[PostagemService] Postagem criada no banco de dados com ID: ' . $postagem->id);
+            return $postagem;
+
         } catch (\Throwable $e) {
-            Log::error('Erro ao criar postagem: ' . $e->getMessage());
+            Log::error('[PostagemService] ERRO na criação: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
             throw $e;
         }
     }
