@@ -19,9 +19,9 @@ class PostagemService
             Log::info('[PostagemService] A iniciar a criação da postagem.');
 
             if (isset($data['midia']) && $data['midia']->isValid()) {
-                Log::info('[PostagemService] Ficheiro de mídia é válido. A tentar salvar...');
+                Log::info('[PostagemService] Arquivo de mídia é válido. A tentar salvar...');
                 $path = $data['midia']->store('uploads/midia', 'public');
-                Log::info('[PostagemService] Ficheiro salvo com sucesso em: ' . $path);
+                Log::info('[PostagemService] Arquivo salvo com sucesso em: ' . $path);
                 $data['midia'] = $path;
             }
 
@@ -37,27 +37,24 @@ class PostagemService
 
     public function update(Postagem $postagem, array $data)
     {
-        try {
-            if (isset($data['midia']) && $data['midia']->isValid()) {
-                if ($postagem->midia) {
-                    Storage::disk('public')->delete($postagem->midia);
-                }
-                $path = $data['midia']->store('uploads/midia', 'public');
-                $data['midia'] = $path;
+        if (isset($data['midia']) && $data['midia']->isValid()) {
+            if ($postagem->midia) {
+                Storage::delete($postagem->midia);
             }
-            $postagem->update($data);
-            return $postagem;
-        } catch (\Throwable $e) {
-            Log::error('Erro ao atualizar postagem ID ' . $postagem->id . ': ' . $e->getMessage());
-            throw $e;
+            $path = $data['midia']->store('uploads/midia');
+            $data['midia'] = $path;
         }
+
+        $postagem->update($data);
+        return $postagem;
     }
 
     public function delete(Postagem $postagem)
     {
         if ($postagem->midia) {
-            Storage::disk('public')->delete($postagem->midia);
+            Storage::delete($postagem->midia);
         }
+
         return $postagem->delete();
     }
 }
