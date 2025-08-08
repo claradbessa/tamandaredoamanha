@@ -19,9 +19,9 @@ class PostagemService
             Log::info('[PostagemService] A iniciar a criação da postagem.');
 
             if (isset($data['midia']) && $data['midia']->isValid()) {
-                Log::info('[PostagemService] Arquivo de mídia é válido. A tentar salvar...');
+                Log::info('[PostagemService] Ficheiro de mídia é válido. A tentar salvar...');
                 $path = $data['midia']->store('uploads/midia', 'public');
-                Log::info('[PostagemService] Arquivo salvo com sucesso em: ' . $path);
+                Log::info('[PostagemService] Ficheiro salvo com sucesso em: ' . $path);
                 $data['midia'] = $path;
             }
 
@@ -39,9 +39,9 @@ class PostagemService
     {
         if (isset($data['midia']) && $data['midia']->isValid()) {
             if ($postagem->midia) {
-                Storage::delete($postagem->midia);
+                Storage::disk('public')->delete($postagem->midia);
             }
-            $path = $data['midia']->store('uploads/midia');
+            $path = $data['midia']->store('uploads/midia', 'public');
             $data['midia'] = $path;
         }
 
@@ -52,7 +52,7 @@ class PostagemService
     public function delete(Postagem $postagem)
     {
         if ($postagem->midia) {
-            Storage::delete($postagem->midia);
+            Storage::disk('public')->delete($postagem->midia);
         }
 
         return $postagem->delete();
