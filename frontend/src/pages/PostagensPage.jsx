@@ -19,6 +19,7 @@ function PostagensPage() {
       const response = await api.get('/postagens');
       setPostagens(response.data);
     } catch (err) {
+      console.error('Erro ao carregar postagens:', err);
       setError('Falha ao carregar as postagens.');
     } finally {
       setLoading(false);
@@ -28,7 +29,7 @@ function PostagensPage() {
   useEffect(() => {
     fetchPostagens();
   }, []);
-  
+
   const showSuccess = (message) => {
     setSuccessMessage(message);
     setTimeout(() => setSuccessMessage(''), 3000);
@@ -44,7 +45,7 @@ function PostagensPage() {
     setEditingPostagem(postagem);
     setIsModalOpen(true);
   };
-  
+
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setEditingPostagem(null);
@@ -52,59 +53,55 @@ function PostagensPage() {
 
   const handleSavePostagem = async (formData, postagemId) => {
     clearMessages();
-    // ----> INÍCIO DA DEPURAÇÃO <----
-    console.log("A tentar salvar postagem com ID:", postagemId);
-    if (!postagemId) {
-        console.error("ERRO: ID da postagem é inválido na edição!");
-        setError("Não foi possível editar: ID da postagem não encontrado.");
-        return;
-    }
-    // ----> FIM DA DEPURAÇÃO <----
-    try {
-      const config = {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      };
 
+    try {
       if (postagemId) {
-        await api.post(`/postagens/${postagemId}`, formData, config);
+        const hasFile = !!formData.get('midia'); 
+
+        if (hasFile) {
+          formData.append('_method', 'PUT');
+          const res = await api.post(`/postagens/${postagemId}`, formData);
+          console.log('Resposta update (POST+_method):', res);
+        } else {
+          const res = await api.put(`/postagens/${postagemId}`, formData);
+          console.log('Resposta update (PUT):', res);
+        }
+
         showSuccess('Postagem atualizada com sucesso!');
       } else {
-        await api.post('/postagens', formData, config);
+        const res = await api.post('/postagens', formData);
+        console.log('Resposta create:', res);
         showSuccess('Postagem criada com sucesso!');
       }
+
       handleCloseModal();
-      fetchPostagens();
+      await fetchPostagens();
     } catch (err) {
-      const errorMessage = err.response?.data?.message || 'Falha ao salvar a postagem.';
-      setError(errorMessage);
+      console.error('Erro ao salvar postagem:', err);
+      const serverMessage = err.response?.data?.message || err.response?.data || err.message;
+      setError(typeof serverMessage === 'string' ? serverMessage : JSON.stringify(serverMessage));
     }
   };
 
   const handleDeletePostagem = async (postagemId) => {
     clearMessages();
-    // ----> INÍCIO DA DEPURAÇÃO <----
-    console.log("A tentar excluir postagem com ID:", postagemId);
-    // ----> FIM DA DEPURAÇÃO <----
+    if (!postagemId) {
+      setError('ID da postagem inválido para excluir.');
+      return;
+    }
+
     if (window.confirm('Tem a certeza que deseja excluir esta postagem?')) {
       try {
-        if (!postagemId) {
-            console.error("ERRO: ID da postagem é inválido! Exclusão cancelada.");
-            setError("Não foi possível excluir: ID da postagem não encontrado.");
-            return;
-        }
-        await api.delete(`/postagens/${postagemId}`);
+        const res = await api.delete(`/postagens/${postagemId}`);
+        console.log('Resposta delete:', res);
         showSuccess('Postagem excluída com sucesso!');
-        fetchPostagens();
+        await fetchPostagens();
       } catch (err) {
-        setError('Falha ao excluir a postagem.');
+        console.error('Erro ao excluir postagem:', err);
+        const serverMessage = err.response?.data?.message || err.response?.data || err.message;
+        setError(typeof serverMessage === 'string' ? serverMessage : 'Falha ao excluir a postagem.');
       }
     }
-  };
-
-  const getMediaUrl = (path) => {
-    return `https://render-m7dj.onrender.com/storage/${path}`;
   };
 
   if (loading) return <p>A carregar postagens...</p>;

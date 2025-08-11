@@ -26,10 +26,6 @@ function PostagemForm({ onSave, onCancel, postagemToEdit }) {
     if (midia) {
       formData.append('midia', midia);
     }
-    
-    if (postagemToEdit) {
-      formData.append('_method', 'PUT');
-    }
 
     await onSave(formData, postagemToEdit?.id);
     setIsSaving(false);
