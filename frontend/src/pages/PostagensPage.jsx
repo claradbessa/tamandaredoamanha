@@ -52,6 +52,14 @@ function PostagensPage() {
 
   const handleSavePostagem = async (formData, postagemId) => {
     clearMessages();
+    // ----> INÍCIO DA DEPURAÇÃO <----
+    console.log("A tentar salvar postagem com ID:", postagemId);
+    if (!postagemId) {
+        console.error("ERRO: ID da postagem é inválido na edição!");
+        setError("Não foi possível editar: ID da postagem não encontrado.");
+        return;
+    }
+    // ----> FIM DA DEPURAÇÃO <----
     try {
       const config = {
         headers: {
@@ -76,8 +84,16 @@ function PostagensPage() {
 
   const handleDeletePostagem = async (postagemId) => {
     clearMessages();
+    // ----> INÍCIO DA DEPURAÇÃO <----
+    console.log("A tentar excluir postagem com ID:", postagemId);
+    // ----> FIM DA DEPURAÇÃO <----
     if (window.confirm('Tem a certeza que deseja excluir esta postagem?')) {
       try {
+        if (!postagemId) {
+            console.error("ERRO: ID da postagem é inválido! Exclusão cancelada.");
+            setError("Não foi possível excluir: ID da postagem não encontrado.");
+            return;
+        }
         await api.delete(`/postagens/${postagemId}`);
         showSuccess('Postagem excluída com sucesso!');
         fetchPostagens();
@@ -85,6 +101,10 @@ function PostagensPage() {
         setError('Falha ao excluir a postagem.');
       }
     }
+  };
+
+  const getMediaUrl = (path) => {
+    return `https://render-m7dj.onrender.com/storage/${path}`;
   };
 
   if (loading) return <p>A carregar postagens...</p>;
@@ -126,7 +146,6 @@ function PostagensPage() {
             postagens.map(postagem => (
               <tr key={postagem.id}>
                 <td>
-                  {/* AQUI ESTÁ A MUDANÇA: Usamos a nova midia_url */}
                   {postagem.midia_url ? (
                     <img src={postagem.midia_url} alt={postagem.titulo} style={{ width: '100px', height: 'auto' }} />
                   ) : 'Sem imagem'}

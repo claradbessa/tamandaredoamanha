@@ -25,6 +25,11 @@ Route::options('/postagens', function () {
         ->header('Access-Control-Allow-Credentials', 'true');
 });
 
+// Adiciona uma rota para responder aos pedidos de verificação OPTIONS
+Route::options('/postagens/{postagem?}', function () {
+    return response()->noContent();
+});
+
 // Grupo de Rotas Protegidas
 Route::middleware('auth:sanctum')->group(function () {
 
