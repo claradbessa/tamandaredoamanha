@@ -9,7 +9,6 @@ function PostagensPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingPostagem, setEditingPostagem] = useState(null);
 
@@ -19,7 +18,6 @@ function PostagensPage() {
       const response = await api.get('/postagens');
       setPostagens(response.data);
     } catch (err) {
-      console.error('Erro ao carregar postagens:', err);
       setError('Falha ao carregar as postagens.');
     } finally {
       setLoading(false);
@@ -53,55 +51,49 @@ function PostagensPage() {
 
   const handleSavePostagem = async (formData, postagemId) => {
     clearMessages();
-
     try {
+      const config = { headers: { 'Content-Type': 'multipart/form-data' } };
+      let response;
+
       if (postagemId) {
-        const hasFile = !!formData.get('midia'); 
+        formData.append('_method', 'PUT');
+        response = await api.post(`/postagens/${postagemId}`, formData, config);
+        const updatedPostagem = response.data;
 
-        if (hasFile) {
-          formData.append('_method', 'PUT');
-          const res = await api.post(`/postagens/${postagemId}`, formData);
-          console.log('Resposta update (POST+_method):', res);
-        } else {
-          const res = await api.put(`/postagens/${postagemId}`, formData);
-          console.log('Resposta update (PUT):', res);
-        }
-
+        // AQUI ESTÁ A CORREÇÃO: Mescla os dados em vez de substituir
+        setPostagens(prevPostagens =>
+          prevPostagens.map(p => (p.id === postagemId ? { ...p, ...updatedPostagem } : p))
+        );
         showSuccess('Postagem atualizada com sucesso!');
       } else {
-        const res = await api.post('/postagens', formData);
-        console.log('Resposta create:', res);
+        response = await api.post('/postagens', formData, config);
+        const newPostagem = response.data;
+        setPostagens(prevPostagens => [newPostagem, ...prevPostagens]);
         showSuccess('Postagem criada com sucesso!');
       }
-
+      
       handleCloseModal();
-      await fetchPostagens();
     } catch (err) {
-      console.error('Erro ao salvar postagem:', err);
-      const serverMessage = err.response?.data?.message || err.response?.data || err.message;
-      setError(typeof serverMessage === 'string' ? serverMessage : JSON.stringify(serverMessage));
+      const serverMessage = err.response?.data?.message || 'Falha ao salvar a postagem.';
+      setError(serverMessage);
     }
   };
 
   const handleDeletePostagem = async (postagemId) => {
     clearMessages();
-    if (!postagemId) {
-      setError('ID da postagem inválido para excluir.');
-      return;
-    }
-
     if (window.confirm('Tem a certeza que deseja excluir esta postagem?')) {
       try {
-        const res = await api.delete(`/postagens/${postagemId}`);
-        console.log('Resposta delete:', res);
+        await api.delete(`/postagens/${postagemId}`);
+        setPostagens(prevPostagens => prevPostagens.filter(p => p.id !== postagemId));
         showSuccess('Postagem excluída com sucesso!');
-        await fetchPostagens();
       } catch (err) {
-        console.error('Erro ao excluir postagem:', err);
-        const serverMessage = err.response?.data?.message || err.response?.data || err.message;
-        setError(typeof serverMessage === 'string' ? serverMessage : 'Falha ao excluir a postagem.');
+        setError('Falha ao excluir a postagem.');
       }
     }
+  };
+
+  const getMediaUrl = (path) => {
+    return `https://render-m7dj.onrender.com/storage/${path}`;
   };
 
   if (loading) return <p>A carregar postagens...</p>;
