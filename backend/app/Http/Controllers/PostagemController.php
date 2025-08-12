@@ -3,19 +3,29 @@
 namespace App\Http\Controllers;
 
 use App\Models\Postagem;
+use App\Services\PostagemService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 
 class PostagemController extends Controller
 {
+    protected $postagemService;
+
+    public function __construct(PostagemService $postagemService)
+    {
+        $this->postagemService = $postagemService;
+    }
+
     public function index()
     {
-        return Postagem::with('voluntario')->latest()->get();
+        $postagens = $this->postagemService->getAll();
+        return response()->json($postagens);
     }
 
     public function store(Request $request)
     {
+        Log::info('[PostagemController] Iniciando criação de postagem.');
+
         try {
             $validatedData = $request->validate([
                 'titulo' => 'required|string|max:150',
@@ -26,19 +36,22 @@ class PostagemController extends Controller
                 'categoria' => 'nullable|string|max:50',
             ]);
 
-            if (isset($validatedData['midia']) && $validatedData['midia']->isValid()) {
-                $path = $validatedData['midia']->store('uploads/midia', 'public');
-                $validatedData['midia'] = $path;
+            // Se houver mídia no request, adiciona ao array de dados
+            if ($request->hasFile('midia')) {
+                $validatedData['midia'] = $request->file('midia');
             }
 
-            $postagem = Postagem::create($validatedData);
+            $postagem = $this->postagemService->create($validatedData);
             $postagem->load('voluntario');
+
             return response()->json($postagem, 201);
 
         } catch (\Throwable $e) {
             Log::error('[PostagemController] Erro no store: ' . $e->getMessage());
             report($e);
-            return response()->json(['error' => 'Ocorreu um erro ao criar a postagem.'], 500);
+            return response()->json([
+                'error' => 'Ocorreu um erro ao criar a postagem.'
+            ], 500);
         }
     }
 
@@ -51,6 +64,8 @@ class PostagemController extends Controller
 
     public function update(Request $request, Postagem $postagem)
     {
+        Log::info("[PostagemController] Atualizando postagem ID: {$postagem->id}");
+
         try {
             $validatedData = $request->validate([
                 'titulo' => 'sometimes|required|string|max:150',
@@ -61,37 +76,35 @@ class PostagemController extends Controller
                 'categoria' => 'nullable|string|max:50',
             ]);
 
-            if (isset($validatedData['midia']) && $validatedData['midia']->isValid()) {
-                if ($postagem->midia) {
-                    Storage::disk('public')->delete($postagem->midia);
-                }
-                $path = $validatedData['midia']->store('uploads/midia', 'public');
-                $validatedData['midia'] = $path;
+            if ($request->hasFile('midia')) {
+                $validatedData['midia'] = $request->file('midia');
             }
 
-            $postagem->update($validatedData);
-            $postagem->load('voluntario');
-            return response()->json($postagem);
+            $updatedPostagem = $this->postagemService->update($postagem, $validatedData);
+            $updatedPostagem->load('voluntario');
+
+            return response()->json($updatedPostagem);
 
         } catch (\Throwable $e) {
             Log::error('[PostagemController] Erro no update: ' . $e->getMessage());
             report($e);
-            return response()->json(['error' => 'Ocorreu um erro ao atualizar a postagem.'], 500);
+            return response()->json([
+                'error' => 'Ocorreu um erro ao atualizar a postagem.'
+            ], 500);
         }
     }
 
     public function destroy(Postagem $postagem)
     {
         try {
-            if ($postagem->midia) {
-                Storage::disk('public')->delete($postagem->midia);
-            }
-            $postagem->delete();
+            $this->postagemService->delete($postagem);
             return response()->json(null, 204);
         } catch (\Throwable $e) {
             Log::error('[PostagemController] Erro no destroy: ' . $e->getMessage());
             report($e);
-            return response()->json(['error' => 'Ocorreu um erro ao excluir a postagem.'], 500);
+            return response()->json([
+                'error' => 'Ocorreu um erro ao excluir a postagem.'
+            ], 500);
         }
     }
 }
