@@ -10,51 +10,89 @@ class PostagemService
 {
     public function getAll()
     {
-        return Postagem::with('voluntario')->latest()->get();
+        return Postagem::with('voluntario')->orderBy('created_at', 'desc')->get();
     }
 
     public function create(array $data)
     {
-        try {
-            Log::info('[PostagemService] A iniciar a criação da postagem.');
+        Log::info('[PostagemService] Iniciando criação de postagem.');
 
+        try {
             if (isset($data['midia']) && $data['midia']->isValid()) {
-                Log::info('[PostagemService] Ficheiro de mídia é válido. A tentar salvar...');
+                Log::info('[PostagemService] Salvando mídia.');
+
+                // $path = $data['midia']->store('postagens', 'public');
+                // $data['midia_url'] = Storage::url($path);
+
+                // unset($data['midia']);
+
                 $path = $data['midia']->store('uploads/midia', 'public');
-                Log::info('[PostagemService] Ficheiro salvo com sucesso em: ' . $path);
                 $data['midia'] = $path;
+            } else {
+                Log::warning('[PostagemService] Nenhuma mídia válida enviada.');
             }
 
             $postagem = Postagem::create($data);
-            Log::info('[PostagemService] Postagem criada no banco de dados com ID: ' . $postagem->id);
-            return $postagem;
 
+            Log::info('[PostagemService] Postagem criada com ID: ' . $postagem->id);
+
+            return $postagem;
         } catch (\Throwable $e) {
-            Log::error('[PostagemService] ERRO na criação: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            Log::error('[PostagemService] Erro ao criar postagem: ' . $e->getMessage());
+            report($e);
             throw $e;
         }
     }
 
     public function update(Postagem $postagem, array $data)
     {
-        if (isset($data['midia']) && $data['midia']->isValid()) {
-            if ($postagem->midia) {
-                Storage::disk('public')->delete($postagem->midia);
-            }
-            $path = $data['midia']->store('uploads/midia', 'public');
-            $data['midia'] = $path;
-        }
+        Log::info("[PostagemService] Atualizando postagem ID: {$postagem->id}");
 
-        $postagem->update($data);
-        return $postagem;
+        try {
+            if (isset($data['midia']) && $data['midia']->isValid()) {
+                Log::info('[PostagemService] Substituindo mídia.');
+
+                // Apagar mídia antiga, se existir
+                if ($postagem->midia_url) {
+                    $oldPath = str_replace('/storage/', '', $postagem->midia_url);
+                    Storage::disk('public')->delete($oldPath);
+                }
+
+                $path = $data['midia']->store('postagens', 'public');
+                $data['midia_url'] = Storage::url($path);
+
+                unset($data['midia']);
+            }
+
+            $postagem->update($data);
+
+            Log::info("[PostagemService] Postagem ID {$postagem->id} atualizada com sucesso.");
+
+            return $postagem;
+        } catch (\Throwable $e) {
+            Log::error('[PostagemService] Erro ao atualizar postagem: ' . $e->getMessage());
+            report($e);
+            throw $e;
+        }
     }
 
     public function delete(Postagem $postagem)
     {
-        if ($postagem->midia) {
-            Storage::disk('public')->delete($postagem->midia);
-        }
+        Log::info("[PostagemService] Deletando postagem ID: {$postagem->id}");
 
-        return $postagem->delete();
+        try {
+            if ($postagem->midia_url) {
+                $path = str_replace('/storage/', '', $postagem->midia_url);
+                Storage::disk('public')->delete($path);
+            }
+
+            $postagem->delete();
+
+            Log::info("[PostagemService] Postagem ID {$postagem->id} deletada.");
+        } catch (\Throwable $e) {
+            Log::error('[PostagemService] Erro ao deletar postagem: ' . $e->getMessage());
+            report($e);
+            throw $e;
+        }
     }
 }

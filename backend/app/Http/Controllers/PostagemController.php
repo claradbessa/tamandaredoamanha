@@ -24,32 +24,39 @@ class PostagemController extends Controller
 
     public function store(Request $request)
     {
+        Log::info('[PostagemController] Iniciando store.');
 
-        Log::info('[PostagemController] A iniciar o método store.');
+        try {
+            if ($request->hasFile('midia')) {
+                Log::info('[PostagemController] Arquivo de mídia presente.');
+            } else {
+                Log::warning('[PostagemController] Nenhum arquivo de mídia enviado.');
+            }
 
-        if ($request->hasFile('midia')) {
-            Log::info('[PostagemController] Arquivo de mídia presente na requisição.');
-        } else {
-            Log::warning('[PostagemController] Nenhum arquivo de mídia na requisição.');
+            $validatedData = $request->validate([
+                'titulo' => 'required|string|max:150',
+                'conteudo' => 'required|string',
+                'midia' => 'nullable|file|mimes:jpg,jpeg,png,gif,mp4|max:20480',
+                'publicado' => 'sometimes|boolean',
+                'voluntario_id' => 'required|exists:voluntarios,id',
+                'categoria' => 'nullable|string|max:50',
+            ]);
+
+            Log::info('[PostagemController] Validação concluída.');
+
+            $postagem = $this->postagemService->create($validatedData);
+
+            $postagem->load('voluntario');
+
+            return response()->json($postagem, 201);
+
+        } catch (\Throwable $e) {
+            Log::error('[PostagemController] Erro no store: ' . $e->getMessage());
+            report($e); // Isso força o Laravel a registrar no log e no Render
+            return response()->json([
+                'error' => 'Ocorreu um erro ao criar a postagem.'
+            ], 500);
         }
-
-        $validatedData = $request->validate([
-            'titulo' => 'required|string|max:150',
-            'conteudo' => 'required|string',
-            'midia' => 'nullable|file|mimes:jpg,jpeg,png,gif,mp4|max:20480',
-            'publicado' => 'sometimes|boolean',
-            'voluntario_id' => 'required|exists:voluntarios,id',
-            'categoria' => 'nullable|string|max:50',
-        ]);
-
-        Log::info('[PostagemController] Validação concluída com sucesso.');
-
-        $postagem = $this->postagemService->create($validatedData);
-
-        // Carrega o relacionamento com o voluntário antes de retornar
-        $postagem->load('voluntario');
-
-        return response()->json($postagem, 201);
     }
 
     public function show(Postagem $postagem)
@@ -61,32 +68,46 @@ class PostagemController extends Controller
 
     public function update(Request $request, Postagem $postagem)
     {
+        Log::info("[PostagemController] Update no post ID: {$postagem->id}");
 
-        Log::info('Requisição recebida no PostagemController@update para o post ID: ' . $postagem->id);
+        try {
+            $validatedData = $request->validate([
+                'titulo' => 'sometimes|required|string|max:150',
+                'conteudo' => 'sometimes|required|string',
+                'midia' => 'nullable|file|mimes:jpg,jpeg,png,gif,mp4|max:20480',
+                'publicado' => 'sometimes|boolean',
+                'voluntario_id' => 'sometimes|required|exists:voluntarios,id',
+                'categoria' => 'nullable|string|max:50',
+            ]);
 
-        $validatedData = $request->validate([
-            'titulo' => 'sometimes|required|string|max:150',
-            'conteudo' => 'sometimes|required|string',
-            'midia' => 'nullable|file|mimes:jpg,jpeg,png,gif,mp4|max:20480',
-            'publicado' => 'sometimes|boolean',
-            'voluntario_id' => 'sometimes|required|exists:voluntarios,id',
-            'categoria' => 'nullable|string|max:50',
-        ]);
+            Log::info('[PostagemController] Validação do update concluída.');
 
-        Log::info('Validação de update concluída com sucesso.');
+            $updatedPostagem = $this->postagemService->update($postagem, $validatedData);
 
-        $updatedPostagem = $this->postagemService->update($postagem, $validatedData);
+            $updatedPostagem->load('voluntario');
 
-        // Carrega o relacionamento com o voluntário antes de retornar
-        $updatedPostagem->load('voluntario');
+            return response()->json($updatedPostagem);
 
-        return response()->json($updatedPostagem);
+        } catch (\Throwable $e) {
+            Log::error('[PostagemController] Erro no update: ' . $e->getMessage());
+            report($e);
+            return response()->json([
+                'error' => 'Ocorreu um erro ao atualizar a postagem.'
+            ], 500);
+        }
     }
 
     public function destroy(Postagem $postagem)
     {
-        $this->postagemService->delete($postagem);
-
-        return response()->json(null, 204);
+        try {
+            $this->postagemService->delete($postagem);
+            return response()->json(null, 204);
+        } catch (\Throwable $e) {
+            Log::error('[PostagemController] Erro no destroy: ' . $e->getMessage());
+            report($e);
+            return response()->json([
+                'error' => 'Ocorreu um erro ao excluir a postagem.'
+            ], 500);
+        }
     }
 }
