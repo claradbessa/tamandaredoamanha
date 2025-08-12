@@ -31,20 +31,19 @@ class Postagem extends Model
     }
 
     /**
-     * Accessor para obter a URL completa da mídia de forma segura.
+     * Accessor para obter a URL completa da mídia.
      */
     public function getMidiaUrlAttribute(): ?string
     {
         try {
-            // Verifica se o campo 'midia' existe e se o ficheiro realmente está no disco
             if ($this->midia && Storage::disk('public')->exists($this->midia)) {
-                return Storage::url($this->midia);
+                return Storage::disk('public')->url($this->midia);
             }
-            return null;
+            // Retorna placeholder caso não tenha mídia
+            return asset('images/placeholder.jpg');
         } catch (\Throwable $e) {
-            // Se houver um erro (ex: APP_URL em falta), regista no log e retorna null
-            Log::error('Erro ao gerar URL da mídia para a postagem ID ' . $this->id . ': ' . $e->getMessage());
-            return null;
+            Log::error("Erro ao gerar URL da mídia para a postagem ID {$this->id}: {$e->getMessage()}");
+            return asset('images/placeholder.jpg');
         }
     }
 }

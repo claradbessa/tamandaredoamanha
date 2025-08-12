@@ -10,31 +10,23 @@ class PostagemService
 {
     public function getAll()
     {
-        return Postagem::with('voluntario')->orderBy('created_at', 'desc')->get();
+        return Postagem::with('voluntario')
+            ->orderBy('created_at', 'desc')
+            ->get();
     }
 
     public function create(array $data)
     {
-        Log::info('[PostagemService] Iniciando criação de postagem.');
+        Log::info('[PostagemService] Criando nova postagem.');
 
         try {
             if (isset($data['midia']) && $data['midia']->isValid()) {
-                Log::info('[PostagemService] Salvando mídia.');
-
-                // $path = $data['midia']->store('postagens', 'public');
-                // $data['midia_url'] = Storage::url($path);
-
-                // unset($data['midia']);
-
-                $path = $data['midia']->store('uploads/midia', 'public');
+                $path = $data['midia']->store('postagens', 'public');
                 $data['midia'] = $path;
-            } else {
-                Log::warning('[PostagemService] Nenhuma mídia válida enviada.');
             }
 
             $postagem = Postagem::create($data);
-
-            Log::info('[PostagemService] Postagem criada com ID: ' . $postagem->id);
+            Log::info("[PostagemService] Postagem criada com ID: {$postagem->id}");
 
             return $postagem;
         } catch (\Throwable $e) {
@@ -50,23 +42,17 @@ class PostagemService
 
         try {
             if (isset($data['midia']) && $data['midia']->isValid()) {
-                Log::info('[PostagemService] Substituindo mídia.');
-
-                // Apagar mídia antiga, se existir
-                if ($postagem->midia_url) {
-                    $oldPath = str_replace('/storage/', '', $postagem->midia_url);
-                    Storage::disk('public')->delete($oldPath);
+                // Deleta a mídia antiga
+                if ($postagem->midia && Storage::disk('public')->exists($postagem->midia)) {
+                    Storage::disk('public')->delete($postagem->midia);
                 }
 
                 $path = $data['midia']->store('postagens', 'public');
-                $data['midia_url'] = Storage::url($path);
-
-                unset($data['midia']);
+                $data['midia'] = $path;
             }
 
             $postagem->update($data);
-
-            Log::info("[PostagemService] Postagem ID {$postagem->id} atualizada com sucesso.");
+            Log::info("[PostagemService] Postagem ID {$postagem->id} atualizada.");
 
             return $postagem;
         } catch (\Throwable $e) {
@@ -81,14 +67,12 @@ class PostagemService
         Log::info("[PostagemService] Deletando postagem ID: {$postagem->id}");
 
         try {
-            if ($postagem->midia_url) {
-                $path = str_replace('/storage/', '', $postagem->midia_url);
-                Storage::disk('public')->delete($path);
+            if ($postagem->midia && Storage::disk('public')->exists($postagem->midia)) {
+                Storage::disk('public')->delete($postagem->midia);
             }
 
             $postagem->delete();
-
-            Log::info("[PostagemService] Postagem ID {$postagem->id} deletada.");
+            Log::info("[PostagemService] Postagem ID {$postagem->id} excluída.");
         } catch (\Throwable $e) {
             Log::error('[PostagemService] Erro ao deletar postagem: ' . $e->getMessage());
             report($e);

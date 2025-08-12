@@ -24,15 +24,9 @@ class PostagemController extends Controller
 
     public function store(Request $request)
     {
-        Log::info('[PostagemController] Iniciando store.');
+        Log::info('[PostagemController] Iniciando criação de postagem.');
 
         try {
-            if ($request->hasFile('midia')) {
-                Log::info('[PostagemController] Arquivo de mídia presente.');
-            } else {
-                Log::warning('[PostagemController] Nenhum arquivo de mídia enviado.');
-            }
-
             $validatedData = $request->validate([
                 'titulo' => 'required|string|max:150',
                 'conteudo' => 'required|string',
@@ -42,17 +36,19 @@ class PostagemController extends Controller
                 'categoria' => 'nullable|string|max:50',
             ]);
 
-            Log::info('[PostagemController] Validação concluída.');
+            // Se houver mídia no request, adiciona ao array de dados
+            if ($request->hasFile('midia')) {
+                $validatedData['midia'] = $request->file('midia');
+            }
 
             $postagem = $this->postagemService->create($validatedData);
-
             $postagem->load('voluntario');
 
             return response()->json($postagem, 201);
 
         } catch (\Throwable $e) {
             Log::error('[PostagemController] Erro no store: ' . $e->getMessage());
-            report($e); // Isso força o Laravel a registrar no log e no Render
+            report($e);
             return response()->json([
                 'error' => 'Ocorreu um erro ao criar a postagem.'
             ], 500);
@@ -68,7 +64,7 @@ class PostagemController extends Controller
 
     public function update(Request $request, Postagem $postagem)
     {
-        Log::info("[PostagemController] Update no post ID: {$postagem->id}");
+        Log::info("[PostagemController] Atualizando postagem ID: {$postagem->id}");
 
         try {
             $validatedData = $request->validate([
@@ -80,10 +76,11 @@ class PostagemController extends Controller
                 'categoria' => 'nullable|string|max:50',
             ]);
 
-            Log::info('[PostagemController] Validação do update concluída.');
+            if ($request->hasFile('midia')) {
+                $validatedData['midia'] = $request->file('midia');
+            }
 
             $updatedPostagem = $this->postagemService->update($postagem, $validatedData);
-
             $updatedPostagem->load('voluntario');
 
             return response()->json($updatedPostagem);
