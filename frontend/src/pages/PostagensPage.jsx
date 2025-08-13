@@ -9,15 +9,17 @@ function PostagensPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingPostagem, setEditingPostagem] = useState(null);
 
   const fetchPostagens = async () => {
     try {
       setLoading(true);
-      const response = await api.get('/postagens');
-      setPostagens(response.data);
+      const { data } = await api.get('/postagens');
+      setPostagens(data);
     } catch (err) {
+      console.error('Erro ao carregar postagens:', err);
       setError('Falha ao carregar as postagens.');
     } finally {
       setLoading(false);
@@ -40,7 +42,8 @@ function PostagensPage() {
 
   const handleOpenModal = (postagem = null) => {
     clearMessages();
-    setEditingPostagem(postagem);
+
+    setEditingPostagem(postagem ? { ...postagem } : null);
     setIsModalOpen(true);
   };
 
@@ -49,51 +52,118 @@ function PostagensPage() {
     setEditingPostagem(null);
   };
 
+  const formDataToObject = (formData) => {
+    const obj = {};
+    for (const [key, value] of formData.entries()) {
+      if (value instanceof File) continue;
+      obj[key] = value;
+    }
+    return obj;
+  };
+
+  // - Ao editar: se não houver ficheiro, enviamos PUT com JSON contendo TODOS os campos importantes
+  //   preenchendo a partir do objeto existente para não sobrescrever com null.
+  // - Se houver ficheiro, enviamos POST + _method=PUT com multipart/form-data, e depois fazemos GET do recurso
+  //   para garantir que temos o objeto completo do backend.
   const handleSavePostagem = async (formData, postagemId) => {
     clearMessages();
+
     try {
-      const config = { headers: { 'Content-Type': 'multipart/form-data' } };
-      let response;
-
       if (postagemId) {
-        formData.append('_method', 'PUT');
-        response = await api.post(`/postagens/${postagemId}`, formData, config);
-        const updatedPostagem = response.data;
+        // === EDIT ===
+        const fileEntry = formData.get('midia');
+        const hasFile = fileEntry instanceof File && fileEntry.name;
 
-        // AQUI ESTÁ A CORREÇÃO: Mescla os dados em vez de substituir
-        setPostagens(prevPostagens =>
-          prevPostagens.map(p => (p.id === postagemId ? { ...p, ...updatedPostagem } : p))
-        );
+        if (hasFile) {
+          // upload 
+          formData.append('_method', 'PUT');
+          console.log('[PostagensPage] Enviando edição (POST + _method=PUT) para', `/postagens/${postagemId}`);
+          await api.post(`/postagens/${postagemId}`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+          });
+
+          // Busca versão completa do backend e mesclar no estado
+          const { data: updated } = await api.get(`/postagens/${postagemId}`);
+          setPostagens((prev) => prev.map((p) => (p.id === postagemId ? { ...p, ...updated } : p)));
+        } else {
+          // Sem arquivo: construir payload JSON com todos os campos importantes,
+          // preenchendo campos faltantes com os valores atuais do item para evitar sobrescrever com null.
+          const payloadPartial = formDataToObject(formData);
+          const current = postagens.find((p) => p.id === postagemId) || {};
+          const payload = {
+            titulo: payloadPartial.titulo ?? current.titulo ?? '',
+            conteudo: payloadPartial.conteudo ?? current.conteudo ?? '',
+            voluntario_id: payloadPartial.voluntario_id ?? current.voluntario_id ?? current.voluntario?.id ?? null,
+            publicado: typeof payloadPartial.publicado !== 'undefined' ? payloadPartial.publicado : current.publicado ?? false,
+            categoria: payloadPartial.categoria ?? current.categoria ?? null,
+          };
+
+          console.log('[PostagensPage] Enviando edição (PUT JSON) payload:', payload);
+          const { data: updated } = await api.put(`/postagens/${postagemId}`, payload);
+
+          // O backend pode devolver o objeto atualizado; se não, pedimos o recurso
+          if (updated && updated.id) {
+            setPostagens((prev) => prev.map((p) => (p.id === postagemId ? { ...p, ...updated } : p)));
+          } else {
+            const { data: fetched } = await api.get(`/postagens/${postagemId}`);
+            setPostagens((prev) => prev.map((p) => (p.id === postagemId ? { ...p, ...fetched } : p)));
+          }
+        }
+
         showSuccess('Postagem atualizada com sucesso!');
       } else {
-        response = await api.post('/postagens', formData, config);
-        const newPostagem = response.data;
-        setPostagens(prevPostagens => [newPostagem, ...prevPostagens]);
+        // === CREATE ===
+        console.log('[PostagensPage] Criando postagem com form-data');
+        const { data: created } = await api.post('/postagens', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+
+        // Insere no topo da lista
+        setPostagens((prev) => [created, ...prev]);
         showSuccess('Postagem criada com sucesso!');
       }
-      
+
       handleCloseModal();
     } catch (err) {
-      const serverMessage = err.response?.data?.message || 'Falha ao salvar a postagem.';
-      setError(serverMessage);
+      console.error('Erro ao salvar postagem:', err);
+      const serverMessage = err.response?.data?.message || err.response?.data || err.message;
+      setError(typeof serverMessage === 'string' ? serverMessage : JSON.stringify(serverMessage));
     }
   };
 
+  // Excluir postagem
   const handleDeletePostagem = async (postagemId) => {
     clearMessages();
-    if (window.confirm('Tem a certeza que deseja excluir esta postagem?')) {
-      try {
-        await api.delete(`/postagens/${postagemId}`);
-        setPostagens(prevPostagens => prevPostagens.filter(p => p.id !== postagemId));
-        showSuccess('Postagem excluída com sucesso!');
-      } catch (err) {
-        setError('Falha ao excluir a postagem.');
-      }
+    if (!postagemId) {
+      setError('ID da postagem inválido para excluir.');
+      return;
     }
-  };
 
-  const getMediaUrl = (path) => {
-    return `https://render-m7dj.onrender.com/storage/${path}`;
+    if (!window.confirm('Tem certeza que deseja excluir esta postagem?')) return;
+
+    try {
+      const res = await api.delete(`/postagens/${postagemId}`);
+      console.log('Resposta delete:', res);
+
+      // Remove localmente
+      setPostagens((prev) => prev.filter((p) => p.id !== postagemId));
+      showSuccess('Postagem excluída com sucesso!');
+
+      // Verificação extra: busca a lista do backend para confirmar (se algo voltar, mostra warning)
+      const { data: fresh } = await api.get('/postagens');
+      setPostagens(fresh);
+
+      // Se a postagem ainda existir no server, avisa e escreve no console para debug
+      const stillExists = fresh.some((p) => p.id === postagemId);
+      if (stillExists) {
+        console.warn(`[PostagensPage] Atenção: após delete, postagem ${postagemId} ainda existe no backend.`);
+        setError('A exclusão no servidor não foi persistida. Verifique os logs do backend.');
+      }
+    } catch (err) {
+      console.error('Erro ao excluir postagem:', err);
+      const serverMessage = err.response?.data?.message || err.response?.data || err.message;
+      setError(typeof serverMessage === 'string' ? serverMessage : 'Falha ao excluir a postagem.');
+    }
   };
 
   if (loading) return <p>A carregar postagens...</p>;
@@ -111,9 +181,9 @@ function PostagensPage() {
       <Modal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
-        title={editingPostagem ? "Editar Postagem" : "Criar Nova Postagem"}
+        title={editingPostagem ? 'Editar Postagem' : 'Criar Nova Postagem'}
       >
-        <PostagemForm 
+        <PostagemForm
           onSave={handleSavePostagem}
           onCancel={handleCloseModal}
           postagemToEdit={editingPostagem}
@@ -123,7 +193,7 @@ function PostagensPage() {
       <table border="1" style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
         <thead>
           <tr>
-            <th style={{width: '100px'}}>Mídia</th>
+            <th style={{ width: '100px' }}>Mídia</th>
             <th>Título</th>
             <th>Autor</th>
             <th>Status</th>
@@ -132,8 +202,9 @@ function PostagensPage() {
         </thead>
         <tbody>
           {postagens.length > 0 ? (
-            postagens.map(postagem => (
-              <tr key={postagem.id}>
+            postagens.map((postagem, idx) => (
+              // fallback key seguro (id preferencial; se faltar, usa índice)
+              <tr key={postagem.id ?? `post-${idx}`}>
                 <td>
                   {postagem.midia_url ? (
                     <img src={postagem.midia_url} alt={postagem.titulo} style={{ width: '100px', height: 'auto' }} />
