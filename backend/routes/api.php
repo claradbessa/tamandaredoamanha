@@ -10,6 +10,7 @@ use App\Http\Controllers\GestorController;
 use App\Http\Controllers\MatriculaController;
 use App\Http\Controllers\PostagemController;
 use App\Http\Controllers\VoluntarioController;
+use App\Http\Controllers\GaleriaController;
 
 // Rotas Públicas de Autenticação
 Route::post('/register', [AuthController::class, 'register']);
@@ -24,6 +25,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/aulas/{aula}/alunos', [AulaController::class, 'getAlunos']);
     Route::get('/aulas-lista', [AulaController::class, 'getListaAulas']);
+
+    Route::get('/galeria', [GaleriaController::class, 'index']);
+    Route::post('/galeria', [GaleriaController::class, 'store']);
 
     // Rotas de Recursos (CRUDs)
     Route::apiResource('voluntarios', VoluntarioController::class);
