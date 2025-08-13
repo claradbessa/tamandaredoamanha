@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\GaleriaImagem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class GaleriaController extends Controller
 {
@@ -22,7 +23,7 @@ class GaleriaController extends Controller
     {
         $validated = $request->validate([
             'imagens' => 'required|array',
-            'imagens.*' => 'image|mimes:jpg,jpeg,png|max:2048', // Aceita múltiplas imagens
+            'imagens.*' => 'image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         $imagensSalvas = [];
@@ -33,5 +34,18 @@ class GaleriaController extends Controller
         }
 
         return response()->json($imagensSalvas, 201);
+    }
+
+    /**
+     * Remove uma imagem específica.
+     */
+    public function destroy(GaleriaImagem $galeriaImagem)
+    {
+        if ($galeriaImagem->caminho) {
+            Storage::disk('public')->delete($galeriaImagem->caminho);
+        }
+        $galeriaImagem->delete();
+
+        return response()->noContent();
     }
 }
