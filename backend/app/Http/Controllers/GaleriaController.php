@@ -28,18 +28,28 @@ class GaleriaController extends Controller
     public function store(Request $request)
     {
         try {
+            // Como enviamos `imagens` várias vezes no FormData (sem []),
+            // Laravel entende como array automaticamente.
             $validated = $request->validate([
-                'imagens'   => 'required|array',
-                'imagens.*' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+                'imagens'   => 'required',
+                'imagens.*' => 'image|mimes:jpg,jpeg,png|max:2048',
             ]);
 
-            $imagensSalvas = [];
-            foreach ($validated['imagens'] as $imagem) {
-                $path = $imagem->store('galeria', 'public');
-                $imagensSalvas[] = GaleriaImagem::create(['caminho' => $path]);
+            $arquivos = $request->file('imagens');
+
+            if (!is_array($arquivos)) {
+                // Se for apenas 1 arquivo, converte para array
+                $arquivos = [$arquivos];
             }
 
-            // Retorna a lista dos objetos de imagem criados, que é o padrão RESTful.
+            $imagensSalvas = [];
+            foreach ($arquivos as $imagem) {
+                if ($imagem) {
+                    $path = $imagem->store('galeria', 'public');
+                    $imagensSalvas[] = GaleriaImagem::create(['caminho' => $path]);
+                }
+            }
+
             return response()->json($imagensSalvas, 201);
 
         } catch (\Exception $e) {
@@ -58,7 +68,6 @@ class GaleriaController extends Controller
                 Storage::disk('public')->delete($galeriaImagem->caminho);
             }
             $galeriaImagem->delete();
-            // Retorna a resposta padrão para uma exclusão bem-sucedida.
             return response()->noContent();
         } catch (\Throwable $e) {
             Log::error('Erro ao excluir da galeria', ['msg' => $e->getMessage()]);
