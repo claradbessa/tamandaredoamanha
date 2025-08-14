@@ -10,27 +10,29 @@ class GaleriaImagem extends Model
 {
     use HasFactory;
 
-    protected $table = 'galeria_imagens';
+    protected $table = 'galeria_imagems';
 
-    /**
-     * Campos que podem ser preenchidos em massa
-     */
     protected $fillable = [
         'caminho',
-        'titulo',
+        'descricao',
     ];
 
-    /**
-     * Atributos que serão automaticamente adicionados ao JSON
-     */
     protected $appends = ['url'];
 
-    /**
-     * Acessor para gerar a URL pública da imagem
-     */
-    public function getUrlAttribute()
+    public function getUrlAttribute(): ?string
     {
-        // Gera a URL baseada no caminho armazenado no banco
-        return $this->caminho ? Storage::url($this->caminho) : null;
+        $caminho = $this->attributes['caminho'] ?? null;
+        if (!$caminho) {
+            return null;
+        }
+
+        try {
+            if (Storage::disk('public')->exists($caminho)) {
+                return Storage::url($caminho);
+            }
+            return null;
+        } catch (\Throwable $e) {
+            return null;
+        }
     }
 }
