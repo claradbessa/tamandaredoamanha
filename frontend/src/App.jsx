@@ -10,6 +10,7 @@ import VoluntariosPage from './pages/VoluntariosPage';
 import PostagensPage from './pages/PostagensPage';
 import FrequenciaPage from './pages/FrequenciaPage'; 
 import RelatorioFrequenciaPage from './pages/RelatorioFrequenciaPage';
+import GaleriaAdminPage from './pages/GaleriaAdminPage';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
             <Route path="/admin/frequencia" element={<RelatorioFrequenciaPage />} />
             <Route path="/admin/voluntarios" element={<VoluntariosPage />} />
             <Route path="/admin/postagens" element={<PostagensPage />} />
+            <Route path="/admin/galeria" element={<GaleriaAdminPage />} />
           </Route>
         </Route>
       </Routes>
