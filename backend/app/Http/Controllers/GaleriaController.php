@@ -10,6 +10,9 @@ use Illuminate\Validation\ValidationException;
 
 class GaleriaController extends Controller
 {
+    /**
+     * Lista todas as imagens da galeria.
+     */
     public function index()
     {
         try {
@@ -20,50 +23,73 @@ class GaleriaController extends Controller
         }
     }
 
+    /**
+     * Armazena uma ou mais imagens novas (modo detetive).
+     */
     public function store(Request $request)
     {
+        Log::info('🚀 Upload iniciado');
+
+        // Loga headers e método
+        Log::info('📩 Request info', [
+            'method' => $request->method(),
+            'content_type' => $request->header('Content-Type'),
+        ]);
+
+        // Verifica se o Laravel está vendo arquivos
+        Log::info('📂 hasFile("imagens")?', [
+            'hasFile' => $request->hasFile('imagens'),
+            'all_files' => $request->allFiles(),
+        ]);
+
         try {
+            Log::info('🔍 Validando arquivos...');
             $request->validate([
                 'imagens'   => 'required',
-                'imagens.*' => 'image|mimes:jpg,jpeg,png|max:5120', // 5MB
+                'imagens.*' => 'image|mimes:jpg,jpeg,png|max:5120', // 5 MB
             ]);
-
-            $arquivos = $request->file('imagens');
-
-            if (!$arquivos) {
-                Log::warning('Nenhum arquivo recebido em "imagens"');
-                return response()->json(['message' => 'Nenhum arquivo recebido.'], 422);
-            }
-            if (!is_array($arquivos)) {
-                $arquivos = [$arquivos];
-            }
-
-            Log::info('Upload galeria', ['qtd' => count($arquivos)]);
-
-            $imagensSalvas = [];
-            foreach ($arquivos as $imagem) {
-                if (!$imagem) {
-                    continue;
-                }
-                $path = $imagem->store('galeria', 'public');
-                $imagensSalvas[] = GaleriaImagem::create(['caminho' => $path]);
-            }
-
-            return response()->json($imagensSalvas, 201);
-
+            Log::info('✅ Validação OK');
         } catch (ValidationException $e) {
+            Log::warning('⚠️ Falha na validação', ['errors' => $e->errors()]);
             return response()->json([
                 'message' => 'Falha de validação.',
                 'errors'  => $e->errors(),
             ], 422);
+        }
+
+        // Recupera arquivos
+        $arquivos = $request->file('imagens');
+        if (!is_array($arquivos)) {
+            $arquivos = [$arquivos];
+        }
+        Log::info('📦 Arquivos recebidos', ['qtd' => count($arquivos)]);
+
+        $imagensSalvas = [];
+        try {
+            foreach ($arquivos as $imagem) {
+                if (!$imagem) {
+                    Log::warning('❌ Arquivo nulo detectado, pulando...');
+                    continue;
+                }
+                $path = $imagem->store('galeria', 'public');
+                $imagensSalvas[] = GaleriaImagem::create(['caminho' => $path]);
+                Log::info('💾 Arquivo salvo', ['path' => $path]);
+            }
         } catch (\Throwable $e) {
-            Log::error('Erro ao salvar imagens na galeria', [
+            Log::error('🔥 Erro ao salvar arquivo', [
                 'msg' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
             ]);
             return response()->json(['message' => 'Erro ao salvar imagens.'], 500);
         }
+
+        Log::info('🎉 Upload concluído com sucesso', ['total_salvos' => count($imagensSalvas)]);
+        return response()->json($imagensSalvas, 201);
     }
 
+    /**
+     * Remove uma imagem da galeria.
+     */
     public function destroy(GaleriaImagem $galeriaImagem)
     {
         try {
