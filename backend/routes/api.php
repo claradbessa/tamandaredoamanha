@@ -26,7 +26,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/aulas/{aula}/alunos', [AulaController::class, 'getAlunos']);
     Route::get('/aulas-lista', [AulaController::class, 'getListaAulas']);
 
-    Route::apiResource('galeria', GaleriaController::class)->except(['update', 'show']);
+    Route::get('/galeria', [GaleriaController::class, 'index']);
+    Route::post('/galeria', [GaleriaController::class, 'store']);
+    Route::delete('/galeria/{galeriaImagem}', [GaleriaController::class, 'destroy']);
 
     // Rotas de Recursos (CRUDs)
     Route::apiResource('voluntarios', VoluntarioController::class);
