@@ -9,29 +9,28 @@ use Illuminate\Support\Facades\Storage;
 class GaleriaController extends Controller
 {
     /**
-     * Lista todas as imagens da galeria.
+     * Exibe todas as imagens da galeria.
      */
     public function index()
     {
-        // O accessor 'url' no Model já é chamado automaticamente.
-        // Adicionamos orderByDesc para mostrar as mais recentes primeiro.
+        // Retorna as imagens mais recentes primeiro. O accessor 'url' no Model já é chamado automaticamente.
         return response()->json(GaleriaImagem::orderByDesc('created_at')->get());
     }
 
     /**
-     * Salva novas imagens na galeria.
+     * Armazena uma ou mais imagens novas.
      */
     public function store(Request $request)
     {
         $validated = $request->validate([
             'imagens' => 'required|array',
-            'imagens.*' => 'image|mimes:jpeg,png,jpg|max:2048',
+            'imagens.*' => 'image|mimes:jpg,jpeg,png|max:2048', // Limite de 2MB por imagem
         ]);
 
         $imagensSalvas = [];
 
-        foreach ($validated['imagens'] as $file) {
-            $path = $file->store('galeria', 'public');
+        foreach ($validated['imagens'] as $imagem) {
+            $path = $imagem->store('galeria', 'public');
             $imagensSalvas[] = GaleriaImagem::create(['caminho' => $path]);
         }
 
