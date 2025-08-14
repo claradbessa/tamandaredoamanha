@@ -12,18 +12,25 @@ class GaleriaImagem extends Model
 
     protected $table = 'galeria_imagens';
 
+    /**
+     * Campos que podem ser preenchidos em massa
+     */
     protected $fillable = [
         'caminho',
         'titulo',
     ];
 
+    /**
+     * Atributos que serão automaticamente adicionados ao JSON
+     */
     protected $appends = ['url'];
 
-    public function getUrlAttribute(): ?string
+    /**
+     * Acessor para gerar a URL pública da imagem
+     */
+    public function getUrlAttribute()
     {
-        if ($this->caminho && Storage::disk('public')->exists($this->caminho)) {
-            return Storage::disk('public')->url($this->caminho);
-        }
-        return null;
+        // Gera a URL baseada no caminho armazenado no banco
+        return $this->caminho ? Storage::url($this->caminho) : null;
     }
 }
