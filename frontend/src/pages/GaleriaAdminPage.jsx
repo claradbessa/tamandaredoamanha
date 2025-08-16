@@ -10,14 +10,21 @@ function GaleriaAdminPage() {
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
+  const safeSetImages = (data) => {
+    if (Array.isArray(data)) setImages(data);
+    else setImages([]);
+  };
+
   const fetchImages = async () => {
     try {
       setLoading(true);
+      setError('');
       const { data } = await api.get('/galeria');
-      setImages(data);
+      safeSetImages(data);
     } catch (err) {
-      console.error(err);
-      setError('Falha ao carregar as imagens da galeria.');
+      console.error('Erro ao carregar a galeria:', err);
+      setError(err.response?.data?.message || 'Falha ao carregar as imagens da galeria.');
+      safeSetImages([]);
     } finally {
       setLoading(false);
     }
@@ -28,7 +35,7 @@ function GaleriaAdminPage() {
   }, []);
 
   const handleFileChange = (event) => {
-    setFiles(event.target.files);
+    setFiles(Array.from(event.target.files || []));
   };
 
   const handleSubmit = async (event) => {
@@ -43,9 +50,7 @@ function GaleriaAdminPage() {
     setSuccessMessage('');
 
     const formData = new FormData();
-    for (let i = 0; i < files.length; i++) {
-      formData.append('imagens[]', files[i]);
-    }
+    files.forEach((file) => formData.append('imagens[]', file));
 
     try {
       await api.post('/galeria', formData, {
@@ -54,25 +59,31 @@ function GaleriaAdminPage() {
       setSuccessMessage('Imagens enviadas com sucesso!');
       setFiles([]);
       event.target.reset();
-      fetchImages();
+      await fetchImages();
     } catch (err) {
-      console.error(err);
-      setError('Ocorreu um erro ao enviar as imagens.');
+      console.error('Erro ao enviar imagens:', err);
+
+      if (err.response) {
+        console.log('Resposta do backend:', err.response.data);
+        setError(JSON.stringify(err.response.data, null, 2)); // JSON formatado
+      } else {
+        setError(err.message);
+      }
     } finally {
       setIsUploading(false);
     }
   };
 
   const handleDelete = async (imageId) => {
-    if (window.confirm('Tem certeza que deseja excluir esta imagem?')) {
-      try {
-        await api.delete(`/galeria/${imageId}`);
-        setSuccessMessage('Imagem excluída com sucesso!');
-        fetchImages();
-      } catch (err) {
-        console.error(err);
-        setError('Falha ao excluir a imagem.');
-      }
+    if (!window.confirm('Tem certeza que deseja excluir esta imagem?')) return;
+
+    try {
+      await api.delete(`/galeria/${imageId}`);
+      setSuccessMessage('Imagem excluída com sucesso!');
+      await fetchImages();
+    } catch (err) {
+      console.error('Erro ao excluir imagem:', err);
+      setError(err.response?.data?.message || 'Falha ao excluir a imagem.');
     }
   };
 
@@ -87,10 +98,11 @@ function GaleriaAdminPage() {
           {successMessage}
         </div>
       )}
+
       {error && (
-        <div style={{ color: 'red', background: '#fde8e8', padding: '10px', margin: '15px 0' }}>
+        <pre style={{ color: 'red', background: '#fde8e8', padding: '10px', margin: '15px 0', whiteSpace: 'pre-wrap' }}>
           {error}
-        </div>
+        </pre>
       )}
 
       <div style={{ border: '1px solid #ccc', padding: '20px', borderRadius: '5px' }}>
@@ -104,7 +116,7 @@ function GaleriaAdminPage() {
               name="imagens"
               multiple
               onChange={handleFileChange}
-              accept="image/png, image/jpeg"
+              accept="image/png,image/jpeg"
               style={{ display: 'block', margin: '10px 0' }}
             />
           </div>
@@ -126,7 +138,7 @@ function GaleriaAdminPage() {
             >
               <img
                 src={image.url}
-                alt={image.titulo || 'Imagem da galeria'}
+                alt={image.descricao || 'Imagem da galeria'}
                 style={{ width: '150px', height: '150px', objectFit: 'cover' }}
               />
               <button
