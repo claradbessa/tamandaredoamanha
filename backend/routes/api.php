@@ -12,16 +12,28 @@ use App\Http\Controllers\PostagemController;
 use App\Http\Controllers\VoluntarioController;
 use App\Http\Controllers\GaleriaController;
 
-// Rota de teste pública (sem auth) só para debug
-Route::post('/galeria-teste', function (Request $request) {
-    \Illuminate\Support\Facades\Log::info('📥 Recebi POST em /galeria-teste', [
-        'all' => $request->all(),
-        'hasFile' => $request->hasFile('imagens')
-    ]);
-    return response()->json([
-        'ok' => true,
+/*
+|--------------------------------------------------------------------------
+| Rota de Teste Pública (Debug)
+|--------------------------------------------------------------------------
+| Essa rota serve apenas para verificar se o Laravel está recebendo
+| corretamente as requisições GET e POST com multipart/form-data.
+*/
+Route::match(['get', 'post'], '/galeria-debug', function (Request $request) {
+    \Illuminate\Support\Facades\Log::info('📥 Recebi requisição em /galeria-debug', [
+        'method'  => $request->method(),
+        'all'     => $request->all(),
         'hasFile' => $request->hasFile('imagens'),
-        'files' => array_map(fn($f) => $f->getClientOriginalName(), (array) $request->file('imagens'))
+    ]);
+
+    return response()->json([
+        'ok'      => true,
+        'method'  => $request->method(),
+        'hasFile' => $request->hasFile('imagens'),
+        'files'   => array_map(
+            fn($f) => $f->getClientOriginalName(),
+            (array) $request->file('imagens')
+        ),
     ]);
 });
 
@@ -39,7 +51,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/aulas/{aula}/alunos', [AulaController::class, 'getAlunos']);
     Route::get('/aulas-lista', [AulaController::class, 'getListaAulas']);
 
-    // Rotas da galeria (originais)
+    // Rotas da galeria
     Route::get('/galeria', [GaleriaController::class, 'index']);
     Route::post('/galeria', [GaleriaController::class, 'store']);
     Route::delete('/galeria/{galeriaImagem}', [GaleriaController::class, 'destroy']);
