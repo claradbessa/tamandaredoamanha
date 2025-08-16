@@ -15,7 +15,14 @@ class GaleriaController extends Controller
     public function index()
     {
         try {
-            $imagens = GaleriaImagem::all();
+            $imagens = GaleriaImagem::all()->map(function ($img) {
+                return [
+                    'id'        => $img->id,
+                    'url'       => Storage::url($img->caminho), // 👈 importante
+                    'descricao' => $img->descricao,
+                ];
+            });
+
             return response()->json($imagens);
         } catch (\Throwable $e) {
             Log::error('Erro no index da Galeria', ['msg' => $e->getMessage()]);
@@ -41,18 +48,24 @@ class GaleriaController extends Controller
 
             $arquivos = $request->file('imagens');
             if (!is_array($arquivos)) {
-                $arquivos = [$arquivos]; 
+                $arquivos = [$arquivos];
             }
 
             $salvas = [];
             foreach ($arquivos as $arquivo) {
                 if ($arquivo->isValid()) {
                     $path = $arquivo->store('galeria', 'public');
+
                     $img = GaleriaImagem::create([
                         'caminho'   => $path,
                         'descricao' => $arquivo->getClientOriginalName(),
                     ]);
-                    $salvas[] = $img;
+
+                    $salvas[] = [
+                        'id'        => $img->id,
+                        'url'       => Storage::url($path), // 👈 adiciona URL aqui
+                        'descricao' => $img->descricao,
+                    ];
                 } else {
                     Log::warning('Arquivo inválido recebido', [
                         'name' => $arquivo->getClientOriginalName()
@@ -81,7 +94,6 @@ class GaleriaController extends Controller
     public function destroy(GaleriaImagem $galeriaImagem)
     {
         try {
-            // Remove o arquivo físico
             if ($galeriaImagem->caminho && Storage::disk('public')->exists($galeriaImagem->caminho)) {
                 Storage::disk('public')->delete($galeriaImagem->caminho);
             }
