@@ -63,5 +63,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('postagens', PostagemController::class);
     Route::apiResource('gestores', GestorController::class);
     Route::apiResource('matriculas', MatriculaController::class);
-    Route::apiResource('frequencias', FrequenciaController::class);
+    Route::post('frequencias/batch', [FrequenciaController::class, 'storeBatch']);
 });
