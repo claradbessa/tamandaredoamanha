@@ -1,41 +1,45 @@
-import { Link, Outlet } from 'react-router-dom';
+import { useState } from 'react'; 
+import { NavLink, Outlet } from 'react-router-dom';
+import { FaBars, FaTimes } from 'react-icons/fa'; 
 
 function AdminLayout() {
-  
-  const styles = {
-    display: 'flex',
-    height: '100vh',
-  };
+  // Cria um estado para controlar se o menu está aberto ou fechado
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const sidebarStyles = {
-    width: '250px',
-    background: '#f4f4f4',
-    padding: '20px',
-  };
-
-  const contentStyles = {
-    flex: 1,
-    padding: '20px',
+  // Função para alternar o estado do menu
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
   };
 
   return (
-    <div style={styles}>
-      <aside style={sidebarStyles}>
+    <div className="admin-layout">
+      
+      <button onClick={toggleSidebar} className="menu-toggle">
+        {isSidebarOpen ? <FaTimes /> : <FaBars />}
+      </button>
+
+      <aside className={`sidebar ${isSidebarOpen ? 'sidebar-open' : ''}`}>
+        <div className="logo-container">
+          <img src="/logo_tamandare.png" alt="Logo Projeto Tamandaré do Amanhã" className="logo" />
+        </div>
         <h2>Admin</h2>
         <nav>
           <ul>
-            <li><Link to="/dashboard">Início</Link></li>
-            <li><Link to="/admin/alunos">Alunos</Link></li>
-            <li><Link to="/admin/aulas">Aulas</Link></li>
-            <li><Link to="/admin/frequencia">Relatório de Frequência</Link></li>
-            <li><Link to="/admin/postagens">Postagens</Link></li>
-            <li><Link to="/admin/galeria">Galeria da Página Inicial</Link></li> 
-            <li><Link to="/admin/voluntarios">Voluntários</Link></li>
-            {/* No futuro terá mais links aqui */}
+            <li><NavLink to="/dashboard" onClick={toggleSidebar}>Início</NavLink></li>
+            <li><NavLink to="/admin/alunos" onClick={toggleSidebar}>Alunos</NavLink></li>
+            <li><NavLink to="/admin/aulas" onClick={toggleSidebar}>Aulas</NavLink></li>
+            <li><NavLink to="/admin/frequencia" onClick={toggleSidebar}>Relatório de Frequência</NavLink></li>
+            <li><NavLink to="/admin/postagens" onClick={toggleSidebar}>Postagens</NavLink></li>
+            <li><NavLink to="/admin/galeria" onClick={toggleSidebar}>Galeria da Página Inicial</NavLink></li> 
+            <li><NavLink to="/admin/voluntarios" onClick={toggleSidebar}>Voluntários</NavLink></li>
           </ul>
         </nav>
       </aside>
-      <main style={contentStyles}>
+
+      {/* 6. Adiciona o overlay que fecha o menu ao ser clicado */}
+      <div className="overlay" onClick={toggleSidebar}></div>
+      
+      <main className="main-content">
         <Outlet />
       </main>
     </div>
