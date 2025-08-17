@@ -170,8 +170,8 @@ function PostagensPage() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h2>Gestão de Postagens</h2>
+      <div className="action-icons" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h2>Postagens</h2>
         <button onClick={() => handleOpenModal()}>Adicionar Nova Postagem</button>
       </div>
 
@@ -190,7 +190,7 @@ function PostagensPage() {
         />
       </Modal>
 
-      <table border="1" style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
+      <table>
         <thead>
           <tr>
             <th style={{ width: '100px' }}>Mídia</th>
@@ -213,7 +213,7 @@ function PostagensPage() {
                 <td>{postagem.titulo}</td>
                 <td>{postagem.voluntario?.nome || 'N/A'}</td>
                 <td>{postagem.publicado ? 'Publicado' : 'Rascunho'}</td>
-                <td style={{ textAlign: 'center' }}>
+                <td  className="action-icons"style={{ textAlign: 'center' }}>
                   <button onClick={() => handleOpenModal(postagem)} title="Editar"><FaEdit /></button>
                   <button onClick={() => handleDeletePostagem(postagem.id)} style={{ marginLeft: '10px' }} title="Excluir"><FaTrashAlt /></button>
                 </td>
@@ -221,7 +221,7 @@ function PostagensPage() {
             ))
           ) : (
             <tr>
-              <td colSpan="5" style={{ textAlign: 'center', padding: '20px' }}>
+              <td colSpan="5" className="action-icons" style={{ textAlign: 'center', padding: '20px' }}>
                 <p>Ainda não há postagens cadastradas.</p>
                 <button onClick={() => handleOpenModal()}>
                   Clique aqui para adicionar a primeira postagem

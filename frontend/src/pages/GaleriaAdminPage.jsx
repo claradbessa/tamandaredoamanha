@@ -105,7 +105,7 @@ function GaleriaAdminPage() {
         </pre>
       )}
 
-      <div style={{ border: '1px solid #ccc', padding: '20px', borderRadius: '5px' }}>
+      <div className="action-icons" style={{ border: '1px solid #ccc', padding: '20px', borderRadius: '5px' }}>
         <h4>Adicionar Novas Imagens</h4>
         <form onSubmit={handleSubmit}>
           <div>

@@ -71,11 +71,11 @@ function RelatorioFrequenciaPage() {
       )}
 
       {selectedAula && (
-        <div>
+        <div className="action-icons">
           <button onClick={() => setSelectedAula(null)}>← Voltar para a lista de aulas</button>
           <h3 style={{ marginTop: '20px' }}>Exibindo frequência para: {selectedAula.nome}</h3>
           
-          <table border="1" style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
+          <table>
             <thead>
               <tr>
                 <th>Data</th>

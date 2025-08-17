@@ -108,8 +108,8 @@ function AulasPage() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h2>Gestão de Aulas</h2>
+      <div className="action-icons" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h2>Aulas</h2>
         <button onClick={() => handleOpenFormModal()}>Adicionar Nova Aula</button>
       </div>
 
@@ -149,7 +149,7 @@ function AulasPage() {
         onClose={() => setViewingAlunos(null)}
       />
 
-      <table border="1" style={{ width: '100%', borderCollapse: 'collapse' }}>
+      <table>
         <thead>
           <tr>
             <th>Nome da Aula</th>
@@ -173,7 +173,7 @@ function AulasPage() {
                   ) : 'Nenhum horário definido'}
                 </td>
                 <td>{aula.voluntario ? aula.voluntario.nome : 'N/A'}</td>
-                <td style={{ textAlign: 'center' }}>
+                <td className="action-icons" style={{ textAlign: 'center' }}>
                   <Link to={`/admin/aulas/${aula.id}/frequencia`} title="Registar Frequência">
                     <button><FaClipboardList /></button>
                   </Link>
@@ -186,7 +186,7 @@ function AulasPage() {
             ))
           ) : (
             <tr>
-              <td colSpan="4" style={{ textAlign: 'center', padding: '20px' }}>
+              <td colSpan="4" className="action-icons" style={{ textAlign: 'center', padding: '20px' }}>
                 <p>Ainda não há aulas cadastradas.</p>
                 <button onClick={() => handleOpenFormModal()}>
                   Clique aqui para adicionar a primeira aula

@@ -88,7 +88,7 @@ function FrequenciaPage() {
 
       {successMessage && <div style={{ color: 'green', background: '#e6ffed', padding: '10px', margin: '15px 0' }}>{successMessage}</div>}
 
-      <table border="1" style={{ width: '100%', borderCollapse: 'collapse' }}>
+      <table>
         <thead>
           <tr>
             <th>Nome do Aluno</th>
@@ -132,7 +132,7 @@ function FrequenciaPage() {
         </tbody>
       </table>
 
-      <div style={{ marginTop: '20px', textAlign: 'right' }}>
+      <div className="action-icons" style={{ marginTop: '20px', textAlign: 'right' }}>
         <button onClick={handleSaveFrequencia}>Salvar Frequência</button>
       </div>
     </div>

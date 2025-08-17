@@ -94,7 +94,7 @@ function VoluntariosPage() {
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h2>Gestão de Voluntários</h2>
+        <h2>Voluntários</h2>
         <button onClick={() => handleOpenModal()}>Adicionar Novo Voluntário</button>
       </div>
 
@@ -131,7 +131,7 @@ function VoluntariosPage() {
                 <td>{voluntario.email}</td>
                 <td>{voluntario.cargo}</td>
                 <td>{voluntario.ativo ? 'Ativo' : 'Inativo'}</td>
-                <td style={{ textAlign: 'center' }}>
+                <td className="action-icons" style={{ textAlign: 'center' }}>
                   <button onClick={() => handleOpenModal(voluntario)} title="Editar">
                     <FaEdit />
                   </button>
@@ -143,7 +143,7 @@ function VoluntariosPage() {
             ))
           ) : (
             <tr>
-              <td colSpan="5" style={{ textAlign: 'center', padding: '20px' }}>
+              <td colSpan="5" className="action-icons" style={{ textAlign: 'center', padding: '20px' }}>
                 <p>Ainda não há voluntários cadastrados.</p>
                 <button onClick={() => handleOpenModal()}>
                   Clique aqui para adicionar o primeiro voluntário
