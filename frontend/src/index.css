@@ -108,7 +108,15 @@ body {
 /* ==========================================================================
    3. ESTILOS DA PÁGINA DE LOGIN
    ========================================================================== */
-.login-container {
+.login-page-wrapper {
+  display: flex;
+  justify-content: center; /* centraliza horizontal */
+  align-items: center;    /* centraliza vertical */
+  height: 100vh;          /* ocupa a tela inteira */
+  background-color: #f5f7fa; /* cor de fundo opcional */
+}
+
+   .login-container {
   background-color: var(--cor-texto-claro);
   padding: 40px 30px;
   border-radius: 8px;
@@ -119,14 +127,31 @@ body {
 }
 
 .login-container .logo {
-  max-width: 150px;
-  margin-bottom: 20px;
+  max-width: 120px;
+  margin-bottom: 10px;
 }
 
 .login-container h1 {
   color: var(--cor-azul-escuro);
   margin-bottom: 25px;
   font-size: 24px;
+}
+
+.login-container .btn-primary {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
 
 /* ==========================================================================

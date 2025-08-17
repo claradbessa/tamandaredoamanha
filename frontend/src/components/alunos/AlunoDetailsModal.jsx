@@ -1,5 +1,3 @@
-// src/components/alunos/AlunoDetailsModal.jsx
-
 import Modal from '../Modal';
 import { formatDateBR, formatPhoneBR } from '../../utils/formatters';
 import api from '../../services/api';
