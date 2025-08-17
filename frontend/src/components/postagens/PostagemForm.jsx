@@ -12,7 +12,6 @@ function PostagemForm({ onSave, onCancel, postagemToEdit }) {
     if (postagemToEdit) {
       setTitulo(postagemToEdit.titulo || '');
       setConteudo(postagemToEdit.conteudo || '');
-      // Não preenchemos o campo de mídia, pois ele só serve para novos uploads
     } else {
       setTitulo('');
       setConteudo('');
@@ -57,17 +56,30 @@ function PostagemForm({ onSave, onCancel, postagemToEdit }) {
           rows={5}
         />
       </div>
+
       <div className="form-group">
-        <label htmlFor="midia">Imagem ou Vídeo (opcional):</label>
-        <input
-          type="file"
-          id="midia"
-          onChange={(e) => setMidia(e.target.files[0])}
-          accept="image/*,video/*"
-        />
+        <label>Imagem ou Vídeo (opcional):</label>
+        <div className="custom-file-upload-wrapper" style={{ marginTop: '5px' }}>
+          
+          <label htmlFor="midia" className="custom-file-upload-label">
+            Escolher arquivo
+          </label>
+
+          <input
+            type="file"
+            id="midia"
+            onChange={(e) => setMidia(e.target.files[0])}
+            accept="image/*,video/*"
+          />
+
+          <span className="file-name-display">
+            {midia ? midia.name : 'Nenhum arquivo escolhido'}
+          </span>
+        </div>
+
         {postagemToEdit?.midia_url && !midia && (
           <small style={{ display: 'block', marginTop: '5px' }}>
-            * Deixe em branco para manter a imagem/vídeo atual.
+            * Deixe em branco para manter a mídia atual.
           </small>
         )}
       </div>

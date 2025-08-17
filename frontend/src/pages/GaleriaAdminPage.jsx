@@ -44,28 +44,25 @@ function GaleriaAdminPage() {
       setError('Por favor, selecione pelo menos um arquivo.');
       return;
     }
-
     setIsUploading(true);
     setError('');
     setSuccessMessage('');
-
     const formData = new FormData();
     files.forEach((file) => formData.append('imagens[]', file));
-
     try {
       await api.post('/galeria', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       setSuccessMessage('Imagens enviadas com sucesso!');
       setFiles([]);
-      event.target.reset();
+      if (document.getElementById('imagens')) {
+        document.getElementById('imagens').value = '';
+      }
       await fetchImages();
     } catch (err) {
       console.error('Erro ao enviar imagens:', err);
-
       if (err.response) {
-        console.log('Resposta do backend:', err.response.data);
-        setError(JSON.stringify(err.response.data, null, 2)); // JSON formatado
+        setError(JSON.stringify(err.response.data, null, 2));
       } else {
         setError(err.message);
       }
@@ -76,13 +73,11 @@ function GaleriaAdminPage() {
 
   const handleDelete = async (imageId) => {
     if (!window.confirm('Tem certeza que deseja excluir esta imagem?')) return;
-
     try {
       await api.delete(`/galeria/${imageId}`);
       setSuccessMessage('Imagem excluída com sucesso!');
       await fetchImages();
     } catch (err) {
-      console.error('Erro ao excluir imagem:', err);
       setError(err.response?.data?.message || 'Falha ao excluir a imagem.');
     }
   };
@@ -90,81 +85,73 @@ function GaleriaAdminPage() {
   if (loading) return <p>Carregando galeria...</p>;
 
   return (
-    <div>
-      <h2>Gestão da Galeria da Página Inicial</h2>
+    <>
+      <div className="main-content-header">
+        <h1>Galeria da Página Inicial</h1>
+      </div>
 
-      {successMessage && (
-        <div style={{ color: 'green', background: '#e6ffed', padding: '10px', margin: '15px 0' }}>
-          {successMessage}
-        </div>
-      )}
+      {successMessage && <div className="alert alert-success">{successMessage}</div>}
+      {error && <div className="alert alert-danger" style={{ whiteSpace: 'pre-wrap' }}>{error}</div>}
 
-      {error && (
-        <pre style={{ color: 'red', background: '#fde8e8', padding: '10px', margin: '15px 0', whiteSpace: 'pre-wrap' }}>
-          {error}
-        </pre>
-      )}
-
-      <div className="action-icons" style={{ border: '1px solid #ccc', padding: '20px', borderRadius: '5px' }}>
-        <h4>Adicionar Novas Imagens</h4>
+      <div className="card" style={{ marginBottom: '30px' }}>
+        <h3 style={{ marginBottom: '15px' }}>Adicionar Novas Imagens</h3>
         <form onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="imagens">Selecionar Imagens:</label>
-            <input
-              type="file"
-              id="imagens"
-              name="imagens"
-              multiple
-              onChange={handleFileChange}
-              accept="image/png,image/jpeg"
-              style={{ display: 'block', margin: '10px 0' }}
-            />
+          <div className="form-group">
+            <label>Selecionar Imagens:</label>
+            <div className="custom-file-upload-wrapper" style={{ marginTop: '5px' }}>
+              
+              <label htmlFor="imagens" className="custom-file-upload-label">
+                Escolher arquivos
+              </label>
+
+              <input
+                type="file"
+                id="imagens"
+                name="imagens"
+                multiple
+                onChange={handleFileChange}
+                accept="image/png,image/jpeg"
+              />
+
+              <span className="file-name-display">
+                {files.length > 0 ? `${files.length} arquivo(s) selecionado(s)` : 'Nenhum arquivo escolhido'}
+              </span>
+
+            </div>
           </div>
-          <button type="submit" disabled={isUploading}>
-            {isUploading ? 'Enviando...' : 'Enviar Imagens'}
-          </button>
+          <div className="form-actions">
+            <button type="submit" disabled={isUploading} className="btn btn-primary">
+              {isUploading ? 'Enviando...' : 'Enviar Imagens'}
+            </button>
+          </div>
         </form>
       </div>
 
-      <hr style={{ margin: '30px 0' }} />
-
-      <h4>Imagens Atuais na Galeria</h4>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px' }}>
-        {images.length > 0 ? (
-          images.map((image) => (
-            <div
-              key={image.id}
-              style={{ position: 'relative', border: '1px solid #ddd', padding: '5px' }}
-            >
-              <img
-                src={image.url}
-                alt={image.descricao || 'Imagem da galeria'}
-                style={{ width: '150px', height: '150px', objectFit: 'cover' }}
-              />
-              <button
-                onClick={() => handleDelete(image.id)}
-                style={{
-                  position: 'absolute',
-                  top: '5px',
-                  right: '5px',
-                  background: 'rgba(255, 0, 0, 0.7)',
-                  color: 'white',
-                  borderRadius: '50%',
-                  border: 'none',
-                  padding: '5px',
-                  cursor: 'pointer',
-                }}
-                title="Excluir Imagem"
-              >
-                <FaTrashAlt />
-              </button>
-            </div>
-          ))
-        ) : (
-          <p>Nenhuma imagem na galeria. Envie a primeira!</p>
-        )}
+      <div className="card">
+        <h3 style={{ marginBottom: '15px' }}>Imagens Atuais na Galeria</h3>
+        <div className="image-gallery-grid">
+          {images.length > 0 ? (
+            images.map((image) => (
+              <div key={image.id} className="gallery-item">
+                <img
+                  src={image.url}
+                  alt={image.descricao || 'Imagem da galeria'}
+                />
+                <button
+                  onClick={() => handleDelete(image.id)}
+                  className="delete-btn"
+                  title="Excluir Imagem"
+                >
+                  <FaTrashAlt />
+                </button>
+              </div>
+            ))
+          ) : (
+            <p>Nenhuma imagem na galeria. Envie a primeira!</p>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

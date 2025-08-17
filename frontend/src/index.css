@@ -545,3 +545,101 @@ textarea:focus {
   color: #555;
   margin-top: 5px;
 }
+
+/* ==========================================================================
+   11. ESTILOS PARA A PÁGINA DE GESTÃO DA GALERIA
+   ========================================================================== */
+
+.image-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.gallery-item {
+  position: relative;
+  border: 1px solid var(--cor-borda-suave);
+  border-radius: 6px;
+  overflow: hidden; /* Garante que a imagem não saia do container arredondado */
+  aspect-ratio: 1 / 1; /* Força o item a ser um quadrado perfeito */
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Garante que a imagem preencha o espaço sem distorcer */
+}
+
+.gallery-item .delete-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: rgba(220, 53, 69, 0.8); 
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  opacity: 0; /* Começa invisível */
+  transition: opacity 0.2s ease-in-out;
+}
+
+.gallery-item:hover .delete-btn {
+  opacity: 1; /* Aparece ao passar o mouse */
+}
+
+/* ==========================================================================
+   12. ESTILOS PARA O INPUT DE UPLOAD DE ARQUIVO PERSONALIZADO
+   ========================================================================== */
+
+.custom-file-upload-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.custom-file-upload-wrapper input[type="file"] {
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+.custom-file-upload-label {
+  background-color: #e9ecef;
+  color: #495057;
+  border: 1px solid #ced4da;
+  
+  padding: 10px 15px;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 14px;
+  
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: inline-block;
+}
+
+/* Efeito hover de botão secundário */
+.custom-file-upload-label:hover {
+  background-color: #dae0e5;
+}
+
+.file-name-display {
+  color: #555;
+  font-style: italic;
+}
+
+/* Classe utilitária para alinhar botões de ação do formulário à direita */
+.form-actions {
+  display: flex;
+  justify-content: flex-start; 
+  margin-top: 20px;
+}
