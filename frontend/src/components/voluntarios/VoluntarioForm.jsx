@@ -39,37 +39,37 @@ function VoluntarioForm({ onSave, onCancel, voluntarioToEdit }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      {/* ... (campos de nome, email, cargo, etc.) ... */}
-      <div style={{ marginBottom: '15px' }}>
+      <div className="form-group">
         <label htmlFor="nome">Nome Completo:</label>
-        <input type="text" id="nome" value={nome} onChange={(e) => setNome(e.target.value)} required style={{ width: '100%', padding: '8px', marginTop: '5px' }} />
+        <input type="text" id="nome" value={nome} onChange={(e) => setNome(e.target.value)} required />
       </div>
-      <div style={{ marginBottom: '15px' }}>
+      <div className="form-group">
         <label htmlFor="email">Email:</label>
-        <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} required style={{ width: '100%', padding: '8px', marginTop: '5px' }} />
+        <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
       </div>
-      <div style={{ marginBottom: '15px' }}>
+      <div className="form-group">
         <label htmlFor="cargo">Cargo:</label>
-        <input type="text" id="cargo" value={cargo} onChange={(e) => setCargo(e.target.value)} placeholder="Ex: Desenvolvedora, Prof. de Inglês" style={{ width: '100%', padding: '8px', marginTop: '5px' }} />
+        <input type="text" id="cargo" value={cargo} onChange={(e) => setCargo(e.target.value)} placeholder="Ex: Desenvolvedora, Prof. de Inglês" />
       </div>
-      <div style={{ marginBottom: '15px' }}>
+      <div className="form-group">
         <label htmlFor="senha">Senha:</label>
-        <input type="password" id="senha" value={senha} onChange={(e) => setSenha(e.target.value)} required={!isEditing} minLength={6} placeholder={isEditing ? "Deixe em branco para não alterar" : ""} style={{ width: '100%', padding: '8px', marginTop: '5px' }} />
+        <input type="password" id="senha" value={senha} onChange={(e) => setSenha(e.target.value)} required={!isEditing} minLength={6} placeholder={isEditing ? "Deixe em branco para não alterar" : ""} />
       </div>
-      <div style={{ marginBottom: '15px' }}>
+      <div className="form-group">
         <label htmlFor="senhaConfirmation">Confirmar Senha:</label>
-        <input type="password" id="senhaConfirmation" value={senhaConfirmation} onChange={(e) => setSenhaConfirmation(e.target.value)} required={!isEditing || !!senha} minLength={6} style={{ width: '100%', padding: '8px', marginTop: '5px' }} />
+        <input type="password" id="senhaConfirmation" value={senhaConfirmation} onChange={(e) => setSenhaConfirmation(e.target.value)} required={!isEditing || !!senha} minLength={6} />
       </div>
-       <div style={{ marginBottom: '15px', display: 'flex', alignItems: 'center' }}>
-        <input type="checkbox" id="ativo" checked={ativo} onChange={(e) => setAtivo(e.target.checked)} style={{ marginRight: '10px' }} />
-        <label htmlFor="ativo">Ativo</label>
+      <div className="form-group" style={{ display: 'flex', alignItems: 'center', marginTop: '20px' }}>
+        <input type="checkbox" id="ativo" checked={ativo} onChange={(e) => setAtivo(e.target.checked)} style={{ width: 'auto', marginRight: '10px' }} />
+        <label htmlFor="ativo" style={{ fontWeight: 'normal' }}>Ativo</label>
       </div>
 
-      {/* Botões com estado de loading */}
-      <div style={{ marginTop: '20px', textAlign: 'right' }}>
-        <button type="button" onClick={onCancel} disabled={isSaving}>Cancelar</button>
-        <button type="submit" disabled={isSaving} style={{ marginLeft: '10px' }}>
-          {isSaving ? 'A salvar...' : 'Salvar'}
+      <div className="modal-footer">
+        <button type="button" onClick={onCancel} disabled={isSaving} className="btn btn-secondary">
+          Cancelar
+        </button>
+        <button type="submit" disabled={isSaving} className="btn btn-primary">
+          {isSaving ? 'Salvando...' : 'Salvar'}
         </button>
       </div>
     </form>
