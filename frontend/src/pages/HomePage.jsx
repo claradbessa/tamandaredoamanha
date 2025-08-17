@@ -1,4 +1,5 @@
 import Header from '../components/layout/Header'; 
+import Footer from '../components/layout/Footer'; 
 
 function HomePage() {
   return (
@@ -9,6 +10,7 @@ function HomePage() {
           Página Inicial em Construção
         </h1>
       </main>
+      <Footer />
     </div>
   );
 }
