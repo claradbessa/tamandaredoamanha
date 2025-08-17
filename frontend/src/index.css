@@ -509,3 +509,39 @@ textarea:focus {
   align-items: center;
   gap: 8px; /* Espaço entre o ícone e o texto */
 }
+
+/* ==========================================================================
+   10. ESTILOS PARA A PÁGINA DE RELATÓRIO DE FREQUÊNCIA
+   ========================================================================== */
+
+.class-selection-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 15px;
+}
+
+.class-selection-item {
+  border: 1px solid var(--cor-borda-suave);
+  border-left: 5px solid var(--cor-azul-medio);
+  padding: 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.class-selection-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  border-left-color: var(--cor-amarelo);
+}
+
+.class-selection-item strong {
+  font-size: 1.1em;
+  color: var(--cor-azul-escuro);
+}
+
+.class-selection-item .details {
+  font-size: 0.9em;
+  color: #555;
+  margin-top: 5px;
+}

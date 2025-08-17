@@ -6,7 +6,6 @@ import { useAuth } from '../contexts/AuthContext';
 function FrequenciaPage() {
   const { id: aulaId } = useParams();
   const { user } = useAuth();
-
   const [aula, setAula] = useState(null);
   const [frequencias, setFrequencias] = useState({});
   const [data, setData] = useState(new Date().toISOString().split('T')[0]);
@@ -20,13 +19,11 @@ function FrequenciaPage() {
         setLoading(true);
         const aulaResponse = await api.get(`/aulas/${aulaId}`);
         setAula(aulaResponse.data);
-
         const frequenciaInicial = {};
         aulaResponse.data.alunos.forEach(aluno => {
           frequenciaInicial[aluno.id] = 'presente';
         });
         setFrequencias(frequenciaInicial);
-
       } catch (err) {
         setError('Falha ao carregar dados da aula.');
       } finally {
@@ -46,7 +43,6 @@ function FrequenciaPage() {
   const handleSaveFrequencia = async () => {
     setError('');
     setSuccessMessage('');
-
     const payload = {
       aula_id: parseInt(aulaId, 10),
       data: data,
@@ -56,9 +52,7 @@ function FrequenciaPage() {
         presenca: status === 'presente',
       })),
     };
-
     try {
-      // Envia todos os registos de uma só vez para o novo endpoint
       await api.post('/frequencias/batch', payload);
       setSuccessMessage('Frequência salva com sucesso!');
     } catch (err) {
@@ -68,74 +62,80 @@ function FrequenciaPage() {
   };
 
   if (loading) return <p>A carregar dados da aula...</p>;
-  if (error) return <p style={{ color: 'red' }}>{error}</p>;
 
   return (
-    <div>
-      <Link to="/admin/aulas">← Voltar para Aulas</Link>
-      <h2 style={{marginTop: '15px'}}>Registo de Frequência</h2>
-      {aula && <h3>{aula.nome}</h3>}
-      
-      <div style={{ margin: '20px 0' }}>
-        <label htmlFor="data-frequencia">Data da Frequência: </label>
-        <input
-          type="date"
-          id="data-frequencia"
-          value={data}
-          onChange={(e) => setData(e.target.value)}
-        />
+    <>
+      <div className="main-content-header">
+        <div>
+          <h1>Registo de Frequência</h1>
+          <h2 style={{ fontSize: '1.2rem', color: '#555', fontWeight: 'normal' }}>{aula?.nome}</h2>
+        </div>
+        <Link to="/admin/aulas" className="btn btn-secondary">← Voltar para Aulas</Link>
       </div>
 
-      {successMessage && <div style={{ color: 'green', background: '#e6ffed', padding: '10px', margin: '15px 0' }}>{successMessage}</div>}
+      {successMessage && <div className="alert alert-success">{successMessage}</div>}
+      {error && <div className="alert alert-danger">{error}</div>}
 
-      <table>
-        <thead>
-          <tr>
-            <th>Nome do Aluno</th>
-            <th style={{width: '200px'}}>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {aula?.alunos.length > 0 ? (
-            aula.alunos.map(aluno => (
-              <tr key={aluno.id}>
-                <td>{aluno.nome}</td>
-                <td>
-                  <label>
-                    <input
-                      type="radio"
-                      name={`frequencia-${aluno.id}`}
-                      checked={frequencias[aluno.id] === 'presente'}
-                      onChange={() => handleFrequenciaChange(aluno.id, 'presente')}
-                    />
-                    Presente
-                  </label>
-                  <label style={{ marginLeft: '15px' }}>
-                    <input
-                      type="radio"
-                      name={`frequencia-${aluno.id}`}
-                      checked={frequencias[aluno.id] === 'ausente'}
-                      onChange={() => handleFrequenciaChange(aluno.id, 'ausente')}
-                    />
-                    Falta
-                  </label>
+      <div className="card">
+        <div className="form-group" style={{ maxWidth: '300px', marginBottom: '20px' }}>
+          <label htmlFor="data-frequencia">Data da Frequência:</label>
+          <input
+            type="date"
+            id="data-frequencia"
+            value={data}
+            onChange={(e) => setData(e.target.value)}
+          />
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Nome do Aluno</th>
+              <th style={{width: '250px'}}>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {aula?.alunos.length > 0 ? (
+              aula.alunos.map(aluno => (
+                <tr key={aluno.id}>
+                  <td>{aluno.nome}</td>
+                  <td>
+                    <label style={{ marginRight: '20px', cursor: 'pointer' }}>
+                      <input
+                        type="radio"
+                        name={`frequencia-${aluno.id}`}
+                        checked={frequencias[aluno.id] === 'presente'}
+                        onChange={() => handleFrequenciaChange(aluno.id, 'presente')}
+                      />
+                      {' '}Presente
+                    </label>
+                    <label style={{ cursor: 'pointer' }}>
+                      <input
+                        type="radio"
+                        name={`frequencia-${aluno.id}`}
+                        checked={frequencias[aluno.id] === 'ausente'}
+                        onChange={() => handleFrequenciaChange(aluno.id, 'ausente')}
+                      />
+                      {' '}Falta
+                    </label>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="2" style={{ textAlign: 'center', padding: '20px' }}>
+                  Nenhum aluno matriculado nesta aula.
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="2" style={{ textAlign: 'center', padding: '10px' }}>
-                Nenhum aluno matriculado nesta aula.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            )}
+          </tbody>
+        </table>
 
-      <div className="action-icons" style={{ marginTop: '20px', textAlign: 'right' }}>
-        <button onClick={handleSaveFrequencia}>Salvar Frequência</button>
+        <div style={{ marginTop: '20px', textAlign: 'right' }}>
+          <button onClick={handleSaveFrequencia} className="btn btn-primary">Salvar Frequência</button>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
