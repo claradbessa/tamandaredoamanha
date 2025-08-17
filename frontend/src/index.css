@@ -76,7 +76,7 @@ body {
 
   /* 2. Ajusta o conteúdo principal para ocupar a tela inteira */
   .main-content {
-    padding: 70px 15px 15px 15px; 
+    padding: 70px 15px 15px 15px !important; 
   }
   
   /* 3. Prepara o menu lateral para ser escondido/mostrado */
@@ -486,4 +486,26 @@ textarea:focus {
 
 .btn-icon-danger:hover {
   color: var(--cor-erro);
+}
+
+/* ==========================================================================
+   9. ESTILOS PARA O FORMULÁRIO DE AULAS
+   ========================================================================== */
+
+.horario-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.horario-row select,
+.horario-row input {
+  flex: 1; /* Faz os campos de dia e hora dividirem o espaço */
+}
+
+.add-horario-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Espaço entre o ícone e o texto */
 }

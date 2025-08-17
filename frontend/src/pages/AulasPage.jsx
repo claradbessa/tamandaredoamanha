@@ -107,98 +107,92 @@ function AulasPage() {
   if (loading) return <p>A carregar aulas...</p>;
 
   return (
-    <div>
-      <div className="action-icons" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h2>Aulas</h2>
-        <button onClick={() => handleOpenFormModal()}>Adicionar Nova Aula</button>
-      </div>
+      <>
+        <div className="main-content-header">
+          <h1>Aulas</h1>
+          <button onClick={() => handleOpenFormModal()} className="btn btn-primary">Adicionar Nova Aula</button>
+        </div>
 
-      {successMessage && <div style={{ color: 'green', background: '#e6ffed', padding: '10px', margin: '15px 0', borderRadius: '5px' }}>{successMessage}</div>}
-      {error && <div style={{ color: 'red', background: '#fde8e8', padding: '10px', margin: '15px 0', borderRadius: '5px' }}>{error}</div>}
+        {successMessage && <div className="alert alert-success">{successMessage}</div>}
+        {error && <div className="alert alert-danger">{error}</div>}
 
-      <div style={{ margin: '20px 0', position: 'relative' }}>
-        <input
-          type="text"
-          placeholder="Buscar aula por nome..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          style={{ width: '100%', padding: '10px', paddingLeft: '40px', boxSizing: 'border-box' }}
-        />
-        <FaSearch style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: '#ccc' }} />
-      </div>
+        <div className="card">
+          <div className="form-group" style={{ marginBottom: '20px', position: 'relative' }}>
+            <input
+              type="text"
+              placeholder="Buscar aula por nome..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <FaSearch style={{ position: 'absolute', right: '15px', top: '50%', transform: 'translateY(-50%)', color: '#ccc' }} />
+          </div>
 
-      <Modal
-        isOpen={isFormModalOpen}
-        onClose={handleCloseFormModal}
-        title={editingAula ? "Editar Aula" : "Cadastrar Aula"}
-      >
-        <AulaForm
-          onSave={handleSaveAula}
-          onCancel={handleCloseFormModal}
-          aulaToEdit={editingAula}
-        />
-      </Modal>
+          <Modal
+            isOpen={isFormModalOpen}
+            onClose={handleCloseFormModal}
+            title={editingAula ? "Editar Aula" : "Cadastrar Aula"}
+          >
+            <AulaForm
+              onSave={handleSaveAula}
+              onCancel={handleCloseFormModal}
+              aulaToEdit={editingAula}
+            />
+          </Modal>
 
-      <AulaDetailsModal
-        aula={viewingAula}
-        onClose={() => setViewingAula(null)}
-      />
+          <AulaDetailsModal aula={viewingAula} onClose={() => setViewingAula(null)} />
+          <AlunosMatriculadosModal aula={viewingAlunos} onClose={() => setViewingAlunos(null)} />
 
-      <AlunosMatriculadosModal
-        aula={viewingAlunos}
-        onClose={() => setViewingAlunos(null)}
-      />
-
-      <table>
-        <thead>
-          <tr>
-            <th>Nome da Aula</th>
-            <th>Horários</th>
-            <th>Voluntário Responsável</th>
-            <th style={{ width: '220px' }}>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredAndSortedAulas.length > 0 ? (
-            filteredAndSortedAulas.map(aula => (
-              <tr key={aula.id}>
-                <td>{aula.nome}</td>
-                <td>
-                  {aula.horarios && aula.horarios.length > 0 ? (
-                    <ul style={{ margin: 0, padding: 0, listStyleType: 'none' }}>
-                      {aula.horarios.map(h => (
-                        <li key={h.id}>{`${h.dia_semana} às ${h.horario.substring(0, 5)}`}</li>
-                      ))}
-                    </ul>
-                  ) : 'Nenhum horário definido'}
-                </td>
-                <td>{aula.voluntario ? aula.voluntario.nome : 'N/A'}</td>
-                <td className="action-icons" style={{ textAlign: 'center' }}>
-                  <Link to={`/admin/aulas/${aula.id}/frequencia`} title="Registar Frequência">
-                    <button><FaClipboardList /></button>
-                  </Link>
-                  <button onClick={() => setViewingAlunos(aula)} style={{ marginLeft: '10px' }} title="Ver Alunos Matriculados"><FaUsers /></button>
-                  <button onClick={() => setViewingAula(aula)} style={{ marginLeft: '10px' }} title="Ver Detalhes"><FaEye /></button>
-                  <button onClick={() => handleOpenFormModal(aula)} style={{ marginLeft: '10px' }} title="Editar"><FaEdit /></button>
-                  <button onClick={() => handleDeleteAula(aula.id)} style={{ marginLeft: '10px' }} title="Excluir"><FaTrashAlt /></button>
-                </td>
+          <table>
+            <thead>
+              <tr>
+                <th>Nome da Aula</th>
+                <th className="hide-on-mobile">Horários</th>
+                <th className="hide-on-mobile">Voluntário Responsável</th>
+                <th style={{ width: '220px' }}>Ações</th>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="4" className="action-icons" style={{ textAlign: 'center', padding: '20px' }}>
-                <p>Ainda não há aulas cadastradas.</p>
-                <button onClick={() => handleOpenFormModal()}>
-                  Clique aqui para adicionar a primeira aula
-                </button>
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            </thead>
+            <tbody>
+              {filteredAndSortedAulas.length > 0 ? (
+                filteredAndSortedAulas.map(aula => (
+                  <tr key={aula.id}>
+                    <td>{aula.nome}</td>
+                    <td className="hide-on-mobile">
+                      {aula.horarios && aula.horarios.length > 0 ? (
+                        <ul style={{ margin: 0, padding: 0, listStyleType: 'none' }}>
+                          {aula.horarios.map(h => (
+                            <li key={h.id}>{`${h.dia_semana} às ${h.horario.substring(0, 5)}`}</li>
+                          ))}
+                        </ul>
+                      ) : 'Nenhum horário definido'}
+                    </td>
+                    <td className="hide-on-mobile">{aula.voluntario ? aula.voluntario.nome : 'N/A'}</td>
+                    <td className="actions">
+                      <Link to={`/admin/aulas/${aula.id}/frequencia`} title="Registar Frequência">
+                        <button><FaClipboardList /></button>
+                      </Link>
+                      <button onClick={() => setViewingAlunos(aula)} title="Ver Alunos Matriculados"><FaUsers /></button>
+                      <button onClick={() => setViewingAula(aula)} title="Ver Detalhes"><FaEye /></button>
+                      <button onClick={() => handleOpenFormModal(aula)} title="Editar"><FaEdit /></button>
+                      <button onClick={() => handleDeleteAula(aula.id)} title="Excluir"><FaTrashAlt /></button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="4" style={{ textAlign: 'center', padding: '20px' }}>
+                    <p>Ainda não há aulas cadastradas.</p>
+                    <button onClick={() => handleOpenFormModal()} className="btn btn-secondary">
+                      Clique aqui para adicionar a primeira aula
+                    </button>
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
 
-      <Pagination meta={paginationMeta} onPageChange={fetchAulas} />
-    </div>
+          <Pagination meta={paginationMeta} onPageChange={fetchAulas} />
+        </div>
+      </>
   );
 }
 

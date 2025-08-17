@@ -6,20 +6,21 @@ function AlunosMatriculadosModal({ aula, onClose }) {
   }
 
   return (
-    <Modal isOpen={!!aula} onClose={onClose} title={`Alunos em ${aula.nome}`}>
+    <Modal isOpen={!!aula} onClose={onClose} title={`Alunos matriculados em ${aula.nome}`}>
       <div>
         {aula.alunos && aula.alunos.length > 0 ? (
-          <ul>
+          <ul style={{ listStyle: 'none', padding: 0 }}>
             {aula.alunos.map(aluno => (
-              <li key={aluno.id}>{aluno.nome}</li>
+              <li key={aluno.id} style={{ padding: '5px 0' }}>{aluno.nome}</li>
             ))}
           </ul>
         ) : (
           <p>Nenhum aluno matriculado nesta aula.</p>
         )}
       </div>
-      <div style={{ marginTop: '20px', textAlign: 'right' }}>
-        <button onClick={onClose}>Fechar</button>
+
+      <div className="modal-footer">
+        <button onClick={onClose} className="btn btn-secondary">Fechar</button>
       </div>
     </Modal>
   );
