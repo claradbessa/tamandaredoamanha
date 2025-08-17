@@ -1,8 +1,14 @@
+import Header from '../components/layout/Header'; 
+
 function HomePage() {
   return (
     <div>
-      <h1>Página Inicial (Home)</h1>
-      <p>Bem-vindo ao Projeto Tamandaré do Amanhã!</p>
+      <Header />
+      <main>
+        <h1 style={{ textAlign: 'center', padding: '50px' }}>
+          Página Inicial em Construção
+        </h1>
+      </main>
     </div>
   );
 }

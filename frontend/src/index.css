@@ -163,21 +163,22 @@ body {
 }
 
 .sidebar {
-  width: 250px;
+  width: 280px;
   background-color: var(--cor-azul-medio); 
   color: var(--cor-texto-claro);
-  padding: 15px 20px; 
+  padding: 10px 20px; 
   display: flex;
   flex-direction: column;
 }
 
 .sidebar .logo-container {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
 }
 
 .sidebar .logo {
-  max-width: 120px;
+  max-width: 220px;
+  margin: 0 auto;
 }
 
 .sidebar h2 {
