@@ -1,0 +1,464 @@
+/* ==========================================================================
+   1. DEFINIÇÕES GLOBAIS E PALETA DE CORES DO PROJETO
+   ========================================================================== */
+:root {
+  --cor-azul-escuro: #003366;
+  --cor-azul-medio: #005f9e;
+  --cor-amarelo: #ffd700;
+  --cor-texto-claro: #ffffff;
+  --cor-texto-escuro: #333333;
+  --cor-fundo-cinza: #f4f6f9;
+  --cor-borda-suave: #e3e3e3;
+  --cor-sucesso: #28a745;
+  --cor-erro: #dc3545;
+  --cor-azul-escuro-rgb: 0, 51, 102;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--cor-fundo-cinza);
+  color: var(--cor-texto-escuro);
+}
+
+/* ==========================================================================
+   2. REGRAS DE RESPONSIVIDADE (Para Celulares e Telas Pequenas)
+   ========================================================================== */
+
+/* Estilos para o botão que vai abrir/fechar o menu */
+.menu-toggle {
+  display: none; /* Escondido em telas grandes */
+  position: fixed; /* Fixo na tela mesmo com rolagem */
+  top: 15px;
+  left: 15px;
+  z-index: 1001; /* Fica acima de quase tudo */
+  background-color: var(--cor-azul-medio);
+  color: var(--cor-texto-claro);
+  border: none;
+  border-radius: 6px;
+  padding: 10px 12px;
+  cursor: pointer;
+}
+
+/* O :is() aplica o estilo a múltiplos seletores */
+:is(input, select, textarea):focus {
+    border-color: var(--cor-azul-escuro);
+    box-shadow: 0 0 0 4px rgba(var(--cor-azul-escuro-rgb), 0.25);
+    outline: none;
+}
+
+
+/* Overlay para escurecer o fundo quando o menu estiver aberto */
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+
+/* Media Query: Aplica estas regras APENAS em telas com largura máxima de 768px */
+@media (max-width: 768px) {
+  
+  /* 1. Mostra o botão "hambúrguer" */
+  .menu-toggle {
+    display: block;
+  }
+
+  /* 2. Ajusta o conteúdo principal para ocupar a tela inteira */
+  .main-content {
+    padding: 70px 15px 15px 15px; 
+  }
+  
+  /* 3. Prepara o menu lateral para ser escondido/mostrado */
+  .sidebar {
+    position: fixed; /* Fica por cima do conteúdo */
+    left: 0;
+    top: 0;
+    height: 100%;
+    z-index: 1000; /* Fica acima do overlay e do conteúdo */
+    transform: translateX(-100%); /* Joga o menu para fora da tela à esquerda */
+    transition: transform 0.3s ease-in-out; /* Animação suave */
+  }
+
+  /* 4. Classe que mostra o menu e o overlay */
+  .sidebar.sidebar-open {
+    transform: translateX(0); /* Traz o menu de volta para a tela */
+  }
+  .sidebar.sidebar-open + .overlay {
+    display: block; 
+  }
+
+  /* Esconde elementos em telas pequenas */
+  .hide-on-mobile {
+    display: none;
+  }
+
+}
+
+/* ==========================================================================
+   3. ESTILOS DA PÁGINA DE LOGIN
+   ========================================================================== */
+.login-container {
+  background-color: var(--cor-texto-claro);
+  padding: 40px 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.login-container .logo {
+  max-width: 150px;
+  margin-bottom: 20px;
+}
+
+.login-container h1 {
+  color: var(--cor-azul-escuro);
+  margin-bottom: 25px;
+  font-size: 24px;
+}
+
+/* ==========================================================================
+   4. LAYOUT DO PAINEL ADMIN (SIDEBAR E CONTEÚDO)
+   ========================================================================== */
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: var(--cor-azul-medio); 
+  color: var(--cor-texto-claro);
+  padding: 15px 20px; 
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar .logo-container {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.sidebar .logo {
+  max-width: 120px;
+}
+
+.sidebar h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 24px;
+  color: var(--cor-texto-claro);
+}
+
+.sidebar nav {
+  flex-grow: 1;
+}
+
+.sidebar nav ul {
+  list-style-type: none; 
+}
+
+.sidebar nav a {
+  color: var(--cor-texto-claro);
+  text-decoration: none;
+  display: block;
+  padding: 15px 20px; 
+  margin: 0 -20px; 
+  border-radius: 0; 
+  transition: background-color 0.3s ease;
+}
+
+.sidebar nav a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar nav a.active {
+  background-color: var(--cor-amarelo);
+  color: var(--cor-azul-escuro);
+  font-weight: bold;
+}
+
+.main-content {
+  flex: 1;
+  padding: 30px;
+  overflow-y: auto; /* Adiciona scroll se o conteúdo for grande */
+}
+
+.main-content-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.main-content-header h1,
+.main-content h2 { /* Pega os títulos de todas as páginas */
+  font-size: 28px;
+  color: var(--cor-azul-escuro);
+}
+
+
+/* ==========================================================================
+   5. COMPONENTES (BOTÕES, TABELAS, CARDS, FORMULÁRIOS)
+   ========================================================================== */
+
+/* Card */
+.card {
+  background-color: #fff;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+/* Botões */
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  transition: opacity 0.3s ease;
+  background-color: #ccc; /* Padrão */
+  color: #333;
+}
+.btn:hover { opacity: 0.85; }
+
+.btn-primary {
+  background-color: var(--cor-azul-medio);
+  color: var(--cor-texto-claro);
+}
+
+/* Tabelas */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table thead th {
+  background-color: var(--cor-fundo-cinza);
+  text-align: left;
+  padding: 12px;
+  font-size: 14px;
+  color: var(--cor-azul-escuro);
+}
+
+table tbody td {
+  padding: 12px;
+  border-bottom: 1px solid var(--cor-borda-suave);
+  vertical-align: middle;
+}
+
+table tbody tr:last-of-type td { border-bottom: none; }
+
+table .actions a, table .actions button {
+  margin: 0 5px;
+  color: var(--cor-azul-medio);
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+}
+
+/* Formulários */
+.form-group { margin-bottom: 15px; }
+.form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--cor-borda-suave);
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+/* Estilo para inputs, selects e textareas quando estão em foco (clicados) */
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--cor-azul-escuro-rgb); 
+  outline: none; 
+}
+
+/* Mensagens de Sucesso e Erro */
+.alert {
+  padding: 15px;
+  margin: 15px 0;
+  border-radius: 5px;
+  border: 1px solid transparent;
+}
+.alert-success {
+  color: #0f5132;
+  background-color: #d1e7dd;
+  border-color: #badbcc;
+}
+.alert-danger {
+  color: #842029;
+  background-color: #f8d7da;
+  border-color: #f5c2c7;
+}
+
+/* ==========================================================================
+   6. ESTILOS PARA O COMPONENTE MODAL
+   ========================================================================== */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050;
+}
+
+.modal-content {
+  background: white;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  width: 500px;
+  max-width: 90%;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--cor-borda-suave);
+  padding-bottom: 15px;
+  margin-bottom: 20px;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.modal-close-btn {
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  font-weight: 300;
+  line-height: 1;
+  color: #888;
+  cursor: pointer;
+  padding: 0;
+}
+.modal-close-btn:hover {
+  color: #000;
+}
+
+.modal-body {
+  overflow-y: auto; /* Adiciona scroll se o conteúdo for muito grande */
+  padding: 5px 15px 5px 5px;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 20px;
+  margin-top: 20px;
+  border-top: 1px solid var(--cor-borda-suave);
+}
+
+/* Novo estilo para botão secundário (Cancelar) */
+.btn-secondary {
+  background-color: #e9ecef;
+  color: #495057;
+  border: 1px solid #ced4da;
+}
+.btn-secondary:hover {
+  background-color: #dae0e5;
+}
+
+/* ==========================================================================
+   7. ESTILOS PERSONALIZADOS PARA A BARRA DE ROLAGEM (SCROLLBAR)
+   ========================================================================== */
+
+/* O seletor com * aplica o estilo a todos os elementos que tiverem scroll */
+*::-webkit-scrollbar {
+  width: 4px; 
+  height: 8px;
+}
+
+/* A trilha (o fundo) da barra de rolagem */
+*::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+
+/* O "polegar" (a parte que você arrasta) */
+*::-webkit-scrollbar-thumb {
+  background: #ccc; 
+  border-radius: 4px; 
+}
+
+/* Efeito ao passar o mouse por cima do polegar */
+*::-webkit-scrollbar-thumb:hover {
+  background: #aaa;
+}
+
+/* ==========================================================================
+   8. ESTILOS PARA O MODAL DE DETALHES DO ALUNO
+   ========================================================================== */
+
+.student-details-list {
+  display: grid;
+  grid-template-columns: max-content 1fr; 
+  gap: 10px 20px;
+  margin-bottom: 20px;
+}
+
+.student-details-list dt { 
+  font-weight: bold;
+  color: var(--cor-texto-escuro);
+}
+
+.student-details-list dd { 
+  margin: 0;
+  color: #555;
+}
+
+.enrolled-class-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid var(--cor-borda-suave);
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+.btn-icon-danger {
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  padding: 5px;
+  font-size: 1.1rem;
+}
+
+.btn-icon-danger:hover {
+  color: var(--cor-erro);
+}
