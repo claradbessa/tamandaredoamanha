@@ -11,39 +11,39 @@ function AdminLayout() {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  return (
-    <div className="admin-layout">
-      
-      <button onClick={toggleSidebar} className="menu-toggle">
-        {isSidebarOpen ? <FaTimes /> : <FaBars />}
-      </button>
+    return (
+      <div className="admin-layout">
+        
+        <button onClick={toggleSidebar} className="menu-toggle">
+          {isSidebarOpen ? <FaTimes /> : <FaBars />}
+        </button>
 
-      <aside className={`sidebar ${isSidebarOpen ? 'sidebar-open' : ''}`}>
-        <div className="logo-container">
-          <img src="/logo_tamandare.png" alt="Logo Projeto Tamandaré do Amanhã" className="logo" />
-        </div>
-        <h2>Admin</h2>
-        <nav>
-          <ul>
-            <li><NavLink to="/dashboard" onClick={toggleSidebar}>Início</NavLink></li>
-            <li><NavLink to="/admin/alunos" onClick={toggleSidebar}>Alunos</NavLink></li>
-            <li><NavLink to="/admin/aulas" onClick={toggleSidebar}>Aulas</NavLink></li>
-            <li><NavLink to="/admin/frequencia" onClick={toggleSidebar}>Relatório de Frequência</NavLink></li>
-            <li><NavLink to="/admin/postagens" onClick={toggleSidebar}>Postagens</NavLink></li>
-            <li><NavLink to="/admin/galeria" onClick={toggleSidebar}>Galeria da Página Inicial</NavLink></li> 
-            <li><NavLink to="/admin/voluntarios" onClick={toggleSidebar}>Voluntários</NavLink></li>
-          </ul>
-        </nav>
-      </aside>
+        <aside className={`sidebar ${isSidebarOpen ? 'sidebar-open' : ''}`}>
+          <div className="logo-container">
+            <img src="/logo_tamandare.png" alt="Logo Projeto Tamandaré do Amanhã" className="logo" />
+          </div>
+          {/* <h2>Admin</h2> */}
+          <nav>
+            <ul>
+              <li><NavLink to="/dashboard" onClick={toggleSidebar}>Início</NavLink></li>
+              <li><NavLink to="/admin/alunos" onClick={toggleSidebar}>Alunos</NavLink></li>
+              <li><NavLink to="/admin/aulas" onClick={toggleSidebar}>Aulas</NavLink></li>
+              <li><NavLink to="/admin/frequencia" onClick={toggleSidebar}>Relatório de Frequência</NavLink></li>
+              <li><NavLink to="/admin/postagens" onClick={toggleSidebar}>Postagens</NavLink></li>
+              <li><NavLink to="/admin/galeria" onClick={toggleSidebar}>Galeria da Página Inicial</NavLink></li> 
+              <li><NavLink to="/admin/voluntarios" onClick={toggleSidebar}>Voluntários</NavLink></li>
+            </ul>
+          </nav>
+        </aside>
 
-      {/* 6. Adiciona o overlay que fecha o menu ao ser clicado */}
-      <div className="overlay" onClick={toggleSidebar}></div>
-      
-      <main className="main-content">
-        <Outlet />
-      </main>
-    </div>
-  );
+        {/* 6. Adiciona o overlay que fecha o menu ao ser clicado */}
+        <div className="overlay" onClick={toggleSidebar}></div>
+        
+        <main className="main-content">
+          <Outlet />
+        </main>
+      </div>
+    );
 }
 
 export default AdminLayout;

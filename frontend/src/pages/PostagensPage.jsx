@@ -169,69 +169,72 @@ function PostagensPage() {
   if (loading) return <p>A carregar postagens...</p>;
 
   return (
-    <div>
-      <div className="action-icons" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h2>Postagens</h2>
-        <button onClick={() => handleOpenModal()}>Adicionar Nova Postagem</button>
+    <>
+      <div className="main-content-header">
+        <h1>Postagens</h1>
+        <button onClick={() => handleOpenModal()} className="btn btn-primary">Adicionar Nova Postagem</button>
       </div>
 
-      {successMessage && <div style={{ color: 'green', background: '#e6ffed', padding: '10px', margin: '15px 0' }}>{successMessage}</div>}
-      {error && <div style={{ color: 'red', background: '#fde8e8', padding: '10px', margin: '15px 0' }}>{error}</div>}
+      {successMessage && <div className="alert alert-success">{successMessage}</div>}
+      {error && <div className="alert alert-danger">{error}</div>}
 
-      <Modal
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-        title={editingPostagem ? 'Editar Postagem' : 'Criar Nova Postagem'}
-      >
-        <PostagemForm
-          onSave={handleSavePostagem}
-          onCancel={handleCloseModal}
-          postagemToEdit={editingPostagem}
-        />
-      </Modal>
+      <div className="card">
+        <Modal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          title={editingPostagem ? 'Editar Postagem' : 'Criar Nova Postagem'}
+        >
+          <PostagemForm
+            onSave={handleSavePostagem}
+            onCancel={handleCloseModal}
+            postagemToEdit={editingPostagem}
+          />
+        </Modal>
 
-      <table>
-        <thead>
-          <tr>
-            <th style={{ width: '100px' }}>Mídia</th>
-            <th>Título</th>
-            <th>Autor</th>
-            <th>Status</th>
-            <th style={{ width: '120px' }}>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          {postagens.length > 0 ? (
-            postagens.map((postagem, idx) => (
-              // fallback key seguro (id preferencial; se faltar, usa índice)
-              <tr key={postagem.id ?? `post-${idx}`}>
-                <td>
-                  {postagem.midia_url ? (
-                    <img src={postagem.midia_url} alt={postagem.titulo} style={{ width: '100px', height: 'auto' }} />
-                  ) : 'Sem imagem'}
-                </td>
-                <td>{postagem.titulo}</td>
-                <td>{postagem.voluntario?.nome || 'N/A'}</td>
-                <td>{postagem.publicado ? 'Publicado' : 'Rascunho'}</td>
-                <td  className="action-icons"style={{ textAlign: 'center' }}>
-                  <button onClick={() => handleOpenModal(postagem)} title="Editar"><FaEdit /></button>
-                  <button onClick={() => handleDeletePostagem(postagem.id)} style={{ marginLeft: '10px' }} title="Excluir"><FaTrashAlt /></button>
+        <table>
+          <thead>
+            <tr>
+              <th style={{ width: '120px' }}>Mídia</th>
+              <th>Título</th>
+              <th className="hide-on-mobile">Autor</th>
+              <th className="hide-on-mobile">Status</th>
+              <th style={{ width: '120px' }}>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {postagens.length > 0 ? (
+              postagens.map((postagem, idx) => (
+                // MANTENDO A SUA LÓGICA DE KEY, QUE É MAIS SEGURA
+                <tr key={postagem.id ?? `post-${idx}`}>
+                  <td>
+                    {postagem.midia_url ? (
+                      <img src={postagem.midia_url} alt={postagem.titulo} style={{ width: '100px', height: 'auto', borderRadius: '6px' }} />
+                    ) : 'Sem imagem'}
+                  </td>
+                  <td>{postagem.titulo}</td>
+                  <td className="hide-on-mobile">{postagem.voluntario?.nome || 'N/A'}</td>
+                  <td className="hide-on-mobile">{postagem.publicado ? 'Publicado' : 'Rascunho'}</td>
+                  <td className="actions">
+                    <button onClick={() => handleOpenModal(postagem)} title="Editar"><FaEdit /></button>
+                    <button onClick={() => handleDeletePostagem(postagem.id)} title="Excluir"><FaTrashAlt /></button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5" style={{ textAlign: 'center', padding: '20px' }}>
+                  <p>Ainda não há postagens cadastradas.</p>
+                  {/* MANTENDO SEU BOTÃO ORIGINAL, QUE EU TINHA REMOVIDO POR ENGANO */}
+                  <button onClick={() => handleOpenModal()} className="btn btn-secondary">
+                    Clique aqui para adicionar a primeira postagem
+                  </button>
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="5" className="action-icons" style={{ textAlign: 'center', padding: '20px' }}>
-                <p>Ainda não há postagens cadastradas.</p>
-                <button onClick={() => handleOpenModal()}>
-                  Clique aqui para adicionar a primeira postagem
-                </button>
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-    </div>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </>
   );
 }
 

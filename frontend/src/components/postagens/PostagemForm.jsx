@@ -12,6 +12,10 @@ function PostagemForm({ onSave, onCancel, postagemToEdit }) {
     if (postagemToEdit) {
       setTitulo(postagemToEdit.titulo || '');
       setConteudo(postagemToEdit.conteudo || '');
+      // Não preenchemos o campo de mídia, pois ele só serve para novos uploads
+    } else {
+      setTitulo('');
+      setConteudo('');
     }
   }, [postagemToEdit]);
 
@@ -33,7 +37,7 @@ function PostagemForm({ onSave, onCancel, postagemToEdit }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div style={{ marginBottom: '15px' }}>
+      <div className="form-group">
         <label htmlFor="titulo">Título:</label>
         <input
           type="text"
@@ -41,10 +45,9 @@ function PostagemForm({ onSave, onCancel, postagemToEdit }) {
           value={titulo}
           onChange={(e) => setTitulo(e.target.value)}
           required
-          style={{ width: '100%', padding: '8px', marginTop: '5px' }}
         />
       </div>
-      <div style={{ marginBottom: '15px' }}>
+      <div className="form-group">
         <label htmlFor="conteudo">Conteúdo:</label>
         <textarea
           id="conteudo"
@@ -52,22 +55,29 @@ function PostagemForm({ onSave, onCancel, postagemToEdit }) {
           onChange={(e) => setConteudo(e.target.value)}
           required
           rows={5}
-          style={{ width: '100%', padding: '8px', marginTop: '5px' }}
         />
       </div>
-      <div style={{ marginBottom: '15px' }}>
-        <label htmlFor="midia">Imagem ou Vídeo:</label>
+      <div className="form-group">
+        <label htmlFor="midia">Imagem ou Vídeo (opcional):</label>
         <input
           type="file"
           id="midia"
           onChange={(e) => setMidia(e.target.files[0])}
-          style={{ width: '100%', padding: '8px', marginTop: '5px' }}
+          accept="image/*,video/*"
         />
+        {postagemToEdit?.midia_url && !midia && (
+          <small style={{ display: 'block', marginTop: '5px' }}>
+            * Deixe em branco para manter a imagem/vídeo atual.
+          </small>
+        )}
       </div>
-      <div style={{ marginTop: '20px', textAlign: 'right' }}>
-        <button type="button" onClick={onCancel} disabled={isSaving}>Cancelar</button>
-        <button type="submit" disabled={isSaving} style={{ marginLeft: '10px' }}>
-          {isSaving ? 'A salvar...' : 'Salvar'}
+
+      <div className="modal-footer">
+        <button type="button" onClick={onCancel} disabled={isSaving} className="btn btn-secondary">
+          Cancelar
+        </button>
+        <button type="submit" disabled={isSaving} className="btn btn-primary">
+          {isSaving ? 'Salvando...' : 'Salvar'}
         </button>
       </div>
     </form>
