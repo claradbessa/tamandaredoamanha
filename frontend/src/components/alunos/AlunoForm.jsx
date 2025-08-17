@@ -102,10 +102,12 @@ function AlunoForm({ onSave, onCancel, alunoToEdit }) {
         </div>
       </div>
       
-      <div style={{ marginTop: '20px', textAlign: 'right' }}>
-        <button type="button" onClick={onCancel} disabled={isSaving}>Cancelar</button>
-        <button type="submit" disabled={isSaving} style={{ marginLeft: '10px' }}>
-          {isSaving ? 'A salvar...' : 'Salvar'}
+      <div className="modal-footer">
+        <button type="button" onClick={onCancel} disabled={isSaving} className="btn btn-secondary">
+          Cancelar
+        </button>
+        <button type="submit" disabled={isSaving} className="btn btn-primary">
+          {isSaving ? 'Salvando...' : 'Salvar'}
         </button>
       </div>
     </form>
