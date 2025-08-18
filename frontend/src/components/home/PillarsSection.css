@@ -1,0 +1,45 @@
+.pillars-container {
+  padding: 60px 40px;
+  text-align: center;
+  background-color: #f1f3f5; 
+}
+
+.pillars-container h2 {
+  font-size: 2.5rem;
+  margin-bottom: 40px;
+}
+
+.pillars-grid {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+}
+
+.pillar-card {
+  flex: 1;
+  max-width: 350px;
+  padding: 30px;
+}
+
+.pillar-icon {
+  margin-bottom: 20px;
+  color: var(--cor-primaria);
+}
+
+.pillar-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+}
+
+.pillar-card p {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* --- Media Query para Responsividade --- */
+@media (max-width: 768px) {
+  .pillars-grid {
+    flex-direction: column; 
+    align-items: center;
+  }
+}
