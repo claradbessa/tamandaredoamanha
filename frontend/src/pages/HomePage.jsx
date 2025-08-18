@@ -4,6 +4,7 @@ import HeroSection from '../components/home/HeroSection';
 import AboutSection from '../components/home/AboutSection';
 import PillarsSection from '../components/home/PillarsSection';
 import ClassroomSection from '../components/home/ClassroomSection';
+import CardSection from '../components/home/CardSection';
 
 function HomePage() {
   return (
@@ -13,6 +14,7 @@ function HomePage() {
       <AboutSection />
       <PillarsSection />
       <ClassroomSection />
+      <CardSection />
       
       {/* Aqui virão as outras secções */}
       <Footer />

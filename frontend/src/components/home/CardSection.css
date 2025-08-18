@@ -1,0 +1,57 @@
+.cta-container {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  padding: 60px 40px;
+  background-color: var(--cor-branco);
+}
+
+.cta-card {
+  flex: 1;
+  max-width: 400px;
+  padding: 40px;
+  border-radius: 20px;
+  text-align: center;
+  color: #343a40; 
+}
+
+.cta-card.voluntariado {
+  background-color: #a5d8ff; 
+}
+
+.cta-card.doe {
+  background-color: #ffd43b; 
+}
+
+.cta-card h2 {
+  font-size: 2rem;
+  margin-bottom: 15px;
+}
+
+.cta-card p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 25px;
+}
+
+.cta-button {
+  background-color: #364fc7; 
+  color: #ffffff;
+  padding: 12px 25px;
+  border-radius: 50px;
+  font-weight: bold;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.cta-button:hover {
+  opacity: 0.9;
+}
+
+/* --- Media Query para Responsividade --- */
+@media (max-width: 768px) {
+  .cta-container {
+    flex-direction: column; 
+    align-items: center;
+  }
+}
