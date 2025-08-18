@@ -3,6 +3,7 @@ import Footer from '../components/layout/Footer';
 import HeroSection from '../components/home/HeroSection'; 
 import AboutSection from '../components/home/AboutSection';
 import PillarsSection from '../components/home/PillarsSection';
+import GallerySection from '../components/home/GallerySection';
 
 function HomePage() {
   return (
@@ -11,11 +12,9 @@ function HomePage() {
       <HeroSection />
       <AboutSection />
       <PillarsSection />
-      <main>
-        <h1 style={{ textAlign: 'center', padding: '50px' }}>
-          Página Inicial em Construção
-        </h1>
-      </main>
+      <GallerySection />
+      
+      {/* Aqui virão as outras secções */}
       <Footer />
     </div>
   );

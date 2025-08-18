@@ -1,0 +1,35 @@
+.gallery-container {
+  padding: 60px 40px;
+  text-align: center;
+}
+
+.gallery-container h2 {
+  font-size: 2.5rem;
+  margin-bottom: 40px;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Cria uma grelha de 3 colunas */
+  gap: 20px;
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover; /* Garante que a imagem preencha o espaço sem distorcer */
+  border-radius: 8px;
+}
+
+.gallery-item p {
+  margin-top: 10px;
+  font-weight: 500;
+  color: #555;
+}
+
+/* --- Media Query para Responsividade --- */
+@media (max-width: 768px) {
+  .gallery-grid {
+    grid-template-columns: 1fr; /* Em telemóveis, mostra uma imagem por linha */
+  }
+}
