@@ -1,0 +1,41 @@
+.aulas-ofertadas-container {
+  padding: 60px 40px;
+  text-align: center;
+}
+
+.aulas-ofertadas-container h2 {
+  font-size: 2.5rem;
+  margin-bottom: 40px;
+}
+
+.aulas-ofertadas-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.aula-card img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+}
+
+.aula-card img:hover {
+  transform: scale(1.05);
+}
+
+.aula-card p {
+  margin-top: 10px;
+  font-weight: 500;
+  font-size: 1.1rem;
+  color: #555;
+}
+
+/* --- Media Query para Responsividade --- */
+@media (max-width: 768px) {
+  .aulas-ofertadas-grid {
+    grid-template-columns: 1fr;
+  }
+}
