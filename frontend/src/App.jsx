@@ -11,6 +11,7 @@ import PostagensPage from './pages/PostagensPage';
 import FrequenciaPage from './pages/FrequenciaPage'; 
 import RelatorioFrequenciaPage from './pages/RelatorioFrequenciaPage';
 import GaleriaAdminPage from './pages/GaleriaAdminPage';
+import GaleriaPage from './pages/GaleriaPage';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         {/* Rotas Públicas */}
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/galeria" element={<GaleriaPage />} />
 
         {/* Rotas Protegidas com o Layout de Admin */}
         <Route element={<ProtectedRoute />}>
