@@ -1,48 +1,41 @@
 import { Link } from 'react-router-dom';
 import { FaFacebook, FaInstagram, FaWhatsapp } from 'react-icons/fa';
+import logo from '../../../public/logo_tamandare.png';
+
+// 1. Importe o arquivo CSS aqui!
+import './Footer.css';
 
 function Footer() {
-  // Estilos inline para simplicidade
-  const footerStyle = {
-    backgroundColor: '#005f9e',
-    color: '#ffffff',
-    padding: '40px 20px',
-    textAlign: 'center',
-  };
-
-  const socialIconsStyle = {
-    display: 'flex',
-    justifyContent: 'center',
-    gap: '20px',
-    marginBottom: '20px',
-  };
-
-  const iconStyle = {
-    color: '#ffffff',
-    fontSize: '1.5rem',
-  };
-
-  const copyrightStyle = {
-    fontSize: '0.9rem',
-    opacity: 0.7,
-  };
-
   return (
-    <footer style={footerStyle}>
-      <div style={socialIconsStyle}>
+    // 2. Use className em vez de style
+    <footer className="footer">
+      <div className="footer-content">
+        <div className="footer-logo">
+          <img src={logo} alt="Logo Tamandaré do Amanhã" />
+        </div>
+        <div className="footer-contact">
+          <h2>Fale conosco</h2>
+          <p>(12) 4002 8922</p>
+          <p>Rua Qualquer, 123, Cidade Qualquer</p>
+          <p>tamandare@grandesite.com.br</p>
+        </div>
+      </div>
+
+      <div className="social-icons">
         <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
-          <FaFacebook style={iconStyle} />
+          <FaFacebook />
         </a>
         <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
-          <FaInstagram style={iconStyle} />
+          <FaInstagram />
         </a>
         <a href="https://whatsapp.com" target="_blank" rel="noopener noreferrer">
-          <FaWhatsapp style={iconStyle} />
+          <FaWhatsapp />
         </a>
       </div>
-      <p>Projeto Tamandaré do Amanhã</p>
-      <p>Feito com 💙 por <a href="http://linkedin.com/in/claradbessa" target="_blank">claradbessa</a></p>
-      <p style={copyrightStyle}>
+      <p className="footer-credits">
+        Feito com 💙 por <a href="http://linkedin.com/in/claradbessa" target="_blank">claradbessa</a>
+      </p>
+      <p className="copyright">
         © {new Date().getFullYear()} Todos os direitos reservados.
       </p>
     </footer>

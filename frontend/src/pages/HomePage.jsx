@@ -5,6 +5,7 @@ import AboutSection from '../components/home/AboutSection';
 import PillarsSection from '../components/home/PillarsSection';
 import ClassroomSection from '../components/home/ClassroomSection';
 import CardSection from '../components/home/CardSection';
+import MediaSection from '../components/home/MediaSection';
 
 function HomePage() {
   return (
@@ -12,6 +13,7 @@ function HomePage() {
       <Header />
       <HeroSection />
       <AboutSection />
+      <MediaSection />
       <PillarsSection />
       <ClassroomSection />
       <CardSection />

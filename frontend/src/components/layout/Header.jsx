@@ -36,6 +36,7 @@ function Header() {
         <Link to="/" style={navLinkStyle}>Início</Link>
         <Link to="/sobre" style={navLinkStyle}>Sobre o Projeto</Link>
         <Link to="/galeria" style={navLinkStyle}>Galeria</Link>
+        <Link to="/contato" style={navLinkStyle}>Posts</Link>
         <Link to="/contato" style={navLinkStyle}>Contato</Link>
       </nav>
     </header>
