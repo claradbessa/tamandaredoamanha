@@ -1,0 +1,36 @@
+.single-post-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.single-post-container h1 {
+  font-size: 2.8rem;
+  margin-bottom: 10px;
+}
+
+.post-meta {
+  font-size: 1rem;
+  color: #6c757d;
+  margin-bottom: 30px;
+}
+
+.post-image {
+  width: 40%;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 30px;
+}
+
+.post-content p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #343a40;
+}
+
+.back-to-blog-link {
+  display: inline-block;
+  margin-top: 40px;
+  color: #003366;
+  font-weight: 500;
+}

@@ -166,7 +166,7 @@ function PostagensPage() {
     }
   };
 
-  if (loading) return <p>A carregar postagens...</p>;
+  if (loading) return <p>Carregando postagens...</p>;
 
   return (
     <>

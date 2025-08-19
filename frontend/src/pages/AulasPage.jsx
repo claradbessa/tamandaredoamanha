@@ -104,7 +104,7 @@ function AulasPage() {
     )
     .sort((a, b) => a.nome.localeCompare(b.nome));
 
-  if (loading) return <p>A carregar aulas...</p>;
+  if (loading) return <p>Carregando aulas...</p>;
 
   return (
       <>

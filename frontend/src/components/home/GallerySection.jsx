@@ -32,7 +32,7 @@ function GallerySection() {
       <h2>Galeria de Fotos</h2>
       <div className="gallery-grid">
         {loading ? (
-          <p>A carregar imagens...</p>
+          <p>Carregando imagens...</p>
         ) : (
           images.map(image => (
             <div key={image.id} className="gallery-item">

@@ -61,7 +61,7 @@ function FrequenciaPage() {
     }
   };
 
-  if (loading) return <p>A carregar dados da aula...</p>;
+  if (loading) return <p>Carregando dados da aula...</p>;
 
   return (
     <>

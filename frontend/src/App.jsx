@@ -13,7 +13,7 @@ import RelatorioFrequenciaPage from './pages/RelatorioFrequenciaPage';
 import GaleriaAdminPage from './pages/GaleriaAdminPage';
 import GaleriaPage from './pages/GaleriaPage';
 import BlogPage from './pages/BlogPage';
-// import SinglePostPage from './pages/SinglePostPage'; 
+import SinglePostPage from './pages/SinglePostPage'; 
 
 function App() {
   return (
@@ -24,7 +24,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/galeria" element={<GaleriaPage />} />
         <Route path="/blog" element={<BlogPage />} /> 
-        {/* <Route path="/post/:id" element={<SinglePostPage />} /> */}
+        <Route path="/post/:id" element={<SinglePostPage />} />
 
         {/* Rotas Protegidas com o Layout de Admin */}
         <Route element={<ProtectedRoute />}>

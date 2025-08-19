@@ -87,7 +87,7 @@ function VoluntariosPage() {
     }
   };
 
-  if (loading) return <p>A carregar voluntários...</p>;
+  if (loading) return <p>Carregando voluntários...</p>;
 
   
   return (

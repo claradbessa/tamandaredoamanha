@@ -41,7 +41,7 @@ function GaleriaPage() {
         <h2>Galeria de Fotos</h2>
         <p>Explore os momentos e as atividades do nosso projeto.</p>
 
-        {loading && <p>A carregar imagens...</p>}
+        {loading && <p>Carregando imagens...</p>}
         {error && <p style={{ color: 'red' }}>{error}</p>}
 
         <div className="galeria-grid">

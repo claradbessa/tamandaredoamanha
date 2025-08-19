@@ -32,7 +32,7 @@ function BlogPage() {
         <h2>Notícias e Atividades</h2>
         <p>Acompanhe os últimos acontecimentos e novidades do nosso projeto.</p>
 
-        {loading && <p>A carregar postagens...</p>}
+        {loading && <p>Carregando postagens...</p>}
         {error && <p style={{ color: 'red' }}>{error}</p>}
 
         <div className="posts-grid">

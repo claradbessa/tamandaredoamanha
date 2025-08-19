@@ -98,7 +98,7 @@ function AlunoForm({ onSave, onCancel, alunoToEdit }) {
                 {aula.nome}
               </label>
             </div>
-          )) : <p>A carregar aulas...</p>}
+          )) : <p>Carregando aulas...</p>}
         </div>
       </div>
       

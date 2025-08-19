@@ -28,7 +28,7 @@ function RelatorioFrequenciaPage() {
     fetchData();
   }, []);
 
-  if (loading) return <p>A carregar...</p>;
+  if (loading) return <p>Carregando...</p>;
 
   const registrosFiltrados = selectedAula
     ? registros.filter(r => r.aula_id === selectedAula.id)

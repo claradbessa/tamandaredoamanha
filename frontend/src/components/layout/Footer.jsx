@@ -15,9 +15,9 @@ function Footer() {
         </div>
         <div className="footer-contact">
           <h2>Fale conosco</h2>
-          <p>(12) 4002 8922</p>
-          <p>Rua Qualquer, 123, Cidade Qualquer</p>
-          <p>tamandare@grandesite.com.br</p>
+          <p>(12) 99605-1909</p>
+          <p>R. Barão da Bocaína, 131</p>
+          <p>Centro - Guaratinguetá - SP</p>
         </div>
       </div>
 
