@@ -12,7 +12,7 @@ function CardSection() {
         </Link>
       </div>
       <div className="cta-card doe">
-        <h2>Doe</h2>
+        <h2>DOE</h2>
         <p>Sua doação faz a diferença.<br/> Participe da nossa missão e multiplique sorrisos.</p>
         <Link to="/contato" className="cta-button">
           Obrigada!
