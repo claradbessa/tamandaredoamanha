@@ -40,6 +40,10 @@ Route::match(['get', 'post'], '/galeria-debug', function (Request $request) {
 // Rotas públicas da galeria
     Route::get('/galeria', [GaleriaController::class, 'index']);
 
+// Rotas PÚBLICAS para Postagens (Blog)
+Route::get('/postagens', [PostagemController::class, 'index']);
+Route::get('/postagens/{id}', [PostagemController::class, 'show']);
+
 // Rotas Públicas de Autenticação
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -58,11 +62,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/galeria', [GaleriaController::class, 'store']);
     Route::delete('/galeria/{galeriaImagem}', [GaleriaController::class, 'destroy']);
 
+    // Rotas de Postagens (Gerenciamento)
+    Route::post('/postagens', [PostagemController::class, 'store']);
+    Route::put('/postagens/{id}', [PostagemController::class, 'update']);
+    Route::delete('/postagens/{id}', [PostagemController::class, 'destroy']);
+
     // Rotas de Recursos (CRUDs)
     Route::apiResource('voluntarios', VoluntarioController::class);
     Route::apiResource('alunos', AlunoController::class);
     Route::apiResource('aulas', AulaController::class);
-    Route::apiResource('postagens', PostagemController::class);
+    // Route::apiResource('postagens', PostagemController::class);
     Route::apiResource('gestores', GestorController::class);
     Route::apiResource('matriculas', MatriculaController::class);
     Route::apiResource('frequencias', FrequenciaController::class);
