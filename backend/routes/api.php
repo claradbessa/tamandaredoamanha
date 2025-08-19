@@ -37,6 +37,9 @@ Route::match(['get', 'post'], '/galeria-debug', function (Request $request) {
     ]);
 });
 
+// Rotas públicas da galeria
+    Route::get('/galeria', [GaleriaController::class, 'index']);
+
 // Rotas Públicas de Autenticação
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -52,7 +55,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/aulas-lista', [AulaController::class, 'getListaAulas']);
 
     // Rotas da galeria
-    Route::get('/galeria', [GaleriaController::class, 'index']);
     Route::post('/galeria', [GaleriaController::class, 'store']);
     Route::delete('/galeria/{galeriaImagem}', [GaleriaController::class, 'destroy']);
 
