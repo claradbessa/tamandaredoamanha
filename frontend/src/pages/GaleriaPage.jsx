@@ -3,7 +3,6 @@ import api from '../services/api';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 
-// 1. Importe o Lightbox e os seus estilos
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 
@@ -14,7 +13,6 @@ function GaleriaPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  // 2. Novo estado para controlar o lightbox
   const [lightboxIndex, setLightboxIndex] = useState(-1);
 
   useEffect(() => {
@@ -31,7 +29,6 @@ function GaleriaPage() {
     fetchImages();
   }, []);
 
-  // 3. Prepara as imagens para o formato que o Lightbox espera
   const slides = images.map(image => ({
     src: image.url,
     title: image.descricao,
@@ -52,7 +49,6 @@ function GaleriaPage() {
             <div 
               key={image.id} 
               className="galeria-item"
-              // 4. Adiciona o evento de clique para abrir o lightbox
               onClick={() => setLightboxIndex(index)}
             >
               <img src={image.url} alt={image.descricao || 'Foto do projeto'} />
@@ -61,7 +57,6 @@ function GaleriaPage() {
         </div>
       </main>
 
-      {/* 5. Adiciona o componente Lightbox à página */}
       <Lightbox
         open={lightboxIndex >= 0}
         index={lightboxIndex}
