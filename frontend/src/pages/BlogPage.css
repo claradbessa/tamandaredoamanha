@@ -1,62 +1,106 @@
+@import '../styles/theme.css';
+
 .blog-page-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 80px 40px;
   text-align: center;
+  background-color: var(--cor-fundo-cinza); 
 }
 
 .blog-page-container h2 {
   font-size: 2.5rem;
   margin-bottom: 10px;
+  color: var(--cor-azul-escuro);
 }
 
 .blog-page-container p {
   font-size: 1.1rem;
   color: #6c757d;
-  margin-bottom: 40px;
+  margin-bottom: 50px;
 }
 
 .posts-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 30px;
-  text-align: center;
+  text-align: left; 
 }
 
 .post-card {
-  background-color: #ffffff;
+  background-color: var(--cor-branco);
   border-radius: 8px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
   overflow: hidden;
   text-decoration: none;
-  color: var(--cor-texto);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  color: var(--cor-texto-escuro);
+  display: flex; 
+  flex-direction: column; 
+  transition: all 0.3s ease;
+  border-bottom: 4px solid transparent; 
 }
 
 .post-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  transform: translateY(-8px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  border-bottom-color: var(--cor-amarelo); 
 }
 
 .post-card img {
-  display: block; 
-  margin: 0 auto; 
-  width: 50%;
+  width: 100%; 
   height: 200px;
   object-fit: cover;
 }
 
 .post-card-content {
   padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; 
 }
 
 .post-card-content h3 {
   margin: 0 0 10px 0;
   font-size: 1.3rem;
+  color: var(--cor-azul-escuro);
+  flex-grow: 1; 
 }
 
 .post-card-content p {
   margin: 0;
   font-size: 0.9rem;
-  color: #6c757d;
+  color: #888; 
+  margin-top: auto; 
+  padding-top: 10px;
+}
+
+/* Estilo para o link "Ler mais" */
+.read-more-link {
+  color: var(--cor-azul-medio);
+  font-weight: bold;
+  font-size: 0.9rem;
+  display: block; 
+  margin-top: 10px;
+  
+  /* Escondido por padrão */
+  opacity: 0; 
+  transform: translateY(10px); /* Começa um pouco abaixo */
+  transition: all 0.3s ease;
+}
+
+/* Regra para o hover */
+.post-card:hover .read-more-link {
+  opacity: 1; /* Aparece */
+  transform: translateY(0); /* Sobe para a posição final */
+}
+
+.post-card-content p {
+  padding-top: 0; 
+  border-top: none; 
+}
+
+@media (max-width: 768px) {
+  .blog-page-container {
+    padding: 60px 20px;
+  }
 }

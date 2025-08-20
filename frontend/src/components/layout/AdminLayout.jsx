@@ -28,9 +28,9 @@ function AdminLayout() {
               <li><NavLink to="/dashboard" onClick={toggleSidebar}>Início</NavLink></li>
               <li><NavLink to="/admin/alunos" onClick={toggleSidebar}>Alunos</NavLink></li>
               <li><NavLink to="/admin/aulas" onClick={toggleSidebar}>Aulas</NavLink></li>
-              <li><NavLink to="/admin/frequencia" onClick={toggleSidebar}>Relatório de Frequência</NavLink></li>
+              <li><NavLink to="/admin/frequencia" onClick={toggleSidebar}>Relatório de frequência</NavLink></li>
               <li><NavLink to="/admin/postagens" onClick={toggleSidebar}>Postagens</NavLink></li>
-              <li><NavLink to="/admin/galeria" onClick={toggleSidebar}>Galeria da Página Inicial</NavLink></li> 
+              <li><NavLink to="/admin/galeria" onClick={toggleSidebar}>Galeria de imagens</NavLink></li> 
               <li><NavLink to="/admin/voluntarios" onClick={toggleSidebar}>Voluntários</NavLink></li>
             </ul>
           </nav>

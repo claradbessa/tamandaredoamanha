@@ -4,6 +4,7 @@ import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 
 import Lightbox from "yet-another-react-lightbox";
+import { FaSearchPlus } from 'react-icons/fa'; 
 import "yet-another-react-lightbox/styles.css";
 
 import './GaleriaPage.css';
@@ -52,6 +53,10 @@ function GaleriaPage() {
               onClick={() => setLightboxIndex(index)}
             >
               <img src={image.url} alt={image.descricao || 'Foto do projeto'} />
+              
+              <div className="zoom-icon">
+                <FaSearchPlus />
+              </div>
             </div>
           ))}
         </div>

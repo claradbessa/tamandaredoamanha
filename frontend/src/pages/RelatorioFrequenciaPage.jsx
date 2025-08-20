@@ -37,7 +37,7 @@ function RelatorioFrequenciaPage() {
   return (
     <>
       <div className="main-content-header">
-        <h1>Relatório de Frequência</h1>
+        <h1>Relatório de frequência</h1>
         {selectedAula && (
           <button onClick={() => setSelectedAula(null)} className="btn btn-secondary">← Ver todas as aulas</button>
         )}

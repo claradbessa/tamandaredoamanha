@@ -37,12 +37,16 @@ function BlogPage() {
 
         <div className="posts-grid">
           {posts.map(post => (
-            // Cada card é um link para a página individual do post
             <Link to={`/post/${post.id}`} key={post.id} className="post-card">
               <img src={post.midia_url} alt={post.titulo} />
               <div className="post-card-content">
                 <h3>{post.titulo}</h3>
-                <p>Por {post.voluntario?.nome || 'ONG'}</p>
+                
+                <div>
+                  <p>Por {post.voluntario?.nome || 'ONG'}</p>
+                  <span className="read-more-link">Ler mais →</span>
+                </div>
+
               </div>
             </Link>
           ))}

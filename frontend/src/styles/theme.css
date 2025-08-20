@@ -1,0 +1,31 @@
+:root {
+  --cor-azul-escuro: #003366 !important;
+  --cor-azul-medio: #005f9e !important;
+  --cor-azul-claro: #01acf4 !important;
+  --cor-amarelo: #ffd700 !important;
+  --cor-texto-claro: #ffffff !important;
+  --cor-texto-escuro: #333333 !important;
+  --cor-fundo-cinza: #f4f6f9 !important;
+  --cor-borda-suave: #e3e3e6 !important;
+  --cor-branco: #ffffff !important;
+  --cor-sucesso: #28a745 !important;
+  --cor-erro: #dc3545 !important;
+}
+
+.cta-button {
+  background-color: var(--cor-azul-escuro);
+  color: var(--cor-branco);
+  padding: 15px 35px;
+  border-radius: 50px;
+  font-weight: bold;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.cta-button:hover {
+  background-color: #1f487e;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+}

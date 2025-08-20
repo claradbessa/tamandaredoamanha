@@ -1,44 +1,34 @@
-import { Link } from 'react-router-dom';
-import logo from '/logo_tamandare.png'; 
+import { useState } from 'react';
+import { Link, NavLink } from 'react-router-dom';
+import logo from '/logo_tamandare_site.png'; 
+import './Header.css'; 
+import { FaBars, FaTimes } from 'react-icons/fa'; 
 
 function Header() {
-  const headerStyle = {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '10px 40px',
-    backgroundColor: 'var(--cor-branco)',
-    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-  };
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const logoStyle = {
-    height: '60px',
+  const handleLinkClick = () => {
+    setIsMenuOpen(false);
   };
-
-  const navStyle = {
-    display: 'flex',
-    gap: '20px',
-  };
-
-  const navLinkStyle = {
-    color: 'var(--cor-texto)',
-    fontWeight: '500',
-    fontSize: '1rem',
-  };
-  
 
   return (
-    <header style={headerStyle}>
-      <Link to="/">
-        <img src={logo} alt="Logo Tamandaré do Amanhã" style={logoStyle} />
+    <header className="main-header">
+      <Link to="/" onClick={handleLinkClick}>
+        <img src={logo} alt="Logo Tamandaré do Amanhã" className="logo" />
       </Link>
-      <nav style={navStyle}>
-        <Link to="/" style={navLinkStyle}>Início</Link>
-        {/* <Link to="/sobre" style={navLinkStyle}>Sobre o Projeto</Link> */}
-        <Link to="/galeria" style={navLinkStyle}>Galeria</Link>
-        <Link to="/blog" style={navLinkStyle}>Blog</Link>
-        <Link to="/contato" style={navLinkStyle}>Contato</Link>
+      
+      {/*Navegação muda de classe quando o menu está aberto */}
+      <nav className={`main-nav ${isMenuOpen ? 'active' : ''}`}>
+        <NavLink  to="/" onClick={handleLinkClick}>Início</NavLink >
+        <NavLink  to="/galeria" onClick={handleLinkClick}>Galeria</NavLink >
+        <NavLink  to="/blog" onClick={handleLinkClick}>Blog</NavLink >
+        <NavLink  to="/contato" onClick={handleLinkClick}>Contato</NavLink >
       </nav>
+
+      {/* Botão "hambúrguer" que aparece no mobile */}
+      <button className="menu-toggle-site" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+        {isMenuOpen ? <FaTimes /> : <FaBars />}
+      </button>
     </header>
   );
 }

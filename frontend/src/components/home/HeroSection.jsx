@@ -1,5 +1,3 @@
-import { Link } from 'react-router-dom';
-
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
@@ -8,20 +6,24 @@ import 'swiper/css/pagination';
 
 import './HeroSection.css';
 
-import slide1 from '../../assets/slide-1.png';
-import slide2 from '../../assets/slide-2.png';
+import slide1Desktop from '../../assets/slide-1.png';
+import slide1Mobile from '../../assets/slide-1-mob.jpg';
+import slide2Desktop from '../../assets/slide-2.png';
+import slide2Mobile from '../../assets/slide-2-mob.jpg';
 
 function HeroSection() {
   const slides = [
     {
-      image: slide1,
-    //   title: 'Transformando vidas',
-    //   subtitle: 'Uma criança de cada vez.',
+      imageDesktop: slide1Desktop,
+      imageMobile: slide1Mobile,
+      // title: 'Um Lugar Para Crescer, Aprender e Sonhar',
+      // subtitle: 'Oferecemos um ambiente seguro e estimulante onde crianças e adolescentes desenvolvem seu potencial máximo.',
     },
     {
-      image: slide2,
-    //   title: 'Um lugar para crescer, aprender e sonhar.',
-    //   subtitle: 'Oferecemos um ambiente acolhedor com atividades que estimulam o desenvolvimento integral de nossas crianças e adolescentes.',
+      imageDesktop: slide2Desktop,
+      imageMobile: slide2Mobile,
+      // title: 'Transformando Vidas',
+      // subtitle: 'Uma criança de cada vez, com educação, esporte e cultura.',
     },
   ];
 
@@ -42,13 +44,19 @@ function HeroSection() {
         {slides.map((slide, index) => (
           <SwiperSlide key={index}>
             <div
-              className="hero-slide"
-              style={{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${slide.image})` }}
+              className="hero-slide desktop-image"
+              style={{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${slide.imageDesktop})` }}
             >
-              <div className="hero-content">
-                <h1>{slide.title}</h1>
-                <p>{slide.subtitle}</p>
-              </div>
+            </div>
+            <div
+              className="hero-slide mobile-image"
+              style={{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${slide.imageMobile})` }}
+            >
+            </div>
+            
+            <div className="hero-content">
+              <h1>{slide.title}</h1>
+              <p>{slide.subtitle}</p>
             </div>
           </SwiperSlide>
         ))}

@@ -1,17 +1,16 @@
 import { Link } from 'react-router-dom';
 import { FaFacebook, FaInstagram, FaWhatsapp } from 'react-icons/fa';
-import logo from '../../../public/logo_tamandare.png';
-
-// 1. Importe o arquivo CSS aqui!
 import './Footer.css';
 
 function Footer() {
+  const whatsappNumber = '5512996051909'; 
+  const whatsappLink = `https://wa.me/${whatsappNumber}`;
+
   return (
-    // 2. Use className em vez de style
     <footer className="footer">
       <div className="footer-content">
         <div className="footer-logo">
-          <img src={logo} alt="Logo Tamandaré do Amanhã" />
+          <img src="/logo_tamandare.png" alt="Logo Tamandaré do Amanhã" />
         </div>
         <div className="footer-contact">
           <h2>Fale conosco</h2>
@@ -22,18 +21,18 @@ function Footer() {
       </div>
 
       <div className="social-icons">
-        <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
+        <a href="https://www.facebook.com/fabiana.andrade.50552" target="_blank" rel="noopener noreferrer">
           <FaFacebook />
         </a>
-        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+        <a href="https://www.instagram.com/tmdoamanha/" target="_blank" rel="noopener noreferrer">
           <FaInstagram />
         </a>
-        <a href="https://whatsapp.com" target="_blank" rel="noopener noreferrer">
+        <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
           <FaWhatsapp />
         </a>
       </div>
       <p className="footer-credits">
-        Feito com 💙 por <a href="http://linkedin.com/in/claradbessa" target="_blank">claradbessa</a>
+        Feito com 💙 por <a href="https://claradbessa.vercel.app/" target="_blank" rel="noopener noreferrer">claradbessa</a>
       </p>
       <p className="copyright">
         © {new Date().getFullYear()} Todos os direitos reservados.

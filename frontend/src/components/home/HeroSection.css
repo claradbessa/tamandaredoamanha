@@ -1,27 +1,92 @@
-.hero-slide {
-  width: 100%;
-  height: 90vh;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
+@import '../../styles/theme.css';
+
+.swiper-slide {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
-  color: var(--cor-branco);
 }
+
+.hero-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 90vh; 
+  min-height: 500px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+/* --- LÓGICA DE IMAGEM RESPONSIVA --- */
+
+.mobile-image {
+  display: none;
+}
+.desktop-image {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .desktop-image {
+    display: none;
+  }
+  .mobile-image {
+    display: block;
+  }
+}
+/* --- FIM DA LÓGICA --- */
+
 
 .hero-content {
+  position: relative; 
+  z-index: 2;
+  color: var(--cor-branco);
   max-width: 800px;
   padding: 20px;
+  height: 90vh
 }
 
-/* --- Estilos para os controlos do Swiper --- */
+.hero-content h1 {
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+}
+
+.hero-content p {
+  font-size: 1.2rem;
+  font-weight: 300;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+}
+
 .swiper-button-next,
 .swiper-button-prev {
   color: var(--cor-branco) !important;
+  --swiper-navigation-size: 20px; 
 }
 
 .swiper-pagination-bullet-active {
   background-color: var(--cor-branco) !important;
+}
+
+@media (max-width: 768px) {
+  .hero-slide {
+    height: 90vh; 
+    min-height: 0;
+  }
+  .swiper-button-next,
+  .swiper-button-prev {
+    display: none; 
+  }
+
+  .hero-content h1 {
+    font-size: 2.2rem;
+  }
+  
+  .hero-content p {
+    font-size: 1.1rem;
+  }
 }

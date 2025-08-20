@@ -1,0 +1,122 @@
+@import '../../styles/theme.css';
+
+.main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 5%; 
+  background-color:  var(--cor-branco);
+  box-shadow: none;
+  border-bottom: 1px solid var(--cor-borda-suave);
+  position: sticky; 
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  height: 15vh;
+}
+
+.main-header .logo {
+  height: 80px;
+  transition: transform 0.3s ease;
+}
+
+.main-header .logo:hover {
+  transform: scale(1.05);
+}
+
+/* Navegação para Desktop */
+.main-nav {
+  display: flex;
+  gap: 30px;
+}
+
+.main-nav a {
+  display: inline-block;
+  color: var(--cor-texto-escuro);
+  font-weight: 500;
+  font-size: 1rem;
+  text-decoration: none;
+  position: relative;
+  padding-bottom: 5px;
+}
+
+/* Efeito de linha embaixo do link ao passar o mouse */
+.main-nav a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 105%;
+  height: 2px;
+  background-color: var(--cor-amarelo);
+  transform: scaleX(0);
+  transition: transform 0.3s ease-in-out;
+}
+
+/* ESTILO PARA O LINK DA PÁGINA ATIVA */
+/* Efeito de linha embaixo do link ao passar o mouse */
+.main-nav a:hover::after {
+  transform: scaleX(1);
+}
+
+/* Deixa a barrinha amarela sempre visível APENAS para o link ativo */
+.main-nav a.active::after {
+  transform: scaleX(1);
+}
+
+
+/* Botão do menu hambúrguer (escondido no desktop) */
+.menu-toggle-site {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  color: var(--cor-azul-escuro);
+  cursor: pointer;
+}
+
+
+/* --- REGRAS PARA O RESPONSIVO (TELAS PEQUENAS) --- */
+@media (max-width: 768px) {
+    .main-header .logo{
+        position: relative;
+        z-index: 1;
+    }
+  
+  /* Mostra o botão do menu hambúrguer */
+ .menu-toggle-site {
+  display: block;
+  z-index: 1; 
+}
+
+  /* Esconde a navegação de desktop e a prepara para o mobile */
+  .main-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+    
+    position: absolute;
+    top: 80px; /* Altura do header */
+    left: 0;
+    width: 100%;
+    
+    background-color: #fff;
+    padding: 20px 0;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    
+    /* Lógica para esconder/mostrar */
+    transform: translateY(-140%);
+    transition: transform 0.4s ease-in-out;
+  }
+  
+  /* Classe que será adicionada via JS para mostrar o menu */
+  .main-nav.active {
+    transform: translateY(0);
+  }
+
+  .main-nav a {
+    font-size: 1.2rem;
+  }
+}

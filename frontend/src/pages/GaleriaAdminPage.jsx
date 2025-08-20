@@ -87,7 +87,7 @@ function GaleriaAdminPage() {
   return (
     <>
       <div className="main-content-header">
-        <h1>Galeria da Página Inicial</h1>
+        <h1>Galeria de imagens</h1>
       </div>
 
       {successMessage && <div className="alert alert-success">{successMessage}</div>}

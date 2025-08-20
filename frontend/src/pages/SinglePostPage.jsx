@@ -29,7 +29,7 @@ function SinglePostPage() {
   if (loading) return <p>Carregando postagem...</p>;
   if (error) return <p style={{ color: 'red' }}>{error}</p>;
 
-  return (
+ return (
     <div>
       <Header />
       <main className="single-post-container">
@@ -39,11 +39,17 @@ function SinglePostPage() {
             <p className="post-meta">
               Publicado por {post.voluntario?.nome || 'ONG'}
             </p>
-            <img className="post-image" src={post.midia_url} alt={post.titulo} />
+            
+            {post.midia_url && (
+              <img className="post-image" src={post.midia_url} alt={post.titulo} />
+            )}
+
             <div className="post-content">
-              {/* Usa dangerouslySetInnerHTML para renderizar o HTML do conteúdo, se houver */}
-              <p dangerouslySetInnerHTML={{ __html: post.conteudo.replace(/\n/g, '<br />') }} />
+              {post.conteudo.split('\n').map((paragrafo, index) => (
+                <p key={index}>{paragrafo}</p>
+              ))}
             </div>
+
             <Link to="/blog" className="back-to-blog-link">
               ← Voltar para todas as postagens
             </Link>

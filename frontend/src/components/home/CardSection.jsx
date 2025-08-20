@@ -22,9 +22,9 @@ function CardSection() {
       <div className="cta-card doe">
         <h2>DOE</h2>
         <p>Sua doação faz a diferença.<br/> Participe da nossa missão e multiplique sorrisos.</p>
-        <a to="/contato" className="cta-button">
+        <Link to="/contato" className="cta-button">
           Quero Doar
-        </a>
+        </Link>
       </div>
     </div>
   );

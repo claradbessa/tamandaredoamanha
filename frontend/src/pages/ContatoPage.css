@@ -1,19 +1,26 @@
+@import '../styles/theme.css';
+
 .contato-container {
   max-width: 900px;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 80px 40px;
   text-align: center;
+  background-color: var(--cor-fundo-cinza);
 }
 
 .contato-header h1 {
   font-size: 2.5rem;
   margin-bottom: 10px;
+  color: var(--cor-azul-escuro);
 }
 
 .contato-header p {
   font-size: 1.1rem;
   color: #6c757d;
   margin-bottom: 50px;
+  max-width: 600px; 
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .contato-cards-container {
@@ -23,17 +30,18 @@
 }
 
 .contact-card {
-  background-color: #ffffff;
+  background-color: var(--cor-branco);
   border-radius: 8px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-  padding: 30px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  padding: 40px;
   text-align: left;
 }
 
 .contact-card h3 {
   margin-top: 0;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   margin-bottom: 15px;
+  color: var(--cor-azul-escuro);
 }
 
 .contact-card p {
@@ -41,96 +49,26 @@
   color: #555;
 }
 
-/* Estilos específicos do card de doação */
 .donation-card {
-  border-left: 5px solid var(--cor-primaria); /* Destaque visual */
-}
-
-.pix-section span {
-  font-size: 0.9rem;
-  color: #6c757d;
-}
-
-.pix-key-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: #f8f9fa;
-  border-radius: 6px;
-  padding: 10px 15px;
-  margin-top: 5px;
-}
-
-.pix-key-wrapper strong {
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 1.1rem;
-}
-
-.copy-button {
-  background-color: #e9ecef;
-  border: none;
-  border-radius: 5px;
-  padding: 8px 12px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: background-color 0.2s;
-}
-
-.copy-button:hover {
-  background-color: #dee2e6;
-}
-
-/* Estilos dos botões de contato */
-.contact-buttons {
-  margin-top: 20px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-}
-
-.whatsapp-button, .instagram-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 20px;
-  border-radius: 50px;
-  text-decoration: none;
-  font-weight: 500;
-  transition: transform 0.2s;
-}
-
-.whatsapp-button {
-  background-color: #25d366;
-  color: white;
-}
-
-.instagram-button {
-  background: #d6249f;
-  background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%);
-  color: white;
-}
-
-.whatsapp-button:hover, .email-button:hover {
-  transform: scale(1.05);
+  border-left: 5px solid var(--cor-amarelo);
 }
 
 .pix-details {
-  background-color: #f8f9fa;
+  background-color: var(--cor-fundo-cinza);
   border: 1px solid #e9ecef;
   border-radius: 8px;
   padding: 20px;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin: 25px 0;
 }
 
 .pix-detail-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 0;
+  padding: 12px 0;
   border-bottom: 1px solid #e9ecef;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .pix-detail-item:last-child {
@@ -144,7 +82,8 @@
 
 .pix-detail-item strong {
   font-family: 'Courier New', Courier, monospace;
-  font-size: 1.1rem;
+  font-size: 1rem;
+  word-break: break-all; 
 }
 
 .copy-pix-button-full {
@@ -159,8 +98,9 @@
   justify-content: center;
   gap: 8px;
   font-weight: 500;
+  font-size: 1rem;
+  color: var(--cor-texto-escuro);
   transition: background-color 0.2s;
-  margin-bottom: 15px;
 }
 
 .copy-pix-button-full:hover {
@@ -172,5 +112,44 @@
   color: #6c757d;
   font-style: italic;
   text-align: center;
-  margin: 0;
+  margin-top: 15px;
+}
+
+.contact-buttons {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.whatsapp-button, .instagram-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 25px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 500;
+  color: white;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.whatsapp-button:hover, .instagram-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+}
+
+.whatsapp-button {
+  background-color: #25d366;
+}
+
+.instagram-button {
+  background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%);
+}
+
+@media (max-width: 768px) {
+  .contato-container {
+    padding: 60px 20px;
+  }
 }

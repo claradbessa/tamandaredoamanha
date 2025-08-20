@@ -1,45 +1,71 @@
+@import '../../styles/theme.css';
+
 .pillars-container {
-  padding: 60px 40px;
+  padding: 100px 40px;
   text-align: center;
-  background-color: #f1f3f5; 
+  background-color: var(--cor-fundo-cinza); 
 }
 
 .pillars-container h2 {
   font-size: 2.5rem;
-  margin-bottom: 40px;
+  margin-bottom: 60px; 
+  color: var(--cor-azul-escuro);
 }
 
 .pillars-grid {
-  display: flex;
-  justify-content: center;
+  display: grid; 
+  grid-template-columns: repeat(3, 1fr);
   gap: 30px;
+  max-width: 1100px;
+  margin: 0 auto;
 }
 
 .pillar-card {
-  flex: 1;
-  max-width: 350px;
-  padding: 30px;
+  background-color: var(--cor-branco);
+  padding: 40px 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  transition: all 0.3s ease-in-out;
+  border-top: 4px solid transparent; 
+}
+
+.pillar-card:hover {
+  transform: translateY(-10px); 
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  border-top-color: var(--cor-amarelo);
 }
 
 .pillar-icon {
   margin-bottom: 20px;
-  color: var(--cor-primaria);
+  color: var(--cor-azul-medio);
+  font-size: 3rem; 
 }
 
 .pillar-card h3 {
   font-size: 1.5rem;
   margin-bottom: 15px;
+  color: var(--cor-azul-escuro);
 }
 
 .pillar-card p {
   font-size: 1rem;
   line-height: 1.6;
+  color: #555; 
 }
 
-/* --- Media Query para Responsividade --- */
-@media (max-width: 768px) {
+@media (max-width: 992px) {
   .pillars-grid {
-    flex-direction: column; 
-    align-items: center;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .pillars-container {
+    padding: 80px 20px;
+  }
+
+  .pillars-grid {
+    grid-template-columns: 1fr; 
+    gap: 30px;
   }
 }
