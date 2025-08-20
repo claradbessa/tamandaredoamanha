@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async';
 import { useState } from 'react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
@@ -24,6 +25,23 @@ function ContatoPage() {
 
   return (
     <div>
+      <Helmet>
+        <title>Contato e Doações | Projeto Tamandaré do Amanhã</title>
+        <meta 
+          name="description" 
+          content="Entre em contato com o Projeto Tamandaré do Amanhã. Encontre nosso endereço, telefone ou doe via PIX para apoiar nossa causa em Guaratinguetá-SP."
+        />
+
+        <meta property="og:title" content="Contato e Doações | Projeto Tamandaré do Amanhã" />
+          
+        <meta property="og:description" content="Entre em contato com o Projeto Tamandaré do Amanhã. Encontre nosso endereço, telefone ou doe via PIX para apoiar nossa causa em Guaratinguetá-SP." />
+          
+        <meta property="og:image" content="https://www.tamandaredoamanha.com.br/og-image-tamandare-do-amanha.png" />
+          
+        <meta property="og:url" content="https://www.tamandaredoamanha.com.br/contato" />
+          
+        <meta property="og:type" content="website" />
+      </Helmet>
       <Header />
       <main className="contato-container">
         <div className="contato-header">

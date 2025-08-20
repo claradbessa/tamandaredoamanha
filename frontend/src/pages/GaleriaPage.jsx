@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async';
 import { useState, useEffect } from 'react';
 import api from '../services/api';
 import Header from '../components/layout/Header';
@@ -37,6 +38,24 @@ function GaleriaPage() {
 
   return (
     <div>
+      <Helmet>
+        <title>Galeria de Fotos | Projeto Tamandaré do Amanhã</title>
+        <meta 
+          name="description" 
+          content="Explore a galeria de fotos do Projeto Tamandaré do Amanhã e veja os momentos marcantes de nossas atividades com as crianças e voluntários."
+        />
+
+        <meta property="og:title" content="Galeria de Fotos | Projeto Tamandaré do Amanhã" />
+          
+        <meta property="og:description" content="Explore a galeria de fotos do Projeto Tamandaré do Amanhã e veja os momentos marcantes de nossas atividades com as crianças e voluntários." />
+          
+        <meta property="og:image" content="https://www.tamandaredoamanha.com.br/og-image-tamandare-do-amanha.png" />
+          
+        <meta property="og:url" content="https://www.tamandaredoamanha.com.br/galeria" />
+          
+        <meta property="og:type" content="website" />
+      </Helmet>
+
       <Header />
       <main className="galeria-page-container">
         <h2>Galeria de Fotos</h2>

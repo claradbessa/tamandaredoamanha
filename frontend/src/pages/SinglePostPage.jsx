@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async';
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import api from '../services/api';
@@ -31,6 +32,26 @@ function SinglePostPage() {
 
  return (
     <div>
+      <Helmet>
+        <title>{`${post.titulo} | Projeto Tamandaré do Amanhã`}</title>
+        <meta name="description" content={`${post.conteudo.substring(0, 155)}...`} />
+
+        {/* og:title agora usa o título do post */}
+        <meta property="og:title" content={`${post.titulo} | Projeto Tamandaré do Amanhã`} />
+        
+        {/* og:description agora usa o conteúdo do post */}
+        <meta property="og:description" content={`${post.conteudo.substring(0, 155)}...`} />
+        
+        {/* og:image usa a imagem do post. Se não houver, usa a imagem padrão. */}
+        <meta property="og:image" content={post.midia_url || "https://www.tamandaredoamanha.com.br/og-image-tamandare-do-amanha.png"} />
+        
+        {/* og:url agora aponta para a URL específica do post */}
+        <meta property="og:url" content={`https://www.tamandaredoamanha.com.br/post/${post.id}`} />
+        
+        {/* og:type para posts de blog deve ser "article" */}
+        <meta property="og:type" content="article" />
+      </Helmet>
+
       <Header />
       <main className="single-post-container">
         {post ? (
