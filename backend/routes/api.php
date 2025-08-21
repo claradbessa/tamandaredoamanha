@@ -77,3 +77,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('frequencias', FrequenciaController::class);
     Route::post('frequencias/batch', [FrequenciaController::class, 'storeBatch']);
 });
+
+// --- ROTA DE DIAGNÓSTICO TEMPORÁRIA ---
+// Para verificar as configurações do PHP no servidor.
+Route::get('/debug-php', function () {
+    $uploadLimit = ini_get('upload_max_filesize');
+    $postLimit = ini_get('post_max_size');
+    $memoryLimit = ini_get('memory_limit');
+
+    return response()->json([
+        'upload_max_filesize' => $uploadLimit,
+        'post_max_size' => $postLimit,
+        'memory_limit' => $memoryLimit,
+    ]);
+});
