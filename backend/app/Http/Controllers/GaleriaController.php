@@ -15,21 +15,13 @@ class GaleriaController extends Controller
     public function index()
     {
         try {
-            $imagens = GaleriaImagem::all()->map(function ($img) {
-                return [
-                    'id'        => $img->id,
-                    'url'       => Storage::url($img->caminho), // 👈 importante
-                    'descricao' => $img->descricao,
-                ];
-            });
+            $imagens = GaleriaImagem::orderByDesc('created_at')->get();
 
             return response()->json($imagens);
+
         } catch (\Throwable $e) {
             Log::error('Erro no index da Galeria', ['msg' => $e->getMessage()]);
-            return response()->json([
-                'message' => 'Erro ao listar imagens',
-                'error'   => $e->getMessage(),
-            ], 500);
+            return response()->json(['message' => 'Erro ao listar imagens'], 500);
         }
     }
 
@@ -39,52 +31,37 @@ class GaleriaController extends Controller
     public function store(Request $request)
     {
         try {
-            if (!$request->hasFile('imagens')) {
-                return response()->json([
-                    'message' => 'Nenhuma imagem enviada',
-                    'debug'   => $request->all()
-                ], 400);
-            }
+            $request->validate([
+                'imagens' => 'required|array',
+                'imagens.*' => 'image|mimes:jpg,jpeg,png,gif|max:20480' // Valida cada imagem no array
+            ]);
 
             $arquivos = $request->file('imagens');
-            if (!is_array($arquivos)) {
-                $arquivos = [$arquivos];
-            }
-
             $salvas = [];
+
             foreach ($arquivos as $arquivo) {
                 if ($arquivo->isValid()) {
-                    $path = $arquivo->store('galeria', 'public');
+                    // 1. FAZ O UPLOAD PARA O CLOUDINARY
+                    $path = $arquivo->store('galeria');
 
+                    // 2. OBTÉM A URL COMPLETA
+                    $url = Storage::url($path);
+
+                    // 3. SALVA A URL NO BANCO DE DADOS
                     $img = GaleriaImagem::create([
-                        'caminho'   => $path,
+                        'caminho'   => $url,
                         'descricao' => $arquivo->getClientOriginalName(),
                     ]);
 
-                    $salvas[] = [
-                        'id'        => $img->id,
-                        'url'       => Storage::url($path), // 👈 adiciona URL aqui
-                        'descricao' => $img->descricao,
-                    ];
-                } else {
-                    Log::warning('Arquivo inválido recebido', [
-                        'name' => $arquivo->getClientOriginalName()
-                    ]);
+                    $salvas[] = $img;
                 }
             }
 
             return response()->json($salvas, 201);
 
         } catch (\Throwable $e) {
-            Log::error('🔥 Erro no store da Galeria', [
-                'msg'   => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-
-            return response()->json([
-                'message' => 'Erro ao salvar imagem',
-                'error'   => $e->getMessage(),
-            ], 500);
+            Log::error('🔥 Erro no store da Galeria', ['msg' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+            return response()->json(['message' => 'Erro ao salvar as imagens.'], 500);
         }
     }
 
@@ -94,21 +71,19 @@ class GaleriaController extends Controller
     public function destroy(GaleriaImagem $galeriaImagem)
     {
         try {
-            if ($galeriaImagem->caminho && Storage::disk('public')->exists($galeriaImagem->caminho)) {
-                Storage::disk('public')->delete($galeriaImagem->caminho);
+            // 1. DELETA A IMAGEM DO CLOUDINARY
+            if ($galeriaImagem->caminho) {
+                Storage::delete($galeriaImagem->caminho);
             }
 
+            // 2. DELETA O REGISTRO DO BANCO DE DADOS
             $galeriaImagem->delete();
 
             return response()->json(['message' => 'Imagem excluída com sucesso']);
+
         } catch (\Throwable $e) {
-            Log::error('Erro ao excluir imagem da galeria', [
-                'msg' => $e->getMessage()
-            ]);
-            return response()->json([
-                'message' => 'Erro ao excluir imagem',
-                'error'   => $e->getMessage(),
-            ], 500);
+            Log::error('Erro ao excluir imagem da galeria', ['msg' => $e->getMessage()]);
+            return response()->json(['message' => 'Erro ao excluir imagem'], 500);
         }
     }
 }
