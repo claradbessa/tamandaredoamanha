@@ -15,14 +15,22 @@ until php artisan migrate --force; do
   sleep 3
 done
 
+echo "===== Variáveis de ambiente carregadas no container ====="
+echo "APP_ENV=$APP_ENV"
+echo "APP_DEBUG=$APP_DEBUG"
+echo "FILESYSTEM_DISK=$FILESYSTEM_DISK"
+echo "========================================================="
+
 echo "Limpando caches antigos..."
 php artisan config:clear
 php artisan route:clear
 php artisan view:clear
 php artisan cache:clear
 
+# php artisan config:cache
+# php artisan route:cache
+
 echo "Criando o link de armazenamento..."
-# Apaga o link antigo se existir e cria o novo para garantir a consistência
 rm -rf /var/www/html/public/storage
 php artisan storage:link
 
