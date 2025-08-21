@@ -81,11 +81,14 @@ Route::middleware('auth:sanctum')->group(function () {
 // --- ROTA DE DIAGNÓSTICO TEMPORÁRIA ---
 // Para verificar as configurações do PHP no servidor.
 Route::get('/debug-php', function () {
+    $defaultDisk = config('filesystems.default');
+
     $uploadLimit = ini_get('upload_max_filesize');
     $postLimit = ini_get('post_max_size');
     $memoryLimit = ini_get('memory_limit');
 
     return response()->json([
+        'default_filesystem_disk' => $defaultDisk,
         'upload_max_filesize' => $uploadLimit,
         'post_max_size' => $postLimit,
         'memory_limit' => $memoryLimit,
