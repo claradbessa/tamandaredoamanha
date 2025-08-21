@@ -18,10 +18,8 @@ done
 echo "Limpando caches antigos..."
 php artisan config:clear
 php artisan route:clear
-
-echo "Cacheando configuração e rotas..."
-php artisan config:cache
-php artisan route:cache
+php artisan view:clear
+php artisan cache:clear
 
 echo "Criando o link de armazenamento..."
 # Apaga o link antigo se existir e cria o novo para garantir a consistência
