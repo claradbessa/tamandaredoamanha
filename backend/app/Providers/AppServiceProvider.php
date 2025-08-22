@@ -30,6 +30,11 @@ class AppServiceProvider extends ServiceProvider
             Log::info('[AppServiceProvider] HTTPS forçado.');
         }
 
+        // Forçar o default para produção
+        if (app()->environment('production')) {
+            config(['filesystems.default' => 'cloudinary']);
+        }
+
         // Garantir que o Storage use o disco público corretamente
         config(['filesystems.default' => 'public']);
         Log::info('[AppServiceProvider] Disco padrão configurado como public.');
