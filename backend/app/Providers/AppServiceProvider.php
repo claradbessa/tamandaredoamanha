@@ -11,32 +11,26 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Register any application services.
      */
-    public function register(): void
-    {
-        //
-    }
-
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
-        // Log para confirmar que o AppServiceProvider está rodando
         Log::info('[AppServiceProvider] Boot iniciado.');
 
-        // Forçar HTTPS no ambiente de produção (como na Render)
+        // Força HTTPS e define o disco padrão com base no ambiente
         if ($this->app->environment('production')) {
+
+            // Força HTTPS no ambiente de produção
             URL::forceScheme('https');
-            Log::info('[AppServiceProvider] HTTPS forçado.');
-        }
+            Log::info('[AppServiceProvider] HTTPS forçado para produção.');
 
-        // Forçar o default para produção
-        if (app()->environment('production')) {
+            // Define o disco padrão como 'cloudinary' APENAS em produção
             config(['filesystems.default' => 'cloudinary']);
-        }
+            Log::info('[AppServiceProvider] Disco padrão configurado como CLOUDINARY para produção.');
 
-        // Garantir que o Storage use o disco público corretamente
-        config(['filesystems.default' => 'public']);
-        Log::info('[AppServiceProvider] Disco padrão configurado como public.');
+        } else {
+
+            // Em qualquer outro ambiente (como 'local'), usa 'public'
+            config(['filesystems.default' => 'public']);
+            Log::info('[AppServiceProvider] Disco padrão configurado como PUBLIC para ambiente local.');
+        }
     }
 }
