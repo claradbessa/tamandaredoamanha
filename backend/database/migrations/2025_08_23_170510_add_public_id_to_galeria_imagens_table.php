@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('galeria', function (Blueprint $table) { 
+        Schema::table('galeria', function (Blueprint $table) {
             $table->string('public_id')->nullable()->after('caminho');
         });
     }
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('galeria_imagens', function (Blueprint $table) {
-            //
+        Schema::table('galeria', function (Blueprint $table) {
+            $table->dropColumn('public_id');    
         });
     }
 };
