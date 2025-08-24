@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('galeria', function (Blueprint $table) {
-            if (!Schema::hasColumn('galeria', 'public_id')) {
+        Schema::table('galeria_imagems', function (Blueprint $table) {
+            if (!Schema::hasColumn('galeria_imagems', 'public_id')) {
                 $table->string('public_id')->nullable()->after('caminho');
             }
         });
@@ -23,8 +23,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('galeria', function (Blueprint $table) {
-            if (Schema::hasColumn('galeria', 'public_id')) {
+        Schema::table('galeria_imagems', function (Blueprint $table) {
+            if (Schema::hasColumn('galeria_imagems', 'public_id')) {
                 $table->dropColumn('public_id');
             }
         });
