@@ -11,11 +11,21 @@ RUN apk add --no-cache --update \
     libpng-dev \
     libjpeg-turbo-dev \
     freetype-dev \
-    curl-dev
+    curl-dev \
+    oniguruma-dev \
+    bash
 
 # ETAPA 2: Instala as extensões do PHP
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install pdo pdo_pgsql zip gd curl ctype json fileinfo mbstring
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg=/usr/include \
+    && docker-php-ext-install -j$(nproc) \
+       pdo \
+       pdo_pgsql \
+       zip \
+       gd \
+       curl \
+       ctype \
+       fileinfo \
+       mbstring
 
 # Instala o Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
