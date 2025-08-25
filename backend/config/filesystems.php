@@ -2,7 +2,7 @@
 
 return [
 
-    'default' => 'cloudinary',
+    'default' => env('FILESYSTEM_DISK', 'cloudinary'),
 
     'disks' => [
 
@@ -17,7 +17,7 @@ return [
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
+            'url' => env('APP_URL') . '/storage',
             'visibility' => 'public',
             'throw' => false,
             'report' => false,
