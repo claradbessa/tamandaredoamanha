@@ -1,6 +1,6 @@
 FROM php:8.3-fpm-alpine
 
-# Atualiza o índice de pacotes e instala as dependências do sistema
+# ETAPA 1: Instala as dependências do sistema
 RUN apk add --no-cache --update \
     git \
     nginx \
@@ -13,7 +13,7 @@ RUN apk add --no-cache --update \
     freetype-dev \
     curl-dev
 
-# Instala as extensões PHP
+# ETAPA 2: Instala as extensões do PHP
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install pdo pdo_pgsql zip gd curl ctype json fileinfo mbstring
 
