@@ -1,13 +1,16 @@
 FROM php:8.3-fpm-alpine
 
-# Instala dependências, incluindo GD para imagens e ZIP
+# Instala dependências, incluindo GD para imagens, ZIP e outras comuns
 RUN apk add --no-cache git nginx supervisor shadow postgresql-dev \
     libzip-dev \
     libpng-dev \
     jpeg-dev \
     freetype-dev \
+    # Adiciona dependências para novas extensões
+    curl-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install pdo pdo_pgsql zip gd
+    # Instala as extensões, incluindo as novas para maior compatibilidade
+    && docker-php-ext-install pdo pdo_pgsql zip gd curl ctype json fileinfo mbstring
 
 # Instala o Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer

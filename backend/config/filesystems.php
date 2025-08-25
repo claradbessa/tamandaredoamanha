@@ -39,7 +39,6 @@ return [
         'cloudinary' => [
             'driver' => 'cloudinary',
         ],
-    ],
 
     ],
 
