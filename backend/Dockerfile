@@ -1,7 +1,7 @@
 FROM php:8.3-fpm-alpine
 
-# Instala dependências, incluindo GD para imagens e ZIP
-RUN apk add --no-cache \
+# Atualiza o índice de pacotes e instala as dependências do sistema
+RUN apk add --no-cache --update \
     git \
     nginx \
     supervisor \
@@ -11,8 +11,10 @@ RUN apk add --no-cache \
     libpng-dev \
     libjpeg-turbo-dev \
     freetype-dev \
-    curl-dev \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    curl-dev
+
+# Instala as extensões PHP
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install pdo pdo_pgsql zip gd curl ctype json fileinfo mbstring
 
 # Instala o Composer
