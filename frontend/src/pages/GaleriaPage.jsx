@@ -32,7 +32,7 @@ function GaleriaPage() {
   }, []);
 
   const slides = images.map(image => ({
-    src: image.url,
+    src: image.caminho,
     title: image.descricao,
   }));
 
@@ -71,7 +71,7 @@ function GaleriaPage() {
               className="galeria-item"
               onClick={() => setLightboxIndex(index)}
             >
-              <img src={image.url} alt={image.descricao || 'Foto do projeto'} />
+              <img src={image.caminho} alt={image.descricao || 'Foto do projeto'} />
               
               <div className="zoom-icon">
                 <FaSearchPlus />

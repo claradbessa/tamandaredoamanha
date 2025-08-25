@@ -134,7 +134,7 @@ function GaleriaAdminPage() {
             images.map((image) => (
               <div key={image.id} className="gallery-item">
                 <img
-                  src={image.url}
+                  src={image.caminho}
                   alt={image.descricao || 'Imagem da galeria'}
                 />
                 <button

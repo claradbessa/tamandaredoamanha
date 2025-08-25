@@ -36,7 +36,7 @@ function GallerySection() {
         ) : (
           images.map(image => (
             <div key={image.id} className="gallery-item">
-              <img src={image.url} alt={image.descricao || 'Foto do projeto'} />
+              <img src={image.caminho} alt={image.descricao || 'Foto do projeto'} />
               <p>{image.titulo || 'Atividade da ONG'}</p>
             </div>
           ))
