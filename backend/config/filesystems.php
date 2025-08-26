@@ -37,14 +37,12 @@ return [
         ],
 
         'cloudinary' => [
-        'driver' => 'cloudinary',
-        'url' => env('CLOUDINARY_URL', sprintf(
-            'cloudinary://%s:%s@%s',
-            env('CLOUDINARY_API_KEY'),
-            env('CLOUDINARY_API_SECRET'),
-            env('CLOUDINARY_CLOUD_NAME')
-        )),
-],
+            'driver'     => 'cloudinary',
+            'api_key'    => env('CLOUDINARY_API_KEY'),
+            'api_secret' => env('CLOUDINARY_API_SECRET'),
+            'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
+            'url'        => env('CLOUDINARY_URL'),
+        ],
 
     ],
 
