@@ -13,8 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // Garante que o middleware de CORS é aplicado a todas as rotas de API
-        $middleware->api(prepend: [
+        $middleware->prependToGroup('api', [
             \Illuminate\Http\Middleware\HandleCors::class,
         ]);
 
@@ -23,8 +22,5 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        $exceptions->report(function (Throwable $e) {
-            logger()->error('Erro fatal durante a inicialização: ' . $e->getMessage(), ['exception' => $e]);
-        });
         Integration::handles($exceptions);
     })->create();
