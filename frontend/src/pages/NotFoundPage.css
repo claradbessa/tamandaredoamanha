@@ -1,0 +1,32 @@
+@import '../styles/theme.css'; 
+
+.not-found-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 80px 40px;
+  min-height: 85vh;
+  background-color: var(--cor-fundo-cinza);
+}
+
+.not-found-icon {
+  font-size: 5rem;
+  color: var(--cor-amarelo);
+  margin-bottom: 20px;
+}
+
+.not-found-container h1 {
+  font-size: 2.5rem;
+  margin: 0;
+  color: var(--cor-azul-escuro);
+}
+
+.not-found-container p {
+  font-size: 1.2rem;
+  color: #555;
+  margin-top: 10px;
+  margin-bottom: 30px;
+  max-width: 400px;
+}
