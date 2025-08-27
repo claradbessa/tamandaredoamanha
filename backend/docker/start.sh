@@ -17,11 +17,8 @@ echo "APP_DEBUG=$APP_DEBUG"
 echo "FILESYSTEM_DISK=$FILESYSTEM_DISK"
 echo "========================================================="
 
-echo "Limpando caches antigos..."
-php artisan config:clear
-php artisan route:clear
-php artisan view:clear
-php artisan cache:clear
+echo "Limpando TODOS os caches antigos de forma agressiva..."
+php artisan optimize:clear
 
 echo "Recriando caches de configuração e rotas para produção..."
 php artisan config:cache
