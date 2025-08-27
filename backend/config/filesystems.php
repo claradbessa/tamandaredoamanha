@@ -34,10 +34,9 @@ return [
 
         'cloudinary' => [
             'driver'     => 'cloudinary',
-            'api_key'    => env('CLOUDINARY_API_KEY'),
-            'api_secret' => env('CLOUDINARY_API_SECRET'),
-            'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
-            'url'        => env('CLOUDINARY_URL'),
+            'key'    => env('CLOUDINARY_API_KEY'),
+            'secret' => env('CLOUDINARY_API_SECRET'),
+            'cloud'  => env('CLOUDINARY_CLOUD_NAME'), 
         ],
 
     ],
