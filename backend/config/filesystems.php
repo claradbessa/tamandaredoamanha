@@ -36,6 +36,15 @@ return [
             'report' => false,
         ],
 
+        //  'cloudinary' => [
+        //  'driver' => 'cloudinary',
+        //  'url' => env('CLOUDINARY_URL', sprintf(
+        //      'cloudinary://%s:%s@%s',
+        //      env('CLOUDINARY_API_KEY'),
+        //      env('CLOUDINARY_API_SECRET'),
+        //      env('CLOUDINARY_CLOUD_NAME')
+        //  )),
+
         'cloudinary' => [
             'driver'     => 'cloudinary',
             'api_key'    => env('CLOUDINARY_API_KEY'),
@@ -43,6 +52,7 @@ return [
             'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
             'url'        => env('CLOUDINARY_URL'),
         ],
+],
 
     ],
 

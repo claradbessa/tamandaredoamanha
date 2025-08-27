@@ -17,12 +17,10 @@ echo "APP_DEBUG=$APP_DEBUG"
 echo "FILESYSTEM_DISK=$FILESYSTEM_DISK"
 echo "========================================================="
 
-echo "Limpando TODOS os caches antigos de forma agressiva..."
-php artisan optimize:clear
-
-echo "Recriando caches de configuração e rotas para produção..."
-php artisan config:cache
-php artisan route:cache
+echo "Limpando caches para garantir leitura das variáveis de ambiente em tempo real..."
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear
 
 echo "Criando link de armazenamento..."
 rm -rf /var/www/html/public/storage
