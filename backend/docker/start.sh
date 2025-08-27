@@ -1,10 +1,6 @@
 #!/bin/sh
 set -e
 
-# Ajustando limites do PHP para upload grande
-echo "upload_max_filesize=20M" >> /usr/local/etc/php/conf.d/uploads.ini
-echo "post_max_size=20M" >> /usr/local/etc/php/conf.d/uploads.ini
-
 echo "Corrigindo permissões de pastas..."
 chmod 1777 /tmp
 mkdir -p /var/www/html/storage/app/public
