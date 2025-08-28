@@ -3,6 +3,7 @@ import api from '../services/api';
 import Modal from '../components/Modal';
 import PostagemForm from '../components/postagens/PostagemForm';
 import { FaEdit, FaTrashAlt } from 'react-icons/fa';
+import logoPlaceholder from '../../public/logo_tamandare.png'; 
 
 function PostagensPage() {
   const [postagens, setPostagens] = useState([]);
@@ -47,26 +48,23 @@ function PostagensPage() {
     setEditingPostagem(null);
   };
 
-
   const handleSavePostagem = async (formData, postagemId) => {
     setError('');
     setSuccessMessage('');
 
     try {
-      // Pega os dados do formulário
       const postData = {};
       formData.forEach((value, key) => {
-        if (key !== 'midia') { 
+        if (key !== 'midia') {
           postData[key] = value;
         }
       });
       
       const file = formData.get('midia');
 
-      // ETAPA 1: Se houver um arquivo, faz o upload para a Cloudinary primeiro
       if (file instanceof File && file.name) {
         const CLOUD_NAME = "dbr43jqca";
-        const UPLOAD_PRESET = "TDA_gallery_uploads"; // Reutilizamos o mesmo preset
+        const UPLOAD_PRESET = "TDA_gallery_uploads";
         const cloudinaryURL = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
         
         const cloudinaryFormData = new FormData();
@@ -84,19 +82,15 @@ function PostagensPage() {
           throw new Error(`Erro no Cloudinary: ${cloudinaryData.error.message}`);
         }
 
-        // Adiciona os dados da Cloudinary ao payload final
         postData.midia_url = cloudinaryData.secure_url;
         postData.midia_public_id = cloudinaryData.public_id;
       }
 
-      // ETAPA 2: Envie os dados de texto (e os links da mídia, se houver) para o backend
       if (postagemId) {
-        // ATUALIZAR POSTAGEM
         const { data: updated } = await api.put(`/postagens/${postagemId}`, postData);
         setPostagens(prev => prev.map(p => (p.id === postagemId ? updated : p)));
         showSuccess('Postagem atualizada com sucesso!');
       } else {
-        // CRIAR POSTAGEM
         const { data: created } = await api.post('/postagens', postData);
         setPostagens(prev => [created, ...prev]);
         showSuccess('Postagem criada com sucesso!');
@@ -166,8 +160,29 @@ function PostagensPage() {
                 <tr key={postagem.id}>
                   <td>
                     {postagem.midia_url ? (
-                      <img src={postagem.midia_url} alt={postagem.titulo} style={{ width: '100px', height: 'auto', borderRadius: '6px' }} />
-                    ) : 'Sem Mídia'}
+                      <img 
+                        src={postagem.midia_url} 
+                        alt={`Mídia da postagem: ${postagem.titulo}`} 
+                        style={{ 
+                          width: '100px', 
+                          height: '80px',
+                          borderRadius: '6px', 
+                          objectFit: 'cover'
+                        }} 
+                      />
+                    ) : (
+                      <img 
+                        src={logoPlaceholder} 
+                        alt="Logo do Projeto" 
+                        style={{ 
+                          width: '100px', 
+                          height: '80px',
+                          borderRadius: '6px', 
+                          objectFit: 'contain', 
+                          opacity: 0.5         
+                        }} 
+                      />
+                    )}
                   </td>
                   <td>{postagem.titulo}</td>
                   <td className="hide-on-mobile">{postagem.voluntario?.nome || 'N/A'}</td>
