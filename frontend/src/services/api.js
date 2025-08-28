@@ -1,10 +1,22 @@
 import axios from 'axios';
 
+const baseURL = import.meta.env.VITE_API_BASE_URL;
+
 const api = axios.create({
-  baseURL: 'https://render-m7dj.onrender.com/api',
-  headers: {
-    'Accept': 'application/json',
-  }
+  baseURL: `${baseURL}/api`, 
 });
+
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 export default api;
