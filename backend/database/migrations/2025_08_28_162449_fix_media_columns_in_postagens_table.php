@@ -12,13 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('postagens', function (Blueprint $table) {
-            if (Schema::hasColumn('postagens', 'midia') && !Schema::hasColumn('postagens', 'midia_url')) {
-                $table->renameColumn('midia', 'midia_url');
-            }
-
-            if (!Schema::hasColumn('postagens', 'midia_public_id')) {
-                $table->string('midia_public_id')->nullable()->after('midia_url');
-            }
+            //
         });
     }
 
@@ -28,9 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('postagens', function (Blueprint $table) {
-            if (Schema::hasColumn('postagens', 'midia_public_id')) {
-                $table->dropColumn('midia_public_id');
-            }
+            //
         });
     }
 };
