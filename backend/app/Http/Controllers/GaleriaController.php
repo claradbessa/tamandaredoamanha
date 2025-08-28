@@ -18,28 +18,23 @@ class GaleriaController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'imagens'   => 'required|array',
-            'imagens.*' => 'image|mimes:jpg,jpeg,png,gif|max:20480'
+            'imagens'             => 'required|array',
+            'imagens.*.caminho'   => 'required|url',
+            'imagens.*.public_id' => 'required|string',
+            'imagens.*.descricao' => 'nullable|string',
         ]);
 
-        $arquivos = $request->file('imagens');
         $salvas = [];
+        $imagensData = $request->input('imagens');
 
-        foreach ($arquivos as $arquivo) {
-            if ($arquivo->isValid()) {
-                $path = $arquivo->store('galeria', 'cloudinary');
-                $url = Storage::disk('cloudinary')->url($path);
-                $publicId = $this->extractPublicId($url);
-
-                $img = GaleriaImagem::create([
-                    'caminho'        => $url,
-                    'descricao'      => $arquivo->getClientOriginalName(),
-                    'public_id'      => $publicId, 
-                ]);
-
-                Log::info("Imagem enviada: {$url}");
-                $salvas[] = $img;
-            }
+        foreach ($imagensData as $imageData) {
+            $img = GaleriaImagem::create([
+                'caminho'   => $imageData['caminho'],
+                'public_id' => $imageData['public_id'],
+                'descricao' => $imageData['descricao'] ?? 'Imagem da galeria',
+            ]);
+            Log::info("Imagem da Cloudinary registrada no banco: {$imageData['caminho']}");
+            $salvas[] = $img;
         }
 
         return response()->json($salvas, 201);
@@ -49,16 +44,10 @@ class GaleriaController extends Controller
     {
         if ($galeriaImagem->public_id) {
             Storage::disk('cloudinary')->delete($galeriaImagem->public_id);
-            Log::info("Imagem removida: {$galeriaImagem->public_id}");
+            Log::info("Imagem removida da Cloudinary: {$galeriaImagem->public_id}");
         }
 
         $galeriaImagem->delete();
         return response()->json(['message' => 'Imagem excluída com sucesso']);
-    }
-
-    private function extractPublicId($url)
-    {
-        preg_match('/\/upload\/(?:v\d+\/)?(.+?)\.[a-zA-Z0-9]+$/', $url, $matches);
-        return $matches[1] ?? null;
     }
 }
