@@ -10,9 +10,9 @@ function ContatoPage() {
   const whatsappLink = `https://wa.me/${whatsappNumber}`;
   
   // --- INFORMAÇÕES DO PIX ATUALIZADAS ---
-  const pixKey = '263.267.538-30';
+  const pixKey = '12996051909';
   const titular = 'Fabiana R. de A. Silva'; 
-  const instituicao = 'Caixa Econômica Federal';
+  const instituicao = 'BCO SANTANDER (BRASIL) S.A.';
   
   const [copyButtonText, setCopyButtonText] = useState('Copiar Chave PIX');
 
@@ -42,7 +42,6 @@ function ContatoPage() {
           
         <meta property="og:type" content="website" />
       </Helmet>
-      <Header />
       <main className="contato-container">
         <div className="contato-header">
           <h1>Entre em Contato</h1>
@@ -67,7 +66,7 @@ function ContatoPage() {
                 <strong>{instituicao}</strong>
               </div>
               <div className="pix-detail-item">
-                <span>Chave PIX (CPF):</span>
+                <span>Telefone:</span>
                 <strong>{pixKey}</strong>
               </div>
             </div>
@@ -108,7 +107,6 @@ function ContatoPage() {
           </div>
         </div>
       </main>
-      <Footer />
     </div>
   );
 }
