@@ -9,12 +9,10 @@
 }
 
 .hero-slide {
-  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  height: 90vh; 
-  min-height: 500px;
+  height: calc(100vh - 13vh);
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -44,9 +42,7 @@
   position: relative; 
   z-index: 2;
   color: var(--cor-branco);
-  max-width: 800px;
-  padding: 20px;
-  height: 90vh
+  height: 100%;
 }
 
 .hero-content h1 {
@@ -74,12 +70,15 @@
 
 @media (max-width: 768px) {
   .hero-slide {
-    height: 90vh; 
-    min-height: 0;
+    height: calc(100dvh - 12vh);
   }
   .swiper-button-next,
   .swiper-button-prev {
     display: none; 
+  }
+
+  .hero-content{
+    height: 100%;
   }
 
   .hero-content h1 {
