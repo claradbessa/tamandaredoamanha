@@ -31,19 +31,6 @@ body {
    ========================================================================== */
 
 /* Estilos para o botão que vai abrir/fechar o menu */
-.menu-toggle {
-  display: none; /* Escondido em telas grandes */
-  position: fixed; /* Fixo na tela mesmo com rolagem */
-  top: 15px;
-  left: 15px;
-  z-index: 1001; /* Fica acima de quase tudo */
-  background-color: var(--cor-azul-medio);
-  color: var(--cor-texto-claro);
-  border: none;
-  border-radius: 6px;
-  padding: 10px 12px;
-  cursor: pointer;
-}
 
 /* O :is() aplica o estilo a múltiplos seletores */
 :is(input, select, textarea):focus {
@@ -298,6 +285,23 @@ table .actions a, table .actions button {
   border: none;
   cursor: pointer;
   padding: 5px;
+}
+
+@media (max-width: 768px) {
+  
+  table .actions {
+    display: flex;
+    justify-content: space-around; 
+    align-items: center;
+    flex-wrap: wrap; 
+  }
+
+  table .actions a, table .actions button {
+    margin: 0; 
+    padding: 5px; 
+    font-size: 1.1rem; 
+  }
+
 }
 
 /* Formulários */

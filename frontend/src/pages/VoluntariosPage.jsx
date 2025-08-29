@@ -94,7 +94,7 @@ function VoluntariosPage() {
     <>
       <div className="main-content-header">
         <h1>Voluntários</h1>
-        <button onClick={() => handleOpenModal()} className="btn btn-primary">Adicionar Novo Voluntário</button>
+        <button onClick={() => handleOpenModal()} className="btn btn-primary">Adicionar Voluntário</button>
       </div>
 
       {successMessage && <div className="alert alert-success">{successMessage}</div>}

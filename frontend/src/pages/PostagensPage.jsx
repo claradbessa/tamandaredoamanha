@@ -125,7 +125,7 @@ function PostagensPage() {
     <>
       <div className="main-content-header">
         <h1>Postagens</h1>
-        <button onClick={() => handleOpenModal()} className="btn btn-primary">Adicionar Nova Postagem</button>
+        <button onClick={() => handleOpenModal()} className="btn btn-primary">Adicionar Postagem</button>
       </div>
 
       {successMessage && <div className="alert alert-success">{successMessage}</div>}

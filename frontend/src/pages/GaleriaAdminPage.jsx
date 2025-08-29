@@ -123,7 +123,7 @@ function GaleriaAdminPage() {
       {error && <div className="alert alert-danger" style={{ whiteSpace: 'pre-wrap' }}>{error}</div>}
 
       <div className="card" style={{ marginBottom: '30px' }}>
-        <h3 style={{ marginBottom: '15px' }}>Adicionar Novas Imagens</h3>
+        <h3 style={{ marginBottom: '15px' }}>Adicionar Imagens</h3>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Selecionar Imagens:</label>

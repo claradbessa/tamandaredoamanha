@@ -110,7 +110,7 @@ function AulasPage() {
       <>
         <div className="main-content-header">
           <h1>Aulas</h1>
-          <button onClick={() => handleOpenFormModal()} className="btn btn-primary">Adicionar Nova Aula</button>
+          <button onClick={() => handleOpenFormModal()} className="btn btn-primary">Adicionar Aula</button>
         </div>
 
         {successMessage && <div className="alert alert-success">{successMessage}</div>}
