@@ -2,6 +2,7 @@
 
 return [
 
+<<<<<<< Updated upstream
     'default' => env('FILESYSTEM_DISK', 'local'),
 
     'disks' => [
