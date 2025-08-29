@@ -1,4 +1,4 @@
-import { createContext, useState, useContext } from 'react';
+import { createContext, useState, useContext, useEffect } from 'react';
 import api from '../services/api';
 
 const AuthContext = createContext({});
@@ -6,46 +6,54 @@ const AuthContext = createContext({});
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
+  const [loading, setLoading] = useState(true); 
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem('@App:token');
+    const storedUser = localStorage.getItem('@App:user');
+
+    if (storedToken && storedUser) {
+      setToken(storedToken);
+      setUser(JSON.parse(storedUser));
+      
+      api.defaults.headers.Authorization = `Bearer ${storedToken}`;
+    }
+
+    setLoading(false);
+  }, []);
 
   const login = async ({ email, senha }) => {
     try {
       const response = await api.post('/login', { email, senha });
       const { access_token, user: userData } = response.data;
 
-      // Armazena o token e os dados do usuário no estado
       setToken(access_token);
       setUser(userData);
 
-      // Guarda o token no localStorage para persistir a sessão
       localStorage.setItem('@App:token', access_token);
       localStorage.setItem('@App:user', JSON.stringify(userData));
 
-      // Configura o cabeçalho de autorização para futuras requisições
       api.defaults.headers.Authorization = `Bearer ${access_token}`;
 
-      return true; // Indica que o login foi bem-sucedido
+      return true; 
     } catch (error) {
       console.error("Falha no login", error.response?.data?.message);
-      return false; // Indica que o login falhou
+      return false; 
     }
   };
 
   const logout = () => {
-    // Limpa o estado
     setUser(null);
     setToken(null);
 
-    // Remove os dados do localStorage
     localStorage.removeItem('@App:token');
     localStorage.removeItem('@App:user');
 
-    // Remove o cabeçalho de autorização
     api.defaults.headers.Authorization = null;
   };
 
-
   return (
-    <AuthContext.Provider value={{ signed: !!user, user, token, login, logout }}>
+    <AuthContext.Provider value={{ signed: !!user, user, token, loading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
@@ -53,5 +61,10 @@ export function AuthProvider({ children }) {
 
 export function useAuth() {
   const context = useContext(AuthContext);
+
+  if (!context) {
+    throw new Error('useAuth deve ser usado dentro de um AuthProvider');
+  }
+
   return context;
 }

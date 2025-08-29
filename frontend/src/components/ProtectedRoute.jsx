@@ -2,15 +2,13 @@ import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 function ProtectedRoute() {
-  const auth = useAuth();
+  const { signed, loading } = useAuth();
 
-  // Se o utilizador não estiver logado, redireciona para a página de login
-  if (!auth.signed) {
-    return <Navigate to="/login" replace />;
+  if (loading) {
+    return <div>Carregando...</div>;
   }
 
-  // Se estiver logado, renderiza a página solicitada
-  return <Outlet />;
+  return signed ? <Outlet /> : <Navigate to="/login" replace />;
 }
 
 export default ProtectedRoute;
