@@ -28,7 +28,6 @@ function HomePage() {
           <meta property="og:type" content="website" />
       </Helmet>
 
-      <Header />
       <HeroSection />
       <AboutSection />
       <MediaSection />
@@ -37,7 +36,6 @@ function HomePage() {
       <CardSection />
       
       {/* Aqui virão as outras secções */}
-      <Footer />
     </div>
   );
 }

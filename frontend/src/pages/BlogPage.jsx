@@ -42,7 +42,6 @@ function BlogPage() {
         <meta property="og:type" content="website" />
       </Helmet>
 
-      <Header />
       <main className="blog-page-container">
         <h2>Notícias e Atividades</h2>
         <p>Acompanhe os últimos acontecimentos e novidades do nosso projeto.</p>
@@ -79,7 +78,6 @@ function BlogPage() {
           ))}
         </div>
       </main>
-      <Footer />
     </div>
   );
 }

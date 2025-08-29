@@ -56,7 +56,6 @@ function GaleriaPage() {
         <meta property="og:type" content="website" />
       </Helmet>
 
-      <Header />
       <main className="galeria-page-container">
         <h2>Galeria de Fotos</h2>
         <p>Explore os momentos e as atividades do nosso projeto.</p>
@@ -88,7 +87,6 @@ function GaleriaPage() {
         slides={slides}
       />
       
-      <Footer />
     </div>
   );
 }

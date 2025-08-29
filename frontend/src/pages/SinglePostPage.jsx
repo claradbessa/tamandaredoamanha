@@ -45,7 +45,6 @@ function SinglePostPage() {
         <meta property="og:type" content="article" />
       </Helmet>
 
-      <Header />
       <main className="single-post-container">
         <article>
           <h1>{post.titulo}</h1>
@@ -64,7 +63,6 @@ function SinglePostPage() {
           </Link>
         </article>
       </main>
-      <Footer />
     </div>
   );
 }
