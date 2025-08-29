@@ -29,11 +29,34 @@
   margin-bottom: 40px;
 }
 
-.post-content p {
+.post-content {
   font-size: 1.1rem;
   line-height: 1.8; 
   color: var(--cor-texto-escuro);
+}
+
+.post-content p,
+.post-content ul,
+.post-content ol {
   margin-bottom: 1.5em; 
+}
+
+.post-content strong {
+  color: var(--cor-azul-escuro);
+}
+
+.post-content ul,
+.post-content ol {
+  padding-left: 30px; 
+}
+
+.post-content li {
+  margin-bottom: 0.5em;
+}
+
+.post-content a {
+  color: var(--cor-azul-medio);
+  text-decoration: underline;
 }
 
 .back-to-blog-link {

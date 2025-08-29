@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
 
 class GaleriaImagem extends Model
 {
@@ -15,24 +14,6 @@ class GaleriaImagem extends Model
     protected $fillable = [
         'caminho',
         'descricao',
+        'public_id', 
     ];
-
-    protected $appends = ['url'];
-
-    public function getUrlAttribute(): ?string
-    {
-        $caminho = $this->attributes['caminho'] ?? null;
-        if (!$caminho) {
-            return null;
-        }
-
-        try {
-            if (Storage::disk('public')->exists($caminho)) {
-                return Storage::url($caminho);
-            }
-            return null;
-        } catch (\Throwable $e) {
-            return null;
-        }
-    }
 }

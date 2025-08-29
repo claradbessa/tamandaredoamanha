@@ -47,25 +47,54 @@ function GaleriaAdminPage() {
     setIsUploading(true);
     setError('');
     setSuccessMessage('');
-    const formData = new FormData();
-    files.forEach((file) => formData.append('imagens[]', file));
+
+    // Credenciais públicas do Cloudinary
+    const CLOUD_NAME = "dbr43jqca";
+    const UPLOAD_PRESET = "TDA_gallery_uploads"; // O nome do preset que você criou!
+    const uploadURL = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
+
+    const uploadPromises = files.map(file => {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', UPLOAD_PRESET);
+
+      // O 'fetch' nativo do navegador para o upload para Cloudinary
+      return fetch(uploadURL, {
+        method: 'POST',
+        body: formData,
+      }).then(response => response.json());
+    });
+
     try {
-      await api.post('/galeria', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
+      // 2. Executa todos os uploads para a Cloudinary em paralelo
+      const uploadedImagesResponses = await Promise.all(uploadPromises);
+
+      // 3. Verifica se algum upload para a Cloudinary falhou
+      const failedUploads = uploadedImagesResponses.filter(res => res.error);
+      if (failedUploads.length > 0) {
+        throw new Error(`Falha ao enviar uma ou mais imagens: ${failedUploads[0].error.message}`);
+      }
+
+      // 4. Prepara os dados para enviar ao backend
+      const imageDataForBackend = uploadedImagesResponses.map(res => ({
+        caminho: res.secure_url,
+        public_id: res.public_id,
+        descricao: res.original_filename,
+      }));
+
+      // 5. Envia APENAS os dados (JSON) para o servidor Laravel
+      await api.post('/galeria', { imagens: imageDataForBackend });
+
       setSuccessMessage('Imagens enviadas com sucesso!');
       setFiles([]);
       if (document.getElementById('imagens')) {
         document.getElementById('imagens').value = '';
       }
-      await fetchImages();
+      await fetchImages(); // Atualiza a galeria na tela
+
     } catch (err) {
-      console.error('Erro ao enviar imagens:', err);
-      if (err.response) {
-        setError(JSON.stringify(err.response.data, null, 2));
-      } else {
-        setError(err.message);
-      }
+      console.error('Erro no processo de upload:', err);
+      setError(err.message || 'Ocorreu um erro durante o upload.');
     } finally {
       setIsUploading(false);
     }

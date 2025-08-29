@@ -12,20 +12,13 @@
   color: var(--cor-azul-escuro);
 }
 
-.aulas-ofertadas-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
-  max-width: 1100px;
-  margin: 0 auto;
-}
-
 .aula-card {
   position: relative; 
   overflow: hidden; 
   border-radius: 8px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.05);
   cursor: pointer; 
+  width: 100%; 
 }
 
 .aula-card img {
@@ -74,18 +67,29 @@
   transform: translateY(0); 
 }
 
+.aulas-swiper {
+  padding-bottom: 50px !important; 
+}
 
-@media (max-width: 992px) {
-  .aulas-ofertadas-grid {
-    grid-template-columns: 1fr 1fr; 
-  }
+.aulas-swiper .swiper-slide {
+  height: auto;
+  display: flex;
+  justify-content: center;
+}
+
+.aulas-swiper .swiper-button-next,
+.aulas-swiper .swiper-button-prev {
+  color: var(--cor-azul-escuro); 
+  top: 50%;
+  transform: translateY(-70%); 
+}
+
+.aulas-swiper .swiper-pagination-bullet-active {
+  background-color: var(--cor-azul-escuro); 
 }
 
 @media (max-width: 768px) {
   .aulas-ofertadas-container {
     padding: 80px 20px;
-  }
-  .aulas-ofertadas-grid {
-    grid-template-columns: 1fr; 
   }
 }

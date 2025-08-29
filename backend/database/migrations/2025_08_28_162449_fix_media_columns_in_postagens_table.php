@@ -31,6 +31,10 @@ return new class extends Migration
             if (Schema::hasColumn('postagens', 'midia_public_id')) {
                 $table->dropColumn('midia_public_id');
             }
+
+            if (Schema::hasColumn('postagens', 'midia_url') && !Schema::hasColumn('postagens', 'midia')) {
+                $table->renameColumn('midia_url', 'midia');
+            }
         });
     }
 };

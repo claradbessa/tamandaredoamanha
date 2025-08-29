@@ -32,26 +32,12 @@ class PostagemController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'titulo'        => 'required|string|max:150',
-            'conteudo'      => 'required|string',
-            'midia'         => 'nullable|file|mimes:jpg,jpeg,png,gif,mp4|max:20480',
-            'voluntario_id' => 'required|exists:voluntarios,id',
+            'titulo'            => 'required|string|max:150',
+            'conteudo'          => 'required|string',
+            'voluntario_id'     => 'required|exists:voluntarios,id',
+            'midia_url'         => 'nullable|url',
+            'midia_public_id'   => 'nullable|string',
         ]);
-
-        if ($request->hasFile('midia')) {
-            $file = $request->file('midia');
-
-            // Upload no Cloudinary
-            $path = $file->store('postagens', 'cloudinary');
-            $url = Storage::disk('cloudinary')->url($path);
-
-            // Extrai public_id para deletar futuramente
-            $publicId = $this->extractPublicId($url);
-
-            $validated['midia_url'] = $url;
-            $validated['midia_public_id'] = $publicId;
-            Log::info("Arquivo enviado para Cloudinary: {$url}");
-        }
 
         $postagem = $this->postagemService->create($validated);
         $fresh = Postagem::with('voluntario')->findOrFail($postagem->id);
@@ -61,28 +47,19 @@ class PostagemController extends Controller
 
     public function update(Request $request, $id)
     {
-        $validated = $request->validate([
-            'titulo'        => 'sometimes|string|max:150',
-            'conteudo'      => 'sometimes|string',
-            'midia'         => 'nullable|file|mimes:jpg,jpeg,png,gif,mp4|max:20480',
-            'voluntario_id' => 'sometimes|exists:voluntarios,id',
-        ]);
-
         $postagem = Postagem::findOrFail($id);
 
-        if ($request->hasFile('midia')) {
-            if ($postagem->midia_public_id) {
-                Storage::disk('cloudinary')->delete($postagem->midia_public_id);
-                Log::info("Arquivo antigo removido: {$postagem->midia_public_id}");
-            }
+        $validated = $request->validate([
+            'titulo'            => 'sometimes|string|max:150',
+            'conteudo'          => 'sometimes|string',
+            'voluntario_id'     => 'sometimes|exists:voluntarios,id',
+            'midia_url'         => 'nullable|url',
+            'midia_public_id'   => 'nullable|string',
+        ]);
 
-            $file = $request->file('midia');
-            $path = $file->store('postagens', 'cloudinary');
-            $url = Storage::disk('cloudinary')->url($path);
-            $publicId = $this->extractPublicId($url);
-
-            $validated['midia_url'] = $url;
-            $validated['midia_public_id'] = $publicId;
+        if (isset($validated['midia_public_id']) && $postagem->midia_public_id && $validated['midia_public_id'] !== $postagem->midia_public_id) {
+            Log::info("Substituindo mídia. Deletando a antiga: {$postagem->midia_public_id}");
+            Storage::disk('cloudinary')->delete($postagem->midia_public_id);
         }
 
         $this->postagemService->update($postagem, $validated);
@@ -102,12 +79,5 @@ class PostagemController extends Controller
 
         $this->postagemService->delete($postagem);
         return response()->noContent();
-    }
-
-    private function extractPublicId($url)
-    {
-        // Captura tudo entre o /upload/ e a extensão do arquivo
-        preg_match('/\/upload\/(?:v\d+\/)?(.+?)\.[a-zA-Z0-9]+$/', $url, $matches);
-        return $matches[1] ?? null;
     }
 }

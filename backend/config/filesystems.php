@@ -2,25 +2,22 @@
 
 return [
 
-    'default' => env('FILESYSTEM_DISK', 'cloudinary'),
+    'default' => env('FILESYSTEM_DISK', 'local'),
 
     'disks' => [
 
         'local' => [
             'driver' => 'local',
-            'root' => storage_path('app/private'),
-            'serve' => true,
+            'root' => storage_path('app'),
             'throw' => false,
-            'report' => false,
         ],
 
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => env('APP_URL') . '/storage',
+            'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
             'throw' => false,
-            'report' => false,
         ],
 
         's3' => [
@@ -33,18 +30,14 @@ return [
             'endpoint' => env('AWS_ENDPOINT'),
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
             'throw' => false,
-            'report' => false,
         ],
 
         'cloudinary' => [
-        'driver' => 'cloudinary',
-        'url' => env('CLOUDINARY_URL', sprintf(
-            'cloudinary://%s:%s@%s',
-            env('CLOUDINARY_API_KEY'),
-            env('CLOUDINARY_API_SECRET'),
-            env('CLOUDINARY_CLOUD_NAME')
-        )),
-],
+            'driver'     => 'cloudinary',
+            'key'    => env('CLOUDINARY_API_KEY'),
+            'secret' => env('CLOUDINARY_API_SECRET'),
+            'cloud'  => env('CLOUDINARY_CLOUD_NAME'), 
+        ],
 
     ],
 

@@ -14,7 +14,8 @@ import GaleriaAdminPage from './pages/GaleriaAdminPage';
 import GaleriaPage from './pages/GaleriaPage';
 import BlogPage from './pages/BlogPage';
 import SinglePostPage from './pages/SinglePostPage'; 
-import ContatoPage from './pages/ContatoPage'
+import ContatoPage from './pages/ContatoPage';
+import NotFoundPage from './pages/NotFoundPage.jsx'
 
 function App() {
   return (
@@ -41,6 +42,8 @@ function App() {
             <Route path="/admin/galeria" element={<GaleriaAdminPage />} />
           </Route>
         </Route>
+
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
   );
