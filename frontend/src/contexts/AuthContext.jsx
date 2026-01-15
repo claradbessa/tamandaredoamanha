@@ -26,8 +26,7 @@ export function AuthProvider({ children }) {
     try {
       const response = await api.post('/login', { 
           email, 
-          senha: senha,      
-          password: senha    
+          senha 
       });
 
       const { access_token, user: userData } = response.data;
