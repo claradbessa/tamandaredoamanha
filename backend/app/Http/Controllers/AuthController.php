@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Voluntario;
+use App\Models\Voluntario; 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Hash; 
 
 class AuthController extends Controller
 {
@@ -32,15 +32,15 @@ class AuthController extends Controller
     }
 
     public function login(Request $request)
-    {
+    { 
         $credentials = $request->validate([
-            'email' => 'required|string|email',
-            'senha' => 'required|string',
+            'email' => ['required', 'email'],
+            'senha' => ['required'], 
         ]);
 
-        $voluntario = Voluntario::where('email', $credentials['email'])->first();
+        $voluntario = Voluntario::where('email', $request->email)->first();
 
-        if (! $voluntario || ! Hash::check($credentials['senha'], $voluntario->senha)) {
+        if (! $voluntario || ! Hash::check($request->senha, $voluntario->senha)) {
             return response()->json(['message' => 'Credenciais inválidas'], 401);
         }
 
